@@ -1,0 +1,45 @@
+<.header>
+  Twitch Story
+</.header>
+
+<form id="upload-form" phx-submit="save" phx-change="validate">
+  <.live_file_input upload={@uploads.request} />
+  <.button type="submit">Upload</.button>
+</form>
+
+<%= for entry <- @uploads.request.entries do %>
+  <article class="upload-entry">
+    <progress value={entry.progress} max="100"><%= entry.progress %>%</progress>
+    <button type="button" phx-click="cancel-upload" phx-value-ref={entry.ref} aria-label="cancel">
+      &times;
+    </button>
+  </article>
+<% end %>
+
+<.async_result :let={metadata} assign={@metadata}>
+  <:loading></:loading>
+  <:failed :let={_reason}>There was an error loading the metadata...</:failed>
+  <div>
+    <div class="px-4 sm:px-0">
+      <h3 class="text-base font-semibold leading-7 text-gray-900">Twitch data request</h3>
+    </div>
+    <div class="mt-6 border-t border-gray-100">
+      <dl class="divide-y divide-gray-100">
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Username</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= metadata.username %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Request id</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= metadata.request_id %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Span</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+            <%= metadata.start_time %> - <%= metadata.end_time %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</.async_result>
