@@ -25,9 +25,9 @@ defmodule TwitchStory.Request.Zipfile do
     Jason.decode!(read(file, path))
   end
 
-  def csv(file, path) do
+  def csv(file, path, opts \\ []) do
     with {:ok, [path]} <- :zip.extract(file, [{:file_list, [path]}]),
-         {:ok, df} <- DataFrame.from_csv(List.to_string(path)) do
+         {:ok, df} <- DataFrame.from_csv(List.to_string(path), opts) do
       df
     end
   end

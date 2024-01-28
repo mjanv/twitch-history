@@ -7,9 +7,18 @@ defmodule TwitchStory.Request.Community.FollowsTest do
 
   @zip ~c"priv/static/request-1.zip"
 
-  test "read/2" do
-    follows = Follows.read(@zip)
+  test "count/2" do
+    follows = Follows.count(@zip)
 
-    assert follows == nil
+    assert follows == 169
+  end
+
+  test "all/2" do
+    follows = Follows.all(@zip)
+
+    assert follows ==
+             Explorer.DataFrame.from_parquet!(
+               "test/twitch_story/request/community/follows.parquet"
+             )
   end
 end
