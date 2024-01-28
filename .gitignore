@@ -42,3 +42,4 @@ npm-debug.log
 # Zip files
 *.zip
 priv/static/uploads/*
+request/
