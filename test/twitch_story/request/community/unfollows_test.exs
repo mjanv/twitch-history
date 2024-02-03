@@ -3,6 +3,8 @@ defmodule TwitchStory.Request.Community.UnfollowsTest do
 
   use ExUnit.Case
 
+  alias Explorer.DataFrame
+  alias Support.ExplorerCase
   alias TwitchStory.Request.Community.Unfollows
 
   @zip ~c"priv/static/request-1.zip"
@@ -15,10 +17,8 @@ defmodule TwitchStory.Request.Community.UnfollowsTest do
 
   test "all/2" do
     unfollows = Unfollows.all(@zip)
+    truth = DataFrame.from_parquet!("test/support/data/unfollows.parquet")
 
-    assert unfollows ==
-             Explorer.DataFrame.from_parquet!(
-               "test/twitch_story/request/community/unfollows.parquet"
-             )
+    assert ExplorerCase.dataframes_equal?(unfollows, truth)
   end
 end
