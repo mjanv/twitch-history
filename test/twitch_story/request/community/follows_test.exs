@@ -3,7 +3,6 @@ defmodule TwitchStory.Request.Community.FollowsTest do
 
   use ExUnit.Case
 
-  alias Explorer.DataFrame
   alias Support.ExplorerCase
   alias TwitchStory.Request.Community.Follows
 
@@ -17,8 +16,7 @@ defmodule TwitchStory.Request.Community.FollowsTest do
 
   test "all/2" do
     follows = Follows.all(@zip)
-    truth = DataFrame.from_parquet!("test/support/data/follows.parquet")
 
-    assert ExplorerCase.dataframes_equal?(follows, truth)
+    assert ExplorerCase.equal_master?(follows, "follows")
   end
 end

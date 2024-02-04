@@ -4,17 +4,17 @@ defmodule TwitchStoryWeb.DashboardLive.Index do
   use TwitchStoryWeb, :live_view
 
   alias Phoenix.LiveView.AsyncResult
-  alias TwitchStory.Request
+  alias TwitchStory.Request.{Commerce, Metadata, SiteHistory}
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(:files, [])
-      |> assign(:metadata, AsyncResult.loading())
-      |> allow_upload(:request, accept: ~w(.zip), max_file_size: 999_000_000, max_entries: 1)
-
-    {:ok, socket}
+    socket
+    |> assign(:files, [])
+    |> assign(:metadata, AsyncResult.loading())
+    |> assign(:subs, AsyncResult.loading())
+    |> assign(:minute_watched, AsyncResult.loading())
+    |> allow_upload(:request, accept: ~w(.zip), max_file_size: 999_000_000, max_entries: 1)
+    |> then(fn socket -> {:ok, socket} end)
   end
 
   @impl true
@@ -47,37 +47,37 @@ defmodule TwitchStoryWeb.DashboardLive.Index do
 
   @impl true
   def handle_event("save", _params, socket) do
-    files =
-      consume_uploaded_entries(socket, :request, fn %{path: path}, _entry ->
-        dest =
-          Path.join(
-            Application.app_dir(:twitch_story, "priv/static/uploads"),
-            Path.basename(path)
-          ) <> ".zip"
+    socket
+    |> consume_uploaded_entries(:request, fn %{path: path}, _entry ->
+      dest =
+        Path.join(
+          Application.app_dir(:twitch_story, "priv/static/uploads"),
+          Path.basename(path)
+        ) <> ".zip"
 
-        File.cp!(path, dest)
-        {:ok, dest}
-      end)
-
-    send(self(), {:work, List.first(files)})
-
-    {:noreply, update(socket, :files, &(&1 ++ files))}
+      File.cp!(path, dest)
+      {:ok, dest}
+    end)
+    |> tap(fn files -> send(self(), {:work, to_charlist(List.first(files))}) end)
+    |> then(fn files -> {:noreply, update(socket, :files, &(&1 ++ files))} end)
   end
 
   #
   @impl true
   def handle_info({:work, file}, socket) do
-    socket =
-      socket
-      |> start_async(:metadata, fn -> Request.Metadata.read(to_charlist(file)) end)
-
-    {:noreply, socket}
+    socket
+    |> start_async(:metadata, fn -> Metadata.read(file) end)
+    |> start_async(:subs, fn -> Commerce.Subs.read(file) end)
+    |> start_async(:minute_watched, fn -> SiteHistory.MinuteWatched.read(file) end)
+    |> then(fn socket -> {:noreply, socket} end)
   end
 
   @impl true
-  def handle_async(:metadata, {:ok, metadata}, socket) do
-    result = AsyncResult.ok(socket.assigns.metadata, metadata)
-    {:noreply, assign(socket, :metadata, result)}
+  def handle_async(task, {:ok, data}, socket) do
+    socket.assigns
+    |> Map.get(task)
+    |> AsyncResult.ok(data)
+    |> then(fn result -> {:noreply, assign(socket, task, result)} end)
   end
 
   def error_to_string(:too_large), do: "Too large"

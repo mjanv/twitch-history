@@ -3,6 +3,7 @@ defmodule TwitchStory.Request.SiteHistory.MinuteWatchedTest do
 
   use ExUnit.Case
 
+  alias Support.ExplorerCase
   alias TwitchStory.Request.SiteHistory.MinuteWatched
 
   @zip ~c"priv/static/request-1.zip"
@@ -10,6 +11,6 @@ defmodule TwitchStory.Request.SiteHistory.MinuteWatchedTest do
   test "read/2" do
     minute_watched = MinuteWatched.read(@zip)
 
-    assert minute_watched == %{}
+    assert ExplorerCase.equal_master?(minute_watched, "minute_watched")
   end
 end

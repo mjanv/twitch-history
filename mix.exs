@@ -19,7 +19,7 @@ defmodule TwitchStory.MixProject do
   def application do
     [
       mod: {TwitchStory.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -46,6 +46,7 @@ defmodule TwitchStory.MixProject do
       # Backend
       {:jason, "~> 1.2"},
       {:explorer, "~> 0.8.0"},
+      {:vega_lite, "~> 0.1.8"},
       # Monitoring
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},

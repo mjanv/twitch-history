@@ -10,6 +10,6 @@ defmodule TwitchStory.Request.Commerce.BitsTest do
   test "read/2" do
     bits = Bits.read(@zip)
 
-    assert bits == nil
+    assert Explorer.DataFrame.shape(bits) == {0, 22}
   end
 end

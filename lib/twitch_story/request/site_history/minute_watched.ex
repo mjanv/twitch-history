@@ -9,7 +9,11 @@ defmodule TwitchStory.Request.SiteHistory.MinuteWatched do
 
   def read(file) do
     file
-    |> Zipfile.csv(~c"request/site_history/minute_watched.csv")
+    |> Zipfile.csv(
+      ~c"request/site_history/minute_watched.csv",
+      columns: ["time", "channel", "minutes_logged", "game"],
+      dtypes: [{"time", {:datetime, :microsecond}}]
+    )
   end
 
   def as_string(s), do: s |> Series.cast(:string) |> Series.to_list()

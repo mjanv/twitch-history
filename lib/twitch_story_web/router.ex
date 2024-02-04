@@ -19,10 +19,9 @@ defmodule TwitchStoryWeb.Router do
   scope "/", TwitchStoryWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-
-    live "/dashboard", DashboardLive.Index, :index
-    live "/dashboard/new", DashboardLive.Index, :new
+    # get "/", PageController, :home
+    live "/", DashboardLive.Index, :index
+    live "/new", DashboardLive.Index, :new
   end
 
   if Application.compile_env(:twitch_story, :dev_routes) do
