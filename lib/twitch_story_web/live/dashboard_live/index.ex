@@ -68,7 +68,13 @@ defmodule TwitchStoryWeb.DashboardLive.Index do
     socket
     |> start_async(:metadata, fn -> Metadata.read(file) end)
     |> start_async(:subs, fn -> Commerce.Subs.read(file) end)
-    |> start_async(:minute_watched, fn -> SiteHistory.MinuteWatched.read(file) end)
+    |> start_async(:minute_watched, fn ->
+      file
+      |> SiteHistory.MinuteWatched.read()
+      |> SiteHistory.MinuteWatched.preprocess(threshold: 60 * 6)
+      |> SiteHistory.MinuteWatched.years(2019, 2023)
+      |> SiteHistory.MinuteWatched.group_month()
+    end)
     |> then(fn socket -> {:noreply, socket} end)
   end
 

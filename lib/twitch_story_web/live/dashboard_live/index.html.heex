@@ -7,8 +7,6 @@
   <.button type="submit">Upload</.button>
 </form>
 
-<.live_component module={TwitchStoryWeb.Live.Graph} id="demo" />
-
 <%= for entry <- @uploads.request.entries do %>
   <article class="upload-entry">
     <progress value={entry.progress} max="100"><%= entry.progress %>%</progress>
@@ -67,5 +65,22 @@
         </div>
       </dl>
     </div>
+  </div>
+</.async_result>
+
+<.async_result :let={_minute_watched} assign={@minute_watched}>
+  <:loading></:loading>
+  <:failed :let={_reason}>There was an error loading the minute_watched...</:failed>
+  <div>
+    <div class="px-4 sm:px-0">
+      <h3 class="text-base font-semibold leading-7 text-gray-900">Subs</h3>
+    </div>
+
+    <.live_component
+      module={TwitchStoryWeb.Components.Live.Graph}
+      id="demo"
+      title="Hours per month"
+      data={@minute_watched}
+    />
   </div>
 </.async_result>
