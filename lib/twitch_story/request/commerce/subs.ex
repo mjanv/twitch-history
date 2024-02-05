@@ -53,4 +53,10 @@ defmodule TwitchStory.Request.Commerce.Subs do
       ]
     )
   end
+
+  def n(file) do
+    file
+    |> read()
+    |> DataFrame.n_rows()
+  end
 end

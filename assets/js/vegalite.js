@@ -4,7 +4,7 @@ const VegaLite = {
     mounted() {
         this.props = { id: this.el.getAttribute("data-id") };
         this.handleEvent(`vega_lite:${this.props.id}:init`, ({ spec }) => {
-            vegaEmbed(this.el, spec)
+            vegaEmbed(this.el, spec, {actions: false})
                 .then((result) => result.view)
                 .catch((error) => console.error(error));
         });

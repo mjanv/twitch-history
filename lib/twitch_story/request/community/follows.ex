@@ -23,11 +23,10 @@ defmodule TwitchStory.Request.Community.Follows do
     |> DataFrame.summarise_with(&[time: Explorer.Series.first(&1["time"])])
   end
 
-  def count(file) do
+  def n(file) do
     file
     |> read()
     |> DataFrame.filter(not is_nil(channel))
-    |> DataFrame.shape()
-    |> elem(0)
+    |> DataFrame.n_rows()
   end
 end

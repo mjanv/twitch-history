@@ -3,7 +3,7 @@ defmodule TwitchStory.Request.SiteHistory.ChatMessages do
 
   alias TwitchStory.Request.Zipfile
 
-  # require Explorer.DataFrame, as: DataFrame
+  require Explorer.DataFrame, as: DataFrame
 
   def read(file) do
     file
@@ -20,5 +20,11 @@ defmodule TwitchStory.Request.SiteHistory.ChatMessages do
       ],
       dtypes: [{"time", {:datetime, :microsecond}}]
     )
+  end
+
+  def n(file) do
+    file
+    |> read()
+    |> DataFrame.n_rows()
   end
 end

@@ -7,7 +7,7 @@ defmodule TwitchStoryWeb.Components.Live.Graph do
 
   @impl true
   def update(%{title: title, data: result}, socket) do
-    g = Timeseries.line(result.result, title)
+    g = Timeseries.bar(result.result, title)
 
     socket
     |> assign(id: socket.id)
@@ -22,7 +22,7 @@ defmodule TwitchStoryWeb.Components.Live.Graph do
       style="width:100%; height: 500px;"
       phx-hook="VegaLite"
       phx-update="ignore"
-      id="graph"
+      id={@id}
       data-id={@id}
     />
     """

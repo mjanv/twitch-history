@@ -16,6 +16,14 @@ defmodule TwitchStory.Request.SiteHistory.MinuteWatched do
     )
   end
 
+  def n(file) do
+    file
+    |> read()
+    |> DataFrame.n_rows()
+    |> Kernel./(60)
+    |> Kernel.round()
+  end
+
   def as_string(s), do: s |> Series.cast(:string) |> Series.to_list()
 
   def nominal_date_column(df) do

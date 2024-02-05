@@ -20,10 +20,7 @@ defmodule TwitchStoryWeb.Router do
     pipe_through :browser
 
     # get "/", PageController, :home
-    live "/", DashboardLive.Index, :index
-    live "/new", DashboardLive.Index, :new
-
-    live "/home", DashboardLive.Home, :index
+    live "/", DashboardLive.Home, :index
   end
 
   if Application.compile_env(:twitch_story, :dev_routes) do

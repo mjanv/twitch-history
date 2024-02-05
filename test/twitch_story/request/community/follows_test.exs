@@ -8,8 +8,8 @@ defmodule TwitchStory.Request.Community.FollowsTest do
 
   @zip ~c"priv/static/request-1.zip"
 
-  test "count/2" do
-    follows = Follows.count(@zip)
+  test "n/2" do
+    follows = Follows.n(@zip)
 
     assert follows == 169
   end

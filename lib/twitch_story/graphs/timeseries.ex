@@ -3,11 +3,16 @@ defmodule TwitchStory.Graphs.Timeseries do
 
   require VegaLite, as: Vl
 
-  def line(data, title \\ "") do
+  def bar(data, title \\ "") do
     Vl.new(title: title, width: :container, height: :container, padding: 5)
+    |> Vl.config(
+      title: [anchor: "start", color: "#ffffff"],
+      view: [stroke: :transparent],
+      background: nil
+    )
     |> Vl.data_from_values(data, only: ["date", "total"])
-    |> Vl.mark(:line)
-    |> Vl.encode_field(:x, "date", type: :nominal)
-    |> Vl.encode_field(:y, "total", type: :quantitative)
+    |> Vl.mark(:bar, tooltip: true, color: "#a870ff", corner_radius_end: 3)
+    |> Vl.encode_field(:x, "date", type: :ordinal, title: nil, axis: [label_color: "#ffffff"])
+    |> Vl.encode_field(:y, "total", type: :quantitative, title: nil, axis: nil)
   end
 end
