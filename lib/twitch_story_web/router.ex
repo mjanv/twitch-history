@@ -12,15 +12,13 @@ defmodule TwitchStoryWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", TwitchStoryWeb do
     pipe_through :browser
 
-    # get "/", PageController, :home
-    live "/", DashboardLive.Home, :index
+    live "/", DashboardLive.Home, :new
+    live "/request/:id", DashboardLive.Home, :show
+    live "/request/channels/:id", DashboardLive.Home, :channels
+    live "/request/channel/:channel/:id", DashboardLive.Home, :channel
   end
 
   if Application.compile_env(:twitch_story, :dev_routes) do

@@ -1,9 +1,9 @@
 defmodule TwitchStory.Request.SiteHistory.ChatMessages do
   @moduledoc false
 
+  alias Explorer.Series
+  alias TwitchStory.Request.SiteHistory
   alias TwitchStory.Request.Zipfile
-
-  require Explorer.DataFrame, as: DataFrame
 
   def read(file) do
     file
@@ -22,9 +22,23 @@ defmodule TwitchStory.Request.SiteHistory.ChatMessages do
     )
   end
 
-  def n(file) do
-    file
-    |> read()
-    |> DataFrame.n_rows()
+  def group_channel(df) do
+    df
+    |> SiteHistory.preprocess()
+    |> SiteHistory.group(
+      [:channel],
+      &[messages: Series.count(&1["body"]) |> Series.cast(:integer)],
+      &[desc: &1["messages"]]
+    )
+  end
+
+  def group_month_year(df) do
+    df
+    |> SiteHistory.preprocess()
+    |> SiteHistory.group(
+      [:channel, :month, :year],
+      &[messages: Series.count(&1["body"]) |> Series.cast(:integer)],
+      &[desc: &1["messages"]]
+    )
   end
 end

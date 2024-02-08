@@ -15,7 +15,7 @@ defmodule TwitchStory.Request.Community.FollowsTest do
   end
 
   test "all/2" do
-    follows = Follows.all(@zip)
+    follows = Follows.all(Follows.read(@zip))
 
     assert ExplorerCase.equal_master?(follows, "follows")
   end

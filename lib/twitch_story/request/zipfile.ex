@@ -14,15 +14,12 @@ defmodule TwitchStory.Request.Zipfile do
     |> Enum.reject(&is_nil/1)
   end
 
-  def read(file, path) do
-    with {:ok, handle} <- :zip.zip_open(file, [:memory]),
-         {:ok, {_, binary}} <- :zip.zip_get(path, handle) do
-      binary
-    end
-  end
-
   def json(file, path) do
-    Jason.decode!(read(file, path))
+    with {:ok, [path]} <- :zip.extract(file, [{:file_list, [path]}]),
+         {:ok, binary} <- File.read(path),
+         {:ok, map} <- Jason.decode(binary) do
+      map
+    end
   end
 
   def csv(file, path, opts \\ []) do

@@ -14,13 +14,12 @@ defmodule TwitchStory.Request.Community.Follows do
     )
   end
 
-  def all(file) do
-    file
-    |> read()
+  def all(df) do
+    df
     |> DataFrame.filter(not is_nil(channel))
     |> DataFrame.sort_by(asc: time)
     |> DataFrame.group_by([:channel])
-    |> DataFrame.summarise_with(&[time: Explorer.Series.first(&1["time"])])
+    |> DataFrame.summarise_with(&[follow: Explorer.Series.first(&1["time"])])
   end
 
   def n(file) do

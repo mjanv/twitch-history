@@ -43,15 +43,6 @@ defmodule TwitchStory.Request.ZipfileTest do
            ]
   end
 
-  test "read/2" do
-    file = ~c"request/users/channel/441903922.json"
-
-    binary = Zipfile.read(@path, file)
-
-    assert binary ==
-             "{\"id\":\"441903922\",\"broadcasterLanguage\":\"fr\",\"broadcasterSoftware\":\"unknown_rtmp\",\"game\":\"Science \\u0026 Technology\",\"gameId\":\"509670\",\"lastBroadcastId\":\"40325341829\",\"name\":\"lanfeust313\",\"status\":\"-\",\"title\":\"-\",\"createdOn\":\"2019-06-14T22:01:14.843812Z\",\"lastBroadcastTime\":\"2023-12-29T12:20:23Z\",\"updatedOn\":\"2024-01-04T17:58:20.556928Z\"}"
-  end
-
   test "json/2" do
     file = ~c"request/users/channel/441903922.json"
 
