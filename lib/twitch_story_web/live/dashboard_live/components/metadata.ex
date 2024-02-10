@@ -5,8 +5,9 @@ defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
 
   alias TwitchStory.Request.Metadata
 
-  def update(%{file: file}, socket) do
+  def update(%{file: file, title: title}, socket) do
     socket
+    |> assign(:title, title)
     |> assign_async(:metadata, fn -> {:ok, %{metadata: Metadata.read(file)}} end)
     |> then(fn socket -> {:ok, socket} end)
   end
@@ -43,6 +44,8 @@ defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
                   <span class="font-semibold text-white">Twitch</span>
                   <span class="text-gray-600">/</span>
                   <span class="font-semibold text-white"><%= metadata.username %></span>
+                  <span class="text-gray-600">/</span>
+                  <span class="font-semibold text-white"><%= @title %></span>
                 </h1>
               </div>
               <p class="mt-2 text-xs leading-6 text-gray-400">
