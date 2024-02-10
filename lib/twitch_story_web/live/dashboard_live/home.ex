@@ -4,14 +4,14 @@ defmodule TwitchStoryWeb.DashboardLive.Home do
   use TwitchStoryWeb, :live_view
 
   alias Phoenix.LiveView.AsyncResult
-  alias TwitchStory.Request.{Channels, Commerce, Community, Metadata, SiteHistory}
+  alias TwitchStory.Request.{Channels, Metadata, SiteHistory}
+
+  alias TwitchStoryWeb.DashboardLive.Components
 
   @impl true
   def mount(_params, _session, socket) do
     socket
     |> assign(:request_id, nil)
-    |> assign(:metadata, AsyncResult.loading())
-    |> assign(:stats, AsyncResult.loading())
     |> assign(:channels, AsyncResult.loading())
     |> assign(:chat_messages, AsyncResult.loading())
     |> assign(:minute_watched, AsyncResult.loading())
@@ -25,15 +25,7 @@ defmodule TwitchStoryWeb.DashboardLive.Home do
 
     socket
     |> assign(:request_id, request_id)
-    |> start_async(:metadata, fn -> Metadata.read(file) end)
-    |> start_async(:stats, fn ->
-      %{
-        follows: file |> Community.Follows.read() |> SiteHistory.n_rows(),
-        chat_messages: file |> SiteHistory.ChatMessages.read() |> SiteHistory.n_rows(),
-        hours_watched: file |> SiteHistory.MinuteWatched.read() |> SiteHistory.n_rows(60),
-        subscriptions: file |> Commerce.Subs.read() |> SiteHistory.n_rows()
-      }
-    end)
+    |> assign(:file, file)
     |> start_async(:channels, fn -> Channels.channels(file) end)
     |> start_async(:chat_messages, fn ->
       file

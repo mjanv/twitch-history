@@ -58,6 +58,7 @@
 <% end %>
 
 <%= if @live_action == :channels do %>
+  <.live_component module={Components.Metadata} id="metadata" file={@file} />
   <.async_result :let={channels} assign={@channels}>
     <div class="border-t border-white/10 pt-11">
       <h2 class="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">
@@ -95,7 +96,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-white/5">
-          <%= for channel <- Explorer.DataFrame.to_rows(channels, atom_keys: true) do %>
+          <%= for row <- Explorer.DataFrame.to_rows(channels, atom_keys: true) do %>
             <tr>
               <td class="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
                 <div class="flex items-center gap-x-4">
@@ -104,18 +105,15 @@
                     alt=""
                     class="h-8 w-8 rounded-full bg-gray-800"
                   />
-                  <div
-                    patch={~p"/request/channel/#{channel.channel}/#{@request_id}"}
-                    class="truncate text-sm font-medium leading-6 text-white"
-                  >
-                    <%= channel.channel %>
+                  <div patch={~p"/"} class="truncate text-sm font-medium leading-6 text-white">
+                    <%= row.channel %>
                   </div>
                 </div>
               </td>
               <td class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
                 <div class="flex gap-x-3">
                   <div class="font-mono text-sm leading-6 text-gray-400">
-                    <%= channel.hours %> hours
+                    <%= row.hours %> hours
                   </div>
                 </div>
               </td>
@@ -128,10 +126,10 @@
                 </div>
               </td>
               <td class="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">
-                <%= channel.messages %>
+                <%= row.messages %>
               </td>
               <td class="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">
-                <time datetime="2023-01-23T11:00"><%= channel.follow %></time>
+                <time datetime="2023-01-23T11:00"><%= row.follow %></time>
               </td>
             </tr>
           <% end %>
@@ -142,92 +140,8 @@
 <% end %>
 
 <%= if @live_action == :show do %>
-  <.async_result :let={metadata} assign={@metadata}>
-    <:loading></:loading>
-    <:failed :let={_reason}></:failed>
-
-    <header>
-      <!-- Secondary navigation -->
-      <nav class="flex overflow-x-auto border-b border-white/10 py-4">
-        <ul
-          role="list"
-          class="flex min-w-full flex-none gap-x-6 px-4 text-sm font-semibold leading-6 text-gray-400 sm:px-6 lg:px-8"
-        >
-          <li>
-            <a href="#" class="text-indigo-400">Overview</a>
-          </li>
-          <li>
-            <.link patch={~p"/request/channels/#{metadata.request_id}"} class="">Channels</.link>
-          </li>
-        </ul>
-      </nav>
-      <!-- Heading -->
-      <div class="flex flex-col items-start justify-between gap-x-8 gap-y-4 bg-gray-700/10 px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
-        <div>
-          <div class="flex items-center gap-x-3">
-            <div class="flex-none rounded-full bg-purple-400/10 p-1 text-purple-400">
-              <div class="h-2 w-2 rounded-full bg-current"></div>
-            </div>
-            <h1 class="flex gap-x-3 text-base leading-7">
-              <span class="font-semibold text-white">Twitch</span>
-              <span class="text-gray-600">/</span>
-              <span class="font-semibold text-white"><%= metadata.username %></span>
-            </h1>
-          </div>
-          <p class="mt-2 text-xs leading-6 text-gray-400">
-            Request id: <%= metadata.request_id %>
-          </p>
-        </div>
-        <div class="order-first flex-none rounded-full bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/30 sm:order-none">
-          <%= metadata.start_time %> - <%= metadata.end_time %>
-        </div>
-      </div>
-    </header>
-  </.async_result>
-
-  <.async_result :let={stats} assign={@stats}>
-    <:loading></:loading>
-    <:failed :let={_reason}></:failed>
-
-    <div id="stats" class="grid grid-cols-1 bg-gray-700/10 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8 sm:border-l">
-        <p class="text-sm font-medium leading-6 text-gray-400">Hours watched</p>
-        <p class="mt-2 flex items-baseline gap-x-2">
-          <span class="text-4xl font-semibold tracking-tight text-white">
-            <%= stats.hours_watched %>
-          </span>
-          <span class="text-sm text-gray-400">hours</span>
-        </p>
-      </div>
-      <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8">
-        <p class="text-sm font-medium leading-6 text-gray-400">Number of follows</p>
-        <p class="mt-2 flex items-baseline gap-x-2">
-          <span class="text-4xl font-semibold tracking-tight text-white">
-            <%= stats.follows %>
-          </span>
-          <span class="text-sm text-gray-400">channels</span>
-        </p>
-      </div>
-      <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8 lg:border-l">
-        <p class="text-sm font-medium leading-6 text-gray-400">Number of messages</p>
-        <p class="mt-2 flex items-baseline gap-x-2">
-          <span class="text-4xl font-semibold tracking-tight text-white">
-            <%= stats.chat_messages %>
-          </span>
-          <span class="text-sm text-gray-400">messages</span>
-        </p>
-      </div>
-      <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8 sm:border-l">
-        <p class="text-sm font-medium leading-6 text-gray-400">Number of subscriptions</p>
-        <p class="mt-2 flex items-baseline gap-x-2">
-          <span class="text-4xl font-semibold tracking-tight text-white">
-            <%= stats.subscriptions %>
-          </span>
-          <span class="text-sm text-gray-400">subs</span>
-        </p>
-      </div>
-    </div>
-  </.async_result>
+  <.live_component module={Components.Metadata} id="metadata" file={@file} />
+  <.live_component module={Components.Stats} id="metadata" file={@file} />
 
   <.async_result :let={_minute_watched} assign={@minute_watched}>
     <:loading></:loading>
