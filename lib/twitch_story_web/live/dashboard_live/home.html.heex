@@ -57,38 +57,13 @@
   </form>
 <% end %>
 
+<%= if @live_action == :show do %>
+  <.live_component module={Components.Metadata} id="overview" file={@file} title="Overview" />
+  <.live_component module={Components.Stats} id="stats" file={@file} />
+  <.live_component module={Components.Graphs} id="graphs" file={@file} />
+<% end %>
+
 <%= if @live_action == :channels do %>
   <.live_component module={Components.Metadata} id="metadata" file={@file} title="Channels" />
   <.live_component module={Components.Channels} id="channels" file={@file} />
-<% end %>
-
-<%= if @live_action == :show do %>
-  <.live_component module={Components.Metadata} id="metadata" file={@file} title="Overview" />
-  <.live_component module={Components.Stats} id="metadata" file={@file} />
-
-  <.async_result :let={_minute_watched} assign={@minute_watched}>
-    <:loading></:loading>
-    <:failed :let={_reason}></:failed>
-    <div class="block">
-      <.live_component
-        module={TwitchStoryWeb.Components.Live.Graph}
-        id="hours"
-        title="Hours per month"
-        data={@minute_watched}
-      />
-    </div>
-  </.async_result>
-
-  <.async_result :let={_chat_messages} assign={@chat_messages}>
-    <:loading></:loading>
-    <:failed :let={_reason}></:failed>
-    <div class="block">
-      <.live_component
-        module={TwitchStoryWeb.Components.Live.Graph}
-        id="messages"
-        title="Messages per month"
-        data={@chat_messages}
-      />
-    </div>
-  </.async_result>
 <% end %>

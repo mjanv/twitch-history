@@ -31,6 +31,9 @@ defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
               <li>
                 <.link patch={~p"/request/channels/#{metadata.request_id}"} class="">Channels</.link>
               </li>
+              <li>
+                <.link patch={~p"/request/messages/#{metadata.request_id}"} class="">Messages</.link>
+              </li>
             </ul>
           </nav>
           <!-- Heading -->

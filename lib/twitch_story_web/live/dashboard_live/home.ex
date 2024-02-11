@@ -3,48 +3,31 @@ defmodule TwitchStoryWeb.DashboardLive.Home do
 
   use TwitchStoryWeb, :live_view
 
-  alias Phoenix.LiveView.AsyncResult
-  alias TwitchStory.Request.{Channels, Metadata, SiteHistory}
+  alias TwitchStory.Request.Metadata
 
   alias TwitchStoryWeb.DashboardLive.Components
 
   @impl true
   def mount(_params, _session, socket) do
     socket
-    |> assign(:request_id, nil)
-    |> assign(:channels, AsyncResult.loading())
-    |> assign(:chat_messages, AsyncResult.loading())
-    |> assign(:minute_watched, AsyncResult.loading())
     |> allow_upload(:request, accept: ~w(.zip), max_file_size: 999_000_000, max_entries: 1)
     |> then(fn socket -> {:ok, socket} end)
   end
 
   @impl true
-  def handle_params(%{"id" => request_id}, _uri, socket) do
-    file = to_charlist(path_priv(request_id))
-
+  def handle_params(params, _url, socket) do
     socket
-    |> assign(:request_id, request_id)
-    |> assign(:file, file)
-    |> start_async(:channels, fn -> Channels.channels(file) end)
-    |> start_async(:chat_messages, fn ->
-      file
-      |> SiteHistory.ChatMessages.read()
-      |> SiteHistory.ChatMessages.group_month_year()
-      |> SiteHistory.nominal_date_column()
-    end)
-    |> start_async(:minute_watched, fn ->
-      file
-      |> SiteHistory.MinuteWatched.read()
-      |> SiteHistory.MinuteWatched.group_month_year()
-      |> SiteHistory.nominal_date_column()
-    end)
+    |> handle_action(socket.assigns.live_action, params)
     |> then(fn socket -> {:noreply, socket} end)
   end
 
-  def handle_params(_params, _uri, socket) do
-    {:noreply, socket}
+  def handle_action(socket, _action, %{"id" => request_id}) do
+    socket
+    |> assign(:request_id, request_id)
+    |> assign(:file, to_charlist(path_priv(request_id)))
   end
+
+  def handle_action(socket, _action, _params), do: socket
 
   def handle_event("search", %{"query" => _query}, socket) do
     {:noreply, socket}
@@ -83,22 +66,6 @@ defmodule TwitchStoryWeb.DashboardLive.Home do
     end)
     |> List.first()
     |> then(fn request -> {:noreply, push_patch(socket, to: ~p"/request/#{request}")} end)
-  end
-
-  @impl true
-  def handle_async(task, {:ok, data}, socket) do
-    socket.assigns
-    |> Map.get(task)
-    |> AsyncResult.ok(data)
-    |> then(fn result -> {:noreply, assign(socket, task, result)} end)
-  end
-
-  @impl true
-  def handle_async(task, {:exit, reason}, socket) do
-    socket
-    |> put_flash(:error, "Task #{task} failed: #{inspect(reason)}")
-    |> assign(task, %AsyncResult{})
-    |> then(fn socket -> {:noreply, socket} end)
   end
 
   def error_to_string(:too_large), do: "Too large"

@@ -18,7 +18,7 @@ defmodule TwitchStoryWeb.Router do
     live "/", DashboardLive.Home, :new
     live "/request/:id", DashboardLive.Home, :show
     live "/request/channels/:id", DashboardLive.Home, :channels
-    live "/request/channel/:channel/:id", DashboardLive.Home, :channel
+    live "/request/messages/:id", DashboardLive.Messages, :index
   end
 
   if Application.compile_env(:twitch_story, :dev_routes) do
