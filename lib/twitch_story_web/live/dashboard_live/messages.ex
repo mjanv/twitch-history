@@ -4,7 +4,7 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
   use TwitchStoryWeb, :live_view
 
   alias Phoenix.LiveView.AsyncResult
-  alias TwitchStory.Request.SiteHistory.ChatMessages
+  alias TwitchStory.Request.SiteHistory
 
   alias TwitchStoryWeb.DashboardLive.Components
 
@@ -24,27 +24,44 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
     socket
     |> assign(:request_id, request_id)
     |> assign(:file, to_charlist(path_priv(request_id)))
+    |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())
-    |> start_async(:messages, fn -> ChatMessages.read(to_charlist(path_priv(request_id))) end)
+    |> start_async(:raw, fn -> SiteHistory.ChatMessages.read(to_charlist(path_priv(request_id))) end)
   end
 
   def handle_action(socket, _action, _params), do: socket
 
   @impl true
-  def handle_async(:messages, {:ok, response}, socket) do
+  def handle_async(:raw, {:ok, response}, socket) do
     socket =
       socket
-      |> assign(:messages, AsyncResult.ok(socket.assigns.messages, response))
+      |> assign(:raw, AsyncResult.ok(Map.get(socket.assigns, :raw), response))
+      |> assign(
+        :messages,
+        AsyncResult.ok(Map.get(socket.assigns, :messages), Explorer.DataFrame.head(response, 25))
+      )
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("search", %{"query" => _query}, %{assigns: %{messages: messages}} = socket) do
+  def handle_async(:messages, {:ok, response}, socket) do
     socket =
       socket
+      |> assign(:messages, AsyncResult.ok(Map.get(socket.assigns, :messages), response))
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("search", %{"query" => query}, %{assigns: %{raw: raw}} = socket) do
+    socket =
+      socket
+      |> assign(:query, query)
       |> start_async(:messages, fn ->
-        Explorer.DataFrame.shuffle(messages.result)
+        raw.result
+        |> SiteHistory.contains(body: query)
+        |> Explorer.DataFrame.head(25)
       end)
 
     {:noreply, socket}
@@ -55,5 +72,13 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
     |> Application.app_dir("priv/static/uploads")
     |> Path.join(request)
     |> then(fn dest -> dest <> ".zip" end)
+  end
+
+  def enable_toggle(js \\ %JS{}, id) do
+    js
+    |> JS.toggle_class("bg-gray-200", to: id)
+    |> JS.toggle_class("bg-indigo-600", to: id)
+    |> JS.toggle_class("translate-x-5", to: "#{id} > span")
+    |> JS.toggle_class("translate-x-0", to: "#{id} > span")
   end
 end
