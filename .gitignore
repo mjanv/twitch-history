@@ -43,3 +43,6 @@ npm-debug.log
 *.zip
 priv/static/uploads/*
 request/
+
+# Environment files
+.env

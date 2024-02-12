@@ -44,6 +44,7 @@ defmodule TwitchStory.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, ">= 0.0.0"},
       # Backend
+      {:req, "~> 0.4"},
       {:timex, "~> 3.7"},
       {:jason, "~> 1.2"},
       {:explorer, "~> 0.8.0"},

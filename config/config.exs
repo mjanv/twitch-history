@@ -1,5 +1,9 @@
 import Config
 
+config :twitch_story, :twitch_api,
+  client_id: System.get_env("TWITCH_CLIENT_ID"),
+  client_secret: System.get_env("TWITCH_CLIENT_SECRET")
+
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
   generators: [timestamp_type: :utc_datetime]
