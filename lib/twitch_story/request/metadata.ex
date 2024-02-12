@@ -20,8 +20,8 @@ defmodule TwitchStory.Request.Metadata do
           username: username,
           user_id: user_id,
           request_id: request_id,
-          start_time: start_time,
-          end_time: end_time
+          start_time: Timex.parse!(start_time, "{ISO:Extended:Z}"),
+          end_time: Timex.parse!(end_time, "{ISO:Extended:Z}")
         }
     end
   end

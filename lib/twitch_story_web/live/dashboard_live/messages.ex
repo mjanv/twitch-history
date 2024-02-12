@@ -26,7 +26,9 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
     |> assign(:file, to_charlist(path_priv(request_id)))
     |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())
-    |> start_async(:raw, fn -> SiteHistory.ChatMessages.read(to_charlist(path_priv(request_id))) end)
+    |> start_async(:raw, fn ->
+      SiteHistory.ChatMessages.read(to_charlist(path_priv(request_id)))
+    end)
   end
 
   def handle_action(socket, _action, _params), do: socket

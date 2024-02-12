@@ -11,11 +11,11 @@ defmodule TwitchStory.Request.MetadataTest do
     metadata = Metadata.read(@zip)
 
     assert metadata == %Metadata{
-             end_time: "2024-01-06T23:00:00Z",
-             request_id: "MYCoARYOyQp7Kcwajqn3CmIo9PoFOQ8n",
-             start_time: "2019-06-14T22:01:14.843812Z",
              user_id: "441903922",
-             username: "lanfeust313"
+             username: "lanfeust313",
+             request_id: "MYCoARYOyQp7Kcwajqn3CmIo9PoFOQ8n",
+             start_time: ~U[2019-06-14 22:01:14.843812Z],
+             end_time: ~U[2024-01-06 23:00:00Z]
            }
   end
 end

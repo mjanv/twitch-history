@@ -29,10 +29,14 @@ defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
                 <a href="#" class="text-indigo-400">Overview</a>
               </li>
               <li>
-                <.link patch={~p"/request/channels/#{metadata.request_id}"} class="">Channels</.link>
+                <.link patch={~p"/request/channels?id=#{metadata.request_id}"} class="">
+                  Channels
+                </.link>
               </li>
               <li>
-                <.link patch={~p"/request/messages/#{metadata.request_id}"} class="">Messages</.link>
+                <.link patch={~p"/request/messages?id=#{metadata.request_id}"} class="">
+                  Messages
+                </.link>
               </li>
             </ul>
           </nav>
@@ -56,7 +60,10 @@ defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
               </p>
             </div>
             <div class="order-first flex-none rounded-full bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/30 sm:order-none">
-              <%= metadata.start_time %> - <%= metadata.end_time %>
+              <%= Timex.format!(metadata.start_time, "{YYYY}-{MM}-{DD}") %> - <%= Timex.format!(
+                metadata.end_time,
+                "{YYYY}-{MM}-{DD}"
+              ) %>
             </div>
           </div>
         </header>

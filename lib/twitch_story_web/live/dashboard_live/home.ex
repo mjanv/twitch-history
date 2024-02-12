@@ -65,7 +65,9 @@ defmodule TwitchStoryWeb.DashboardLive.Home do
       {:ok, request}
     end)
     |> List.first()
-    |> then(fn request -> {:noreply, push_patch(socket, to: ~p"/request/#{request}")} end)
+    |> then(fn request ->
+      {:noreply, push_patch(socket, to: ~p"/request/overview?id=#{request}")}
+    end)
   end
 
   def error_to_string(:too_large), do: "Too large"
