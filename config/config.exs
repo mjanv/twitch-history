@@ -1,6 +1,8 @@
 import Config
 
 config :twitch_story, :twitch_api,
+  id_api_url: "https://id.twitch.tv",
+  api_url: "https://api.twitch.tv",
   client_id: System.get_env("TWITCH_CLIENT_ID"),
   client_secret: System.get_env("TWITCH_CLIENT_SECRET")
 
