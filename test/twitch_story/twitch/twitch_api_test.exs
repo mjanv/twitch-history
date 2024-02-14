@@ -3,8 +3,13 @@ defmodule TwitchStory.Twitch.ApiTest do
 
   alias TwitchStory.Twitch.Api
 
+  test "find_broadcaster_id/1" do
+    assert Api.find_broadcaster_id("flonflon") == {:ok, 468_884_133}
+    assert Api.find_broadcaster_id("giregejrigjeorig") == {:error, :not_found}
+  end
+
   test "emotes/1" do
-    emotes = Api.emotes(468_884_133)
+    {:ok, emotes} = Api.emotes(468_884_133)
 
     assert length(emotes) == 37
 
@@ -21,7 +26,7 @@ defmodule TwitchStory.Twitch.ApiTest do
   end
 
   test "channel/1" do
-    channel = Api.channel(468_884_133)
+    {:ok, channel} = Api.channel(468_884_133)
 
     assert channel == %{
              "broadcaster_id" => "468884133",
@@ -31,7 +36,7 @@ defmodule TwitchStory.Twitch.ApiTest do
              "description" =>
                "Une chaine qui parle de musique : des émissions d'actu musicale, des playlists thématiques collaboratives, des interviews, des react Star Academy...",
              "tags" => ["Français", "react", "saintvalentin"],
-             "profile_image_url" =>
+             "thumbnail_url" =>
                "https://static-cdn.jtvnw.net/jtv_user_pictures/f60e1ac9-f8fe-41db-b61c-9ffdb81fe982-profile_image-300x300.png"
            }
   end

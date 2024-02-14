@@ -22,7 +22,7 @@ defmodule TwitchStory.Twitch.Channel do
     timestamps(type: :utc_datetime)
   end
 
-  @attrs [
+  @casts [
     :broadcaster_id,
     :broadcaster_login,
     :broadcaster_name,
@@ -33,8 +33,19 @@ defmodule TwitchStory.Twitch.Channel do
     :thumbnail
   ]
 
+  @validations [
+    :broadcaster_id,
+    :broadcaster_login,
+    :broadcaster_name,
+    :broadcaster_language,
+    :description,
+    :tags
+  ]
+
   @doc false
-  def changeset(channel, attrs), do: channel |> cast(attrs, @attrs) |> validate_required(@attrs)
+  def changeset(channel, attrs),
+    do: channel |> cast(attrs, @casts) |> validate_required(@validations)
+
   def change(%__MODULE__{} = channel, attrs \\ %{}), do: __MODULE__.changeset(channel, attrs)
 
   def list, do: Repo.all(__MODULE__)

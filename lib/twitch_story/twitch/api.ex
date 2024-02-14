@@ -27,6 +27,22 @@ defmodule TwitchStory.Twitch.Api do
     end
   end
 
+  def find_broadcaster_id(login) do
+    Req.new(base_url: "https://api.twitch.tv")
+    |> Req.Request.put_headers([
+      {"Authorization", "Bearer #{token()}"},
+      {"Client-Id", @api[:client_id]}
+    ])
+    |> Req.get(url: "/helix/users?login=#{login}")
+    |> case do
+      {:ok, %Req.Response{status: 200, body: %{"data" => [%{"id" => id} | _]}}} ->
+        {:ok, String.to_integer(id)}
+
+      _ ->
+        {:error, :not_found}
+    end
+  end
+
   def emotes(broadcaster_id) do
     Req.new(base_url: @api[:api_url])
     |> Req.Request.put_headers([
@@ -43,10 +59,16 @@ defmodule TwitchStory.Twitch.Api do
       |> Map.put("channel_id", Integer.to_string(broadcaster_id))
       |> Map.take(["id", "name", "emote_set_id", "channel_id", "format", "scale", "theme_mode"])
     end)
+    |> then(fn data -> {:ok, data} end)
   end
 
   def channel(broadcaster_id) do
-    Map.merge(channels(broadcaster_id), users(broadcaster_id))
+    with {:ok, channel} <- channels(broadcaster_id),
+         {:ok, user} <- users(broadcaster_id) do
+      {:ok, Map.merge(channel, user)}
+    else
+      {:error, :not_found} -> {:error, :not_found}
+    end
   end
 
   defp channels(broadcaster_id) do
@@ -58,7 +80,8 @@ defmodule TwitchStory.Twitch.Api do
     |> Req.get(url: "/helix/channels?broadcaster_id=#{broadcaster_id}")
     |> case do
       {:ok, %Req.Response{status: 200, body: %{"data" => [data | _]}}} ->
-        Map.take(data, [
+        data
+        |> Map.take([
           "broadcaster_id",
           "broadcaster_login",
           "broadcaster_name",
@@ -66,9 +89,10 @@ defmodule TwitchStory.Twitch.Api do
           "description",
           "tags"
         ])
+        |> then(fn data -> {:ok, data} end)
 
-      error ->
-        error
+      _ ->
+        {:error, :not_found}
     end
   end
 
@@ -81,10 +105,13 @@ defmodule TwitchStory.Twitch.Api do
     |> Req.get(url: "/helix/users?id=#{broadcaster_id}")
     |> case do
       {:ok, %Req.Response{status: 200, body: %{"data" => [data | _]}}} ->
-        Map.take(data, ["description", "profile_image_url"])
+        data = Map.take(data, ["description", "profile_image_url"])
+        data = Map.put(data, "thumbnail_url", data["profile_image_url"])
+        data = Map.delete(data, "profile_image_url")
+        {:ok, data}
 
-      error ->
-        error
+      _ ->
+        {:error, :not_found}
     end
   end
 end
