@@ -47,6 +47,7 @@ defmodule TwitchStory.MixProject do
       {:req, "~> 0.4"},
       {:timex, "~> 3.7"},
       {:jason, "~> 1.2"},
+      {:oban, "~> 2.16"},
       {:explorer, "~> 0.8.0"},
       {:vega_lite, "~> 0.1.8"},
       # Monitoring

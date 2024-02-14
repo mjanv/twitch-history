@@ -4,6 +4,9 @@ defmodule TwitchStory.Twitch.Channel do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Ecto.Query, warn: false
+
+  alias TwitchStory.Repo
 
   @primary_key {:broadcaster_id, :binary_id, autogenerate: true}
 
@@ -19,34 +22,20 @@ defmodule TwitchStory.Twitch.Channel do
     timestamps(type: :utc_datetime)
   end
 
+  @attrs [
+    :broadcaster_id,
+    :broadcaster_login,
+    :broadcaster_name,
+    :broadcaster_language,
+    :description,
+    :tags,
+    :thumbnail_url,
+    :thumbnail
+  ]
+
   @doc false
-  def changeset(channel, attrs) do
-    channel
-    |> cast(attrs, [
-      :broadcaster_id,
-      :broadcaster_login,
-      :broadcaster_name,
-      :broadcaster_language,
-      :description,
-      :tags,
-      :thumbnail_url,
-      :thumbnail
-    ])
-    |> validate_required([
-      :broadcaster_id,
-      :broadcaster_login,
-      :broadcaster_name,
-      :broadcaster_language,
-      :description,
-      :tags,
-      :thumbnail_url,
-      :thumbnail
-    ])
-  end
-
-  import Ecto.Query, warn: false
-
-  alias TwitchStory.Repo
+  def changeset(channel, attrs), do: channel |> cast(attrs, @attrs) |> validate_required(@attrs)
+  def change(%__MODULE__{} = channel, attrs \\ %{}), do: __MODULE__.changeset(channel, attrs)
 
   def list, do: Repo.all(__MODULE__)
   def get!(id), do: Repo.get!(__MODULE__, id)
@@ -56,5 +45,4 @@ defmodule TwitchStory.Twitch.Channel do
     do: Repo.update(__MODULE__.changeset(channel, attrs))
 
   def delete(%__MODULE__{} = channel), do: Repo.delete(channel)
-  def change(%__MODULE__{} = channel, attrs \\ %{}), do: __MODULE__.changeset(channel, attrs)
 end

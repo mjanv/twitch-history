@@ -30,7 +30,7 @@ defmodule TwitchStory.Twitch.ApiTest do
              "broadcaster_language" => "fr",
              "description" =>
                "Une chaine qui parle de musique : des émissions d'actu musicale, des playlists thématiques collaboratives, des interviews, des react Star Academy...",
-             "tags" => ["Français"],
+             "tags" => ["Français", "react", "saintvalentin"],
              "profile_image_url" =>
                "https://static-cdn.jtvnw.net/jtv_user_pictures/f60e1ac9-f8fe-41db-b61c-9ffdb81fe982-profile_image-300x300.png"
            }

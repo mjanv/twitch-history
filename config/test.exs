@@ -10,6 +10,8 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
   secret_key_base: "oLeeZY7mwEAOCZU+FRLXoJ/Y0mVQZ3LWIhgX3T93AoiQvPctXJIHlFoFrOLMnivg",
   server: false
 
+config :twitch_story, Oban, testing: :inline
+
 config :logger, level: :warning
 
 config :phoenix, :plug_init_mode, :runtime

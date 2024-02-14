@@ -20,6 +20,15 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
   pubsub_server: TwitchStory.PubSub,
   live_view: [signing_salt: "c73B9kuB"]
 
+config :twitch_story, Oban,
+  engine: Oban.Engines.Lite,
+  repo: TwitchStory.Repo,
+  plugins: [
+    {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24}
+  ],
+  queues: [default: 10]
+
 config :esbuild,
   version: "0.17.11",
   default: [
