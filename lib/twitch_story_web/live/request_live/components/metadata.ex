@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
+defmodule TwitchStoryWeb.RequestLive.Components.Metadata do
   @moduledoc false
 
   use TwitchStoryWeb, :live_component
@@ -60,10 +60,7 @@ defmodule TwitchStoryWeb.DashboardLive.Components.Metadata do
               </p>
             </div>
             <div class="order-first flex-none rounded-full bg-indigo-400/10 px-2 py-1 text-xs font-medium text-indigo-400 ring-1 ring-inset ring-indigo-400/30 sm:order-none">
-              <%= Timex.format!(metadata.start_time, "{YYYY}-{MM}-{DD}") %> - <%= Timex.format!(
-                metadata.end_time,
-                "{YYYY}-{MM}-{DD}"
-              ) %>
+              <%= inspect(metadata.start_time) %> - <%= inspect(metadata.end_time) %>
             </div>
           </div>
         </header>

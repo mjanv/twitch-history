@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.DashboardLive.Messages do
+defmodule TwitchStoryWeb.RequestLive.Messages do
   @moduledoc false
 
   use TwitchStoryWeb, :live_view
@@ -6,7 +6,7 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
   alias Phoenix.LiveView.AsyncResult
   alias TwitchStory.Request.SiteHistory
 
-  alias TwitchStoryWeb.DashboardLive.Components
+  alias TwitchStoryWeb.RequestLive.Components
 
   @impl true
   def mount(_params, _session, socket) do
@@ -23,11 +23,11 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
   def handle_action(socket, _action, %{"id" => request_id}) do
     socket
     |> assign(:request_id, request_id)
-    |> assign(:file, to_charlist(path_priv(request_id)))
+    |> assign(:file, to_charlist(TwitchStory.Request.files_folder(request_id)))
     |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())
     |> start_async(:raw, fn ->
-      SiteHistory.ChatMessages.read(to_charlist(path_priv(request_id)))
+      SiteHistory.ChatMessages.read(to_charlist(TwitchStory.Request.files_folder(request_id)))
     end)
   end
 
@@ -67,13 +67,6 @@ defmodule TwitchStoryWeb.DashboardLive.Messages do
       end)
 
     {:noreply, socket}
-  end
-
-  defp path_priv(request) do
-    :twitch_story
-    |> Application.app_dir("priv/static/uploads")
-    |> Path.join(request)
-    |> then(fn dest -> dest <> ".zip" end)
   end
 
   def enable_toggle(js \\ %JS{}, id) do

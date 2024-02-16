@@ -14,7 +14,7 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: TwitchStoryWeb.ErrorHTML, json: TwitchStoryWeb.ErrorJSON],
+    formats: [html: TwitchStoryWeb.Errors.ErrorHTML, json: TwitchStoryWeb.Errors.ErrorJSON],
     layout: false
   ],
   pubsub_server: TwitchStory.PubSub,

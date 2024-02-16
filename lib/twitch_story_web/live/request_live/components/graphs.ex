@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.DashboardLive.Components.Graphs do
+defmodule TwitchStoryWeb.RequestLive.Components.Graphs do
   @moduledoc false
 
   use TwitchStoryWeb, :live_component

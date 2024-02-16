@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.DashboardLive.Components.Channels do
+defmodule TwitchStoryWeb.RequestLive.Components.Channels do
   @moduledoc false
 
   use TwitchStoryWeb, :live_component

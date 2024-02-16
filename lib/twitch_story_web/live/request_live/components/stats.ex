@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.DashboardLive.Components.Stats do
+defmodule TwitchStoryWeb.RequestLive.Components.Stats do
   @moduledoc false
 
   use TwitchStoryWeb, :live_component

@@ -8,18 +8,19 @@ defmodule TwitchStoryWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {TwitchStoryWeb.Layouts, :root}
-    # plug :protect_from_forgery
+    plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
 
   scope "/", TwitchStoryWeb do
     pipe_through :browser
 
-    live "/", DashboardLive.Home, :new
+    live "/", RootLive.Homepage, :index
 
-    live "/request/overview", DashboardLive.Home, :show
-    live "/request/channels", DashboardLive.Home, :channels
-    live "/request/messages", DashboardLive.Messages, :index
+    live "/request/new", RequestLive.Upload, :new
+    live "/request/overview", RequestLive.Request, :overview
+    live "/request/channels", RequestLive.Request, :channels
+    live "/request/messages", RequestLive.Messages, :index
 
     get "/channels", ChannelController, :index
     post "/channels", ChannelController, :create
