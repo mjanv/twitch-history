@@ -4,6 +4,9 @@ defmodule TwitchStory.Accounts.User do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Ecto.Query, warn: false
+
+  alias TwitchStory.Repo
 
   schema "users" do
     field :email, :string
@@ -19,6 +22,53 @@ defmodule TwitchStory.Accounts.User do
     # field :twitch_avatar, :string
 
     timestamps(type: :utc_datetime)
+  end
+
+  @doc """
+  Get or register a user by email
+  """
+  def get_or_register_user(%{email: email} = attrs) do
+    case get_user_by_email(email) do
+      nil -> register_user(attrs)
+      user -> user
+    end
+  end
+
+  @doc """
+  Gets a user by email.
+  """
+  def get_user_by_email(email) when is_binary(email) do
+    Repo.get_by(__MODULE__, email: email)
+  end
+
+  @doc """
+  Gets a user by email and password.
+  """
+  def get_user_by_email_and_password(email, password)
+      when is_binary(email) and is_binary(password) do
+    user = Repo.get_by(__MODULE__, email: email)
+    if valid_password?(user, password), do: user
+  end
+
+  @doc """
+  Gets a single user.
+  """
+  def get_user!(id), do: Repo.get!(__MODULE__, id)
+
+  @doc """
+  Registers a user.
+  """
+  def register_user(attrs) do
+    %__MODULE__{}
+    |> registration_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user changes.
+  """
+  def change_user_registration(%__MODULE__{} = user, attrs \\ %{}) do
+    registration_changeset(user, attrs, hash_password: false, validate_email: false)
   end
 
   @doc """

@@ -18,7 +18,7 @@ defmodule TwitchStoryWeb.AuthController do
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
     %{email: auth.info.email, password: auth.credentials.token}
-    |> TwitchStory.Accounts.find_or_register()
+    |> TwitchStory.Accounts.get_or_register_user()
     |> case do
       {:ok, user} ->
         conn

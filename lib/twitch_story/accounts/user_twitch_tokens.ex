@@ -1,9 +1,9 @@
-defmodule TwitchStory.Accounts.TwitchTokens do
+defmodule TwitchStory.Accounts.UserTwitchTokens do
   @moduledoc false
 
   use Ecto.Schema
 
-  schema "users_tokens" do
+  schema "user_twitch_tokens" do
     field :token, :binary
     field :access_token, :binary
     field :refresh_token, :binary

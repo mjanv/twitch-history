@@ -74,6 +74,7 @@ defmodule TwitchStory.MixProject do
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      env: [fn _ -> Mix.shell().cmd("export $(cat .env)") end],
       deploy: [fn _ -> Mix.shell().cmd("fly deploy") end]
     ]
   end

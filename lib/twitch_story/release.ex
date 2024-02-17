@@ -3,6 +3,7 @@ defmodule TwitchStory.Release do
   Used for executing DB release tasks when run in production without Mix
   installed.
   """
+
   @app :twitch_story
 
   def migrate do
