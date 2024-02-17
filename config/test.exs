@@ -1,5 +1,8 @@
 import Config
 
+# Only in tests, remove the complexity from the password hashing algorithm
+config :bcrypt_elixir, :log_rounds, 1
+
 config :twitch_story, TwitchStory.Repo,
   database: Path.expand("../twitch_story_test.db", Path.dirname(__ENV__.file)),
   pool_size: 5,

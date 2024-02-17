@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.ErrorHTML do
+defmodule TwitchStoryWeb.Errors.ErrorHTML do
   @moduledoc false
 
   use TwitchStoryWeb, :html

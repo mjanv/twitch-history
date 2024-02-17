@@ -128,18 +128,28 @@
             Want to know what did on Twitch since the beginning? Drop your Twitch activity and we will generate a complete graphical retrospective for you.
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href={~p"/request/new"}
-              class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-            >
-              New request
-            </a>
-            <a
-              href="#"
-              class="rounded-md bg-purple-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
-            >
-              Log in <span aria-hidden="true">→</span>
-            </a>
+            <%= if @current_user do %>
+              <.link
+                href={~p"/users/log_out"}
+                method="delete"
+                class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+              >
+                Log out
+              </.link>
+            <% else %>
+              <.link
+                href={~p"/users/register"}
+                class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+              >
+                Register
+              </.link>
+              <.link
+                href={~p"/users/log_in"}
+                class="rounded-md bg-purple-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
+              >
+                Log in <span aria-hidden="true">→</span>
+              </.link>
+            <% end %>
           </div>
         </div>
         <img

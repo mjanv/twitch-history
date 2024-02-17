@@ -43,6 +43,7 @@ defmodule TwitchStory.MixProject do
       {:gettext, "~> 0.20"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, ">= 0.0.0"},
+      {:bcrypt_elixir, "~> 3.0"},
       # Backend
       {:req, "~> 0.4"},
       {:timex, "~> 3.7"},
@@ -50,6 +51,7 @@ defmodule TwitchStory.MixProject do
       {:oban, "~> 2.16"},
       {:explorer, "~> 0.8.0"},
       {:vega_lite, "~> 0.1.8"},
+      {:swoosh, "~> 1.4"},
       # Monitoring
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
