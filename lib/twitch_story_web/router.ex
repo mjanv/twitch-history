@@ -78,6 +78,7 @@ defmodule TwitchStoryWeb.Router do
       pipe_through :browser
 
       live_dashboard "/dashboard", metrics: TwitchStoryWeb.Telemetry
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 end

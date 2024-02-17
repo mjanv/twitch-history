@@ -6,8 +6,12 @@ defmodule TwitchStory.Repo.Migrations.CreateUsersAuthTables do
       add :email, :string, null: false, collate: :nocase
       add :provider, :string, null: false
 
-      add :hashed_password, :string, null: false
-      add :confirmed_at, :naive_datetime
+      add :hashed_password, :string, null: true
+      add :confirmed_at, :naive_datetime, null: true
+
+      add :twitch_id, :string, null: true
+      add :twitch_avatar, :string, null: true
+
       timestamps(type: :utc_datetime)
     end
 
@@ -18,6 +22,7 @@ defmodule TwitchStory.Repo.Migrations.CreateUsersAuthTables do
       add :token, :binary, null: false, size: 32
       add :context, :string, null: false
       add :sent_to, :string
+
       timestamps(updated_at: false)
     end
 

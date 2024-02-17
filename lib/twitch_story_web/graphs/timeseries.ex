@@ -1,4 +1,4 @@
-defmodule TwitchStory.Graphs.Timeseries do
+defmodule TwitchStoryWeb.Graphs.Timeseries do
   @moduledoc false
 
   require VegaLite, as: Vl

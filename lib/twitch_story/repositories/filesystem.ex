@@ -1,7 +1,7 @@
-defmodule TwitchStory.Request do
+defmodule TwitchStory.Repositories.Filesystem do
   @moduledoc false
 
-  def files_folder(request) do
+  def folder(request) do
     :twitch_story
     |> Application.get_env(:files)
     |> case do

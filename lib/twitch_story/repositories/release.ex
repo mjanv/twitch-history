@@ -1,4 +1,4 @@
-defmodule TwitchStory.Release do
+defmodule TwitchStory.Repositories.Release do
   @moduledoc """
   Used for executing DB release tasks when run in production without Mix
   installed.

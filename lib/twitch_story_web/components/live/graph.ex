@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.Components.Live.Graph do
 
   use TwitchStoryWeb, :live_component
 
-  alias TwitchStory.Graphs.Timeseries
+  alias TwitchStoryWeb.Graphs.Timeseries
 
   @impl true
   def update(%{title: title, data: result}, socket) do

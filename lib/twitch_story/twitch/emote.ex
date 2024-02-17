@@ -26,7 +26,6 @@ defmodule TwitchStory.Twitch.Emote do
 
   @attrs [:name, :emote_set_id, :formats, :scales, :themes, :thumbnail_url, :thumbnail]
 
-  @doc false
   def changeset(emote, attrs), do: emote |> cast(attrs, @attrs) |> validate_required(@attrs)
   def change(%__MODULE__{} = emote, attrs \\ %{}), do: __MODULE__.changeset(emote, attrs)
 

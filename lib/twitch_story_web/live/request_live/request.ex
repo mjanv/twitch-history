@@ -14,7 +14,7 @@ defmodule TwitchStoryWeb.RequestLive.Request do
   def handle_params(%{"id" => request_id}, _url, socket) do
     socket
     |> assign(:request_id, request_id)
-    |> assign(:file, to_charlist(TwitchStory.Request.files_folder(request_id)))
+    |> assign(:file, to_charlist(TwitchStory.Respositories.Filesystem.folder(request_id)))
     |> then(fn socket -> {:noreply, socket} end)
   end
 

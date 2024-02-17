@@ -33,7 +33,7 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
   pubsub_server: TwitchStory.PubSub,
   live_view: [signing_salt: "c73B9kuB"]
 
-config :twitch_story, TwitchStory.Mailer, adapter: Swoosh.Adapters.Local
+config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Local
 
 config :twitch_story, Oban,
   engine: Oban.Engines.Lite,

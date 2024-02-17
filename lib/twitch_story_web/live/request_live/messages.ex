@@ -23,11 +23,11 @@ defmodule TwitchStoryWeb.RequestLive.Messages do
   def handle_action(socket, _action, %{"id" => request_id}) do
     socket
     |> assign(:request_id, request_id)
-    |> assign(:file, to_charlist(TwitchStory.Request.files_folder(request_id)))
+    |> assign(:file, to_charlist(TwitchStory.Repositories.Filesystem.folder(request_id)))
     |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())
     |> start_async(:raw, fn ->
-      SiteHistory.ChatMessages.read(to_charlist(TwitchStory.Request.files_folder(request_id)))
+      SiteHistory.ChatMessages.read(to_charlist(TwitchStory.Repositories.Filesystem.folder(request_id)))
     end)
   end
 

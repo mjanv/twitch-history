@@ -18,8 +18,8 @@ defmodule TwitchStory.Accounts.User do
     field :confirmed_at, :naive_datetime
 
     # twitch provider
-    # field :twitch_id, :string
-    # field :twitch_avatar, :string
+    field :twitch_id, :string
+    field :twitch_avatar, :string
 
     timestamps(type: :utc_datetime)
   end

@@ -4,10 +4,9 @@ defmodule TwitchStory.Accounts.UserTwitchTokens do
   use Ecto.Schema
 
   schema "user_twitch_tokens" do
-    field :token, :binary
     field :access_token, :binary
     field :refresh_token, :binary
-    field :scope, {:array, :string}
+    field :scopes, {:array, :string}
 
     belongs_to :user, TwitchStory.Accounts.User
 
