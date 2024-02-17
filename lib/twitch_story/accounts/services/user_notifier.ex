@@ -1,4 +1,4 @@
-defmodule TwitchStory.Accounts.UserNotifier do
+defmodule TwitchStory.Accounts.Services.UserNotifier do
   @moduledoc false
 
   alias TwitchStory.Accounts.User

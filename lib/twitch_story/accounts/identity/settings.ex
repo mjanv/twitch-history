@@ -5,7 +5,8 @@ defmodule TwitchStory.Accounts.Identity.Settings do
 
   import Ecto.Query, warn: false
 
-  alias TwitchStory.Accounts.{User, UserNotifier, UserToken}
+  alias TwitchStory.Accounts.{User, UserToken}
+  alias TwitchStory.Accounts.Services.UserNotifier
   alias TwitchStory.Repo
 
   @doc """

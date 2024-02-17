@@ -19,11 +19,11 @@ defmodule TwitchStoryWeb.AuthController do
         |> put_session(:current_user, user)
         |> configure_session(renew: true)
 
-      {:error, reason} ->
+      {:error, %Ecto.Changeset{errors: [_ | _]}} ->
         conn
-        |> put_flash(:error, reason)
+        |> put_flash(:error, "Error on changeset")
     end
-    |> redirect(to: "/")
+    |> redirect(to: "/account")
   end
 
   def callback(

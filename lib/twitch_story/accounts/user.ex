@@ -27,10 +27,12 @@ defmodule TwitchStory.Accounts.User do
   @doc """
   Get or register a user by email
   """
-  def get_or_register_user(%{email: email} = attrs) do
-    case get_user_by_email(email) do
-      nil -> register_user(attrs)
-      user -> user
+  def get_or_register_user(%{email: email, provider: "twitch"} = attrs) do
+    email
+    |> get_user_by_email()
+    |> case do
+      nil -> register_twitch_user(attrs)
+      user -> {:ok, user}
     end
   end
 
@@ -56,6 +58,22 @@ defmodule TwitchStory.Accounts.User do
   def get_user!(id), do: Repo.get!(__MODULE__, id)
 
   @doc """
+  Registers a Twitch user.
+  """
+  def register_twitch_user(attrs) do
+    %__MODULE__{}
+    |> registration_twitch_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def registration_twitch_changeset(user, attrs, _opts \\ []) do
+    user
+    |> cast(attrs, [:email, :twitch_id, :twitch_avatar])
+    |> validate_required([:email])
+  end
+
+
+  @doc """
   Registers a user.
   """
   def register_user(attrs) do
@@ -73,11 +91,6 @@ defmodule TwitchStory.Accounts.User do
 
   @doc """
   A user changeset for registration.
-
-  It is important to validate the length of both email and password.
-  Otherwise databases may truncate the email without warnings, which
-  could lead to unpredictable or insecure behaviour. Long passwords may
-  also be very expensive to hash for certain algorithms.
 
   ## Options
 
@@ -97,13 +110,13 @@ defmodule TwitchStory.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
     |> validate_email(opts)
     |> validate_password(opts)
   end
 
   defp validate_email(changeset, opts) do
     changeset
-    |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> maybe_validate_unique_email(opts)
@@ -111,7 +124,6 @@ defmodule TwitchStory.Accounts.User do
 
   defp validate_password(changeset, opts) do
     changeset
-    |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")

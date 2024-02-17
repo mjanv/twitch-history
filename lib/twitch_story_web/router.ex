@@ -50,6 +50,7 @@ defmodule TwitchStoryWeb.Router do
     live_session :current_user,
       on_mount: [{TwitchStoryWeb.UserAuth, :mount_current_user}] do
       live "/", RootLive.Homepage, :index
+      live "/account", RootLive.Account, :index
 
       live "/request/new", RequestLive.Upload, :new
       live "/request/overview", RequestLive.Request, :overview

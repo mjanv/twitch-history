@@ -5,7 +5,8 @@ defmodule TwitchStory.Accounts.Identity.ResetPassword do
 
   alias TwitchStory.Repo
 
-  alias TwitchStory.Accounts.{User, UserNotifier, UserToken}
+  alias TwitchStory.Accounts.{User, UserToken}
+  alias TwitchStory.Accounts.Services.UserNotifier
 
   @doc ~S"""
   Delivers the reset password email to the given user.
