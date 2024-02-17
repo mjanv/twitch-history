@@ -14,6 +14,7 @@ defmodule TwitchStoryWeb.Router do
     plug :put_secure_browser_headers
     plug :fetch_current_user
 
+    # plug SetLocale, gettext: TwitchStoryWeb.Gettext, default_locale: "fr"
     plug Ueberauth
   end
 

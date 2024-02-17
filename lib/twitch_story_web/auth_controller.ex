@@ -8,18 +8,7 @@ defmodule TwitchStoryWeb.AuthController do
   alias TwitchStory.Accounts
   alias TwitchStory.Accounts.Twitch
 
-  # def callback(
-  #       %{assigns: %{
-  #         ueberauth_auth: auth,
-  #         ueberauth_failure: %Ueberauth.Failure{errors: [error | _]}}} = conn,
-  #       _params
-  #     ) do
-  #   conn
-  #   |> put_flash(:error, error.message)
-  #   |> redirect(to: "/")
-  # end
-
-  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
+  def callback(%{assigns: %{ueberauth_auth: %Ueberauth.Auth{} = auth}} = conn, _params) do
     auth
     |> Twitch.OAuth.user_params()
     |> Accounts.get_or_register_user()
@@ -34,6 +23,19 @@ defmodule TwitchStoryWeb.AuthController do
         conn
         |> put_flash(:error, reason)
     end
+    |> redirect(to: "/")
+  end
+
+  def callback(
+        %{
+          assigns: %{
+            ueberauth_failure: %Ueberauth.Failure{errors: [error | _]}
+          }
+        } = conn,
+        _params
+      ) do
+    conn
+    |> put_flash(:error, error.message)
     |> redirect(to: "/")
   end
 end

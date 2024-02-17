@@ -4,8 +4,9 @@ defmodule TwitchStoryWeb.RequestLive.Messages do
   use TwitchStoryWeb, :live_view
 
   alias Phoenix.LiveView.AsyncResult
-  alias TwitchStory.Request.SiteHistory
 
+  alias TwitchStory.Repositories.Filesystem
+  alias TwitchStory.Request.SiteHistory
   alias TwitchStoryWeb.RequestLive.Components
 
   @impl true
@@ -23,11 +24,11 @@ defmodule TwitchStoryWeb.RequestLive.Messages do
   def handle_action(socket, _action, %{"id" => request_id}) do
     socket
     |> assign(:request_id, request_id)
-    |> assign(:file, to_charlist(TwitchStory.Repositories.Filesystem.folder(request_id)))
+    |> assign(:file, to_charlist(Filesystem.folder(request_id)))
     |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())
     |> start_async(:raw, fn ->
-      SiteHistory.ChatMessages.read(to_charlist(TwitchStory.Repositories.Filesystem.folder(request_id)))
+      SiteHistory.ChatMessages.read(to_charlist(Filesystem.folder(request_id)))
     end)
   end
 

@@ -3,6 +3,7 @@ defmodule TwitchStoryWeb.RequestLive.Upload do
 
   use TwitchStoryWeb, :live_view
 
+  alias TwitchStory.Repositories.Filesystem
   alias TwitchStory.Request.Metadata
 
   @impl true
@@ -27,7 +28,7 @@ defmodule TwitchStoryWeb.RequestLive.Upload do
     socket
     |> consume_uploaded_entries(:request, fn %{path: path}, _entry ->
       request = Metadata.read(to_charlist(path)).request_id
-      :ok = File.cp!(path, TwitchStory.Respositories.Filesystem.folder(request))
+      :ok = File.cp!(path, Filesystem.folder(request))
       {:ok, request}
     end)
     |> List.first()

@@ -5,7 +5,7 @@ defmodule TwitchStory.Notifications.Mailer do
 
   import Swoosh.Email
 
-  def deliver(recipient, subject, body) do
+  def deliver_email(recipient, subject, body) do
     new()
     |> to(recipient)
     |> from({"TwitchStory", "contact@example.com"})

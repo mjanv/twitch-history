@@ -26,8 +26,7 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
     ]
   ]
 
-config :twitch_story, TwitchStory.Notifications.Mailer,
-  adapter: Swoosh.Adapters.Local
+config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Local
 
 config :twitch_story, dev_routes: true
 

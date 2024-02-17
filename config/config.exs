@@ -70,4 +70,8 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
+config :twitch_story, TwitchStoryWeb.Gettext,
+  locales: ~w(en fr),
+  default_locale: "en"
+
 import_config "#{config_env()}.exs"

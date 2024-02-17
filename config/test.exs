@@ -12,8 +12,7 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
   secret_key_base: "oLeeZY7mwEAOCZU+FRLXoJ/Y0mVQZ3LWIhgX3T93AoiQvPctXJIHlFoFrOLMnivg",
   server: false
 
-config :twitch_story, TwitchStory.Notifications.Mailer,
-  adapter: Swoosh.Adapters.Test
+config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Test
 
 config :twitch_story, Oban, testing: :inline
 

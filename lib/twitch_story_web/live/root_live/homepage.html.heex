@@ -124,7 +124,7 @@
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-3xl text-center">
           <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-            A simple complete Twitch retrospective
+            <%= gettext("A simple complete Twitch retrospective") %>
           </h1>
           <p class="mt-6 text-lg leading-8 text-gray-300">
             Want to know what did on Twitch since the beginning? Connect with you Twitch account and we will create the most appropriate retrospective for you.
@@ -140,22 +140,10 @@
               </.link>
             <% else %>
               <.link
-                href={~p"/users/register"}
-                class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-              >
-                Register
-              </.link>
-              <.link
                 href={~p"/auth/twitch"}
-                class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                class="rounded-md bg-purple-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
               >
-                Twitch
-              </.link>
-              <.link
-                href={~p"/users/log_in"}
-                class="rounded-md bg-purple-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
-              >
-                Log in <span aria-hidden="true">→</span>
+                Connect with your Twitch account <span aria-hidden="true">→</span>
               </.link>
             <% end %>
           </div>

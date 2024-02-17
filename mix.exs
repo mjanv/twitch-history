@@ -19,7 +19,7 @@ defmodule TwitchStory.MixProject do
   def application do
     [
       mod: {TwitchStory.Application, []},
-      extra_applications: [:logger, :runtime_tools, :os_mon]
+      extra_applications: [:logger, :runtime_tools, :os_mon, :set_locale]
     ]
   end
 
@@ -46,6 +46,7 @@ defmodule TwitchStory.MixProject do
       {:bcrypt_elixir, "~> 3.0"},
       {:ueberauth, "~> 0.10.7"},
       {:ueberauth_twitch, "~> 0.1.0"},
+      {:set_locale, "~> 0.2.1"},
       # Backend
       {:req, "~> 0.4.9"},
       {:timex, "~> 3.7"},
@@ -75,7 +76,12 @@ defmodule TwitchStory.MixProject do
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
       env: [fn _ -> Mix.shell().cmd("export $(cat .env)") end],
-      deploy: [fn _ -> Mix.shell().cmd("fly deploy") end]
+      deploy: [fn _ -> Mix.shell().cmd("fly deploy") end],
+      translate: [
+        "gettext.extract",
+        "gettext.merge priv/gettext --locale en",
+        "gettext.merge priv/gettext --locale fr"
+      ]
     ]
   end
 end
