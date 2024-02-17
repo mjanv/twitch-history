@@ -12,11 +12,11 @@ defmodule TwitchStory.Repo.Migrations.CreateEmotes do
       add :thumbnail_url, :string
       add :thumbnail, :binary
 
-      add :channel_id, references(:channels, on_delete: :nothing)
+      # add :channel_id, references(:channels, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:emotes, [:channel_id])
+    # create index(:emotes, [:channel_id])
   end
 end

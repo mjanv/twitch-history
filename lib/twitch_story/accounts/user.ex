@@ -7,9 +7,16 @@ defmodule TwitchStory.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :provider, :string, default: "identity"
+
+    # identity provider
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+
+    # twitch provider
+    # field :twitch_id, :string
+    # field :twitch_avatar, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -56,7 +63,6 @@ defmodule TwitchStory.Accounts.User do
     changeset
     |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
-    # Examples of additional password validation:
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
@@ -69,10 +75,7 @@ defmodule TwitchStory.Accounts.User do
 
     if hash_password? && password && changeset.valid? do
       changeset
-      # If using Bcrypt, then further validate it is at most 72 bytes long
       |> validate_length(:password, max: 72, count: :bytes)
-      # Hashing could be done with `Ecto.Changeset.prepare_changes/2`, but that
-      # would keep the database transaction open longer and hurt performance.
       |> put_change(:hashed_password, Bcrypt.hash_pwd_salt(password))
       |> delete_change(:password)
     else
@@ -128,8 +131,9 @@ defmodule TwitchStory.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    change(user, confirmed_at: now)
+    NaiveDateTime.utc_now()
+    |> NaiveDateTime.truncate(:second)
+    |> then(fn now -> change(user, confirmed_at: now) end)
   end
 
   @doc """

@@ -13,6 +13,8 @@ defmodule TwitchStoryWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+
+    plug Ueberauth
   end
 
   scope "/", TwitchStoryWeb do
@@ -60,6 +62,13 @@ defmodule TwitchStoryWeb.Router do
       live "/users/confirm/:token", UserLive.ConfirmationLive, :edit
       live "/users/confirm", UserLive.ConfirmationInstructionsLive, :new
     end
+  end
+
+  scope "/auth", TwitchStoryWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
   end
 
   if Application.compile_env(:twitch_story, :dev_routes) do

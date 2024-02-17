@@ -4,6 +4,8 @@ defmodule TwitchStory.Repo.Migrations.CreateUsersAuthTables do
   def change do
     create table(:users) do
       add :email, :string, null: false, collate: :nocase
+      add :provider, :string, null: false
+
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
       timestamps(type: :utc_datetime)

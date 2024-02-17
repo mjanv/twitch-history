@@ -6,6 +6,19 @@ config :twitch_story, :twitch_api,
   client_id: System.get_env("TWITCH_CLIENT_ID"),
   client_secret: System.get_env("TWITCH_CLIENT_SECRET")
 
+config :ueberauth, Ueberauth,
+  providers: [
+    twitch: {
+      Ueberauth.Strategy.Twitch,
+      [default_scope: "user:read:email", ignores_csrf_attack: true]
+    }
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
+  client_id: System.get_env("TWITCH_CLIENT_ID"),
+  client_secret: System.get_env("TWITCH_CLIENT_SECRET"),
+  redirect_uri: System.get_env("TWITCH_REDIRECT_URI")
+
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
   generators: [timestamp_type: :utc_datetime]

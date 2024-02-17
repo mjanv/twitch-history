@@ -44,8 +44,10 @@ defmodule TwitchStory.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, ">= 0.0.0"},
       {:bcrypt_elixir, "~> 3.0"},
+      {:ueberauth, "~> 0.10.7"},
+      {:ueberauth_twitch, "~> 0.1.0"},
       # Backend
-      {:req, "~> 0.4"},
+      {:req, "~> 0.4.9"},
       {:timex, "~> 3.7"},
       {:jason, "~> 1.2"},
       {:oban, "~> 2.16"},

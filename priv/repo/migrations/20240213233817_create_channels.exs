@@ -7,6 +7,7 @@ defmodule TwitchStory.Repo.Migrations.CreateChannels do
       add :broadcaster_login, :string
       add :broadcaster_name, :string
       add :broadcaster_language, :string
+
       add :description, :string
       add :tags, {:array, :string}
       add :thumbnail_url, :string

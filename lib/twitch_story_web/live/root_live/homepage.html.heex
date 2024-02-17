@@ -34,7 +34,9 @@
         </button>
       </div>
       <div class="hidden lg:flex lg:gap-x-12">
-        <a href="#" class="text-sm font-semibold leading-6 text-white">Product</a>
+        <a href="#" class="text-sm font-semibold leading-6 text-white">
+          <%= inspect(@current_user) %>
+        </a>
       </div>
     </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->
@@ -118,14 +120,14 @@
       >
       </div>
     </div>
-    <div class="py-24 sm:py-32 lg:pb-40">
+    <div class="py-12 sm:py-18 lg:pb-40">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center">
+        <div class="mx-auto max-w-3xl text-center">
           <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
             A simple complete Twitch retrospective
           </h1>
           <p class="mt-6 text-lg leading-8 text-gray-300">
-            Want to know what did on Twitch since the beginning? Drop your Twitch activity and we will generate a complete graphical retrospective for you.
+            Want to know what did on Twitch since the beginning? Connect with you Twitch account and we will create the most appropriate retrospective for you.
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <%= if @current_user do %>
@@ -142,6 +144,12 @@
                 class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
               >
                 Register
+              </.link>
+              <.link
+                href={~p"/auth/twitch"}
+                class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+              >
+                Twitch
               </.link>
               <.link
                 href={~p"/users/log_in"}

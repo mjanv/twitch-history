@@ -13,12 +13,13 @@ defmodule TwitchStory.Twitch.Emote do
   schema "emotes" do
     field :name, :string
     field :emote_set_id, :string
-    field :channel_id, :id
     field :formats, {:array, :string}
     field :scales, {:array, :string}
     field :themes, {:array, :string}
     field :thumbnail_url, :string
     field :thumbnail, :binary
+
+    # belongs_to :channel, TwitchStory.Twitch.Channel, references: :broadcaster_id
 
     timestamps(type: :utc_datetime)
   end
