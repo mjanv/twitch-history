@@ -1,12 +1,9 @@
 defmodule TwitchStory.Accounts.Identity.Confirmation do
-  @moduledoc """
-  Confirmation usecase
-  """
+  @moduledoc false
 
-  alias TwitchStory.Repo
-
-  alias TwitchStory.Accounts.{User, UserToken}
   alias TwitchStory.Accounts.Services.UserNotifier
+  alias TwitchStory.Accounts.{User, UserToken}
+  alias TwitchStory.Repo
 
   @doc ~S"""
   Delivers the confirmation email instructions to the given user.
@@ -15,18 +12,14 @@ defmodule TwitchStory.Accounts.Identity.Confirmation do
 
       iex> deliver_user_confirmation_instructions(user, &url(~p"/users/confirm/#{&1}"))
       {:ok, %{to: ..., body: ...}}
-
-      iex> deliver_user_confirmation_instructions(confirmed_user, &url(~p"/users/confirm/#{&1}"))
       {:error, :already_confirmed}
-
   """
   def deliver_user_confirmation_instructions(%User{} = user, confirmation_url_fun)
       when is_function(confirmation_url_fun, 1) do
     if user.confirmed_at do
       {:error, :already_confirmed}
     else
-      {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")
-      Repo.insert!(user_token)
+      {:ok, encoded_token} = UserToken.build_email_token(user, "confirm")
       UserNotifier.deliver_confirmation_instructions(user, confirmation_url_fun.(encoded_token))
     end
   end
@@ -38,8 +31,7 @@ defmodule TwitchStory.Accounts.Identity.Confirmation do
   and the token is deleted.
   """
   def confirm_user(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "confirm"),
-         %User{} = user <- Repo.one(query),
+    with %User{} = user <- UserToken.verify_email_token_query(token, "confirm"),
          {:ok, %{user: user}} <- Repo.transaction(confirm_user_multi(user)) do
       {:ok, user}
     else

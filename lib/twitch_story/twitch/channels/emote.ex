@@ -1,4 +1,4 @@
-defmodule TwitchStory.Twitch.Emote do
+defmodule TwitchStory.Twitch.Channels.Emote do
   @moduledoc false
 
   use Ecto.Schema
@@ -19,7 +19,7 @@ defmodule TwitchStory.Twitch.Emote do
     field :thumbnail_url, :string
     field :thumbnail, :binary
 
-    # belongs_to :channel, TwitchStory.Twitch.Channel, references: :broadcaster_id
+    # belongs_to :channel, TwitchStory.Twitch.Channels.Channel, references: :broadcaster_id
 
     timestamps(type: :utc_datetime)
   end

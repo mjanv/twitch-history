@@ -10,7 +10,10 @@ config :ueberauth, Ueberauth,
   providers: [
     twitch: {
       Ueberauth.Strategy.Twitch,
-      [default_scope: "user:read:email", ignores_csrf_attack: true]
+      [
+        default_scope: "user:read:email user:read:follows user:read:subscriptions",
+        ignores_csrf_attack: true
+      ]
     }
   ]
 

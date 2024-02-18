@@ -16,4 +16,8 @@ defmodule TwitchStory.Repo.Migrations.CreateChannels do
       timestamps(type: :utc_datetime)
     end
   end
+
+  def down do
+    drop table(:channels)
+  end
 end

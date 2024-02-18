@@ -1,15 +1,15 @@
-defmodule TwitchStory.Twitch.ApiTest do
+defmodule TwitchStory.Twitch.Api.ChannelApiTest do
   use ExUnit.Case
 
-  alias TwitchStory.Twitch.Api
+  alias TwitchStory.Twitch.Api.ChannelApi
 
-  test "find_broadcaster_id/1" do
-    assert Api.find_broadcaster_id("flonflon") == {:ok, 468_884_133}
-    assert Api.find_broadcaster_id("giregejrigjeorig") == {:error, :not_found}
+  test "reverse_search/1" do
+    assert ChannelApi.reverse_search("flonflon") == {:ok, 468_884_133}
+    assert ChannelApi.reverse_search("giregejrigjeorig") == {:error, :not_found}
   end
 
   test "emotes/1" do
-    {:ok, emotes} = Api.emotes(468_884_133)
+    {:ok, emotes} = ChannelApi.emotes(468_884_133)
 
     assert length(emotes) == 37
 
@@ -26,7 +26,7 @@ defmodule TwitchStory.Twitch.ApiTest do
   end
 
   test "channel/1" do
-    {:ok, channel} = Api.channel(468_884_133)
+    {:ok, channel} = ChannelApi.channel(468_884_133)
 
     assert channel == %{
              "broadcaster_id" => "468884133",

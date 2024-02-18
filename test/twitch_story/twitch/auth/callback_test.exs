@@ -1,9 +1,9 @@
-defmodule TwitchStory.Accounts.Twitch.OAuthTest do
+defmodule TwitchStory.Twitch.Auth.CallbackTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias TwitchStory.Accounts.Twitch.OAuth
+  alias TwitchStory.Twitch.Auth.Callback
 
   @ueberauth_auth %Ueberauth.Auth{
     uid: "441903922",
@@ -65,9 +65,9 @@ defmodule TwitchStory.Accounts.Twitch.OAuthTest do
   }
 
   test "Callback success can be converted to user parameters" do
-    params = OAuth.user_params(@ueberauth_auth)
+    attrs = Callback.user_attrs(@ueberauth_auth)
 
-    assert params == %{
+    assert attrs == %{
              email: "lanfeust_313@hotmail.com",
              provider: "twitch",
              twitch_id: "441903922",
@@ -77,9 +77,9 @@ defmodule TwitchStory.Accounts.Twitch.OAuthTest do
   end
 
   test "Callback success can be converted to user Twitch tokens parameters" do
-    params = OAuth.user_tokens_params(@ueberauth_auth)
+    attrs = Callback.oauth_token_attrs(@ueberauth_auth)
 
-    assert params == %{
+    assert attrs == %{
              user_id: "441903922",
              access_token: "hzt0dmrje10l31yaalswp73laauqd5",
              refresh_token: "qcvjs5l6efp22lzvhowzlwmlvbi76lnoxn2pze8yv7i18om724",

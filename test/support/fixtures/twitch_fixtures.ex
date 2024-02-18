@@ -4,7 +4,7 @@ defmodule TwitchStory.TwitchFixtures do
   entities via the `TwitchStory.Twitch` context.
   """
 
-  alias TwitchStory.Twitch
+  alias TwitchStory.Twitch.Channels
 
   @doc """
   Generate a channel.
@@ -21,7 +21,7 @@ defmodule TwitchStory.TwitchFixtures do
       thumbnail: "some thumbnail",
       thumbnail_url: "some thumbnail_url"
     })
-    |> Twitch.Channel.create()
+    |> Channels.Channel.create()
     |> then(fn {:ok, channel} -> channel end)
   end
 
@@ -40,7 +40,7 @@ defmodule TwitchStory.TwitchFixtures do
       thumbnail: "some thumbnail",
       thumbnail_url: "some thumbnail_url"
     })
-    |> Twitch.Emote.create()
+    |> Channels.Emote.create()
     |> then(fn {:ok, emote} -> emote end)
   end
 end

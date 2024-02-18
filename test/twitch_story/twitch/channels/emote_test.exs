@@ -1,9 +1,9 @@
-defmodule TwitchStory.TwitchTest do
+defmodule TwitchStory.Twitch.Channels.EmoteTest do
   @moduledoc false
 
   use TwitchStory.DataCase
 
-  alias TwitchStory.Twitch.Emote
+  alias TwitchStory.Twitch.Channels.Emote
 
   import TwitchStory.TwitchFixtures
 

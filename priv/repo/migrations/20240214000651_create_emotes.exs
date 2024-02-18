@@ -19,4 +19,8 @@ defmodule TwitchStory.Repo.Migrations.CreateEmotes do
 
     # create index(:emotes, [:channel_id])
   end
+
+  def down do
+    drop table(:emotes)
+  end
 end

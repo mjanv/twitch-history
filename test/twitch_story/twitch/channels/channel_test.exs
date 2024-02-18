@@ -1,9 +1,9 @@
-defmodule TwitchStory.Twitch.ChannelTest do
+defmodule TwitchStory.Twitch.Channels.ChannelTest do
   @moduledoc false
 
   use TwitchStory.DataCase
 
-  alias TwitchStory.Twitch.Channel
+  alias TwitchStory.Twitch.Channels.Channel
 
   import TwitchStory.TwitchFixtures
 

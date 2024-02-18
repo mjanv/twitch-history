@@ -11,6 +11,7 @@ defmodule TwitchStory.MixProject do
       elixirc_options: [warnings_as_errors: true],
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      compilers: [] ++ Mix.compilers(),
       aliases: aliases(),
       deps: deps()
     ]
@@ -60,7 +61,8 @@ defmodule TwitchStory.MixProject do
       {:telemetry_poller, "~> 1.0"},
       # Development tools
       {:credo, "~> 1.7"},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:boundary, "~> 0.10", runtime: false}
     ]
   end
 
@@ -69,7 +71,7 @@ defmodule TwitchStory.MixProject do
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      quality: ["format", "credo --strict"],
+      quality: ["format", "credo --strict", "dialyzer"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       start: ["phx.server"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],

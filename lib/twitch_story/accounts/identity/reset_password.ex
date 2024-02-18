@@ -1,12 +1,9 @@
 defmodule TwitchStory.Accounts.Identity.ResetPassword do
-  @moduledoc """
-  Reset password usecase
-  """
+  @moduledoc false
 
-  alias TwitchStory.Repo
-
-  alias TwitchStory.Accounts.{User, UserToken}
   alias TwitchStory.Accounts.Services.UserNotifier
+  alias TwitchStory.Accounts.{User, UserToken}
+  alias TwitchStory.Repo
 
   @doc ~S"""
   Delivers the reset password email to the given user.
@@ -19,30 +16,13 @@ defmodule TwitchStory.Accounts.Identity.ResetPassword do
   """
   def deliver_user_reset_password_instructions(%User{} = user, reset_password_url_fun)
       when is_function(reset_password_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
-    Repo.insert!(user_token)
+    {:ok, encoded_token} = UserToken.build_email_token(user, "reset_password")
     UserNotifier.deliver_reset_password_instructions(user, reset_password_url_fun.(encoded_token))
   end
 
-  @doc """
-  Gets the user by reset password token.
-
-  ## Examples
-
-      iex> get_user_by_reset_password_token("validtoken")
-      %User{}
-
-      iex> get_user_by_reset_password_token("invalidtoken")
-      nil
-
-  """
+  @doc "Gets the user by reset password token."
   def get_user_by_reset_password_token(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "reset_password"),
-         %User{} = user <- Repo.one(query) do
-      user
-    else
-      _ -> nil
-    end
+    UserToken.verify_email_token_query(token, "reset_password")
   end
 
   @doc """

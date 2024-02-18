@@ -5,8 +5,8 @@ defmodule TwitchStory.Accounts.Identity.Settings do
 
   import Ecto.Query, warn: false
 
-  alias TwitchStory.Accounts.{User, UserToken}
   alias TwitchStory.Accounts.Services.UserNotifier
+  alias TwitchStory.Accounts.{User, UserToken}
   alias TwitchStory.Repo
 
   @doc """
@@ -51,8 +51,7 @@ defmodule TwitchStory.Accounts.Identity.Settings do
   def update_user_email(user, token) do
     context = "change:#{user.email}"
 
-    with {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
-         %UserToken{sent_to: email} <- Repo.one(query),
+    with %UserToken{sent_to: email} <- UserToken.verify_change_email_token_query(token, context),
          {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)) do
       :ok
     else
@@ -82,9 +81,7 @@ defmodule TwitchStory.Accounts.Identity.Settings do
   """
   def deliver_user_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
-
-    Repo.insert!(user_token)
+    {:ok, encoded_token} = UserToken.build_email_token(user, "change:#{current_email}")
     UserNotifier.deliver_update_email_instructions(user, update_email_url_fun.(encoded_token))
   end
 

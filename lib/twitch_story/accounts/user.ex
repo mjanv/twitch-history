@@ -20,13 +20,12 @@ defmodule TwitchStory.Accounts.User do
     # twitch provider
     field :twitch_id, :string
     field :twitch_avatar, :string
+    has_one :twitch_token, TwitchStory.Twitch.Auth.OauthToken
 
     timestamps(type: :utc_datetime)
   end
 
-  @doc """
-  Get or register a user by email
-  """
+  @doc "Get or register a user by email"
   def get_or_register_user(%{email: email, provider: "twitch"} = attrs) do
     email
     |> get_user_by_email()
@@ -36,55 +35,48 @@ defmodule TwitchStory.Accounts.User do
     end
   end
 
-  @doc """
-  Gets a user by email.
-  """
+  @doc "Gets a user by email."
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(__MODULE__, email: email)
   end
 
-  @doc """
-  Gets a user by email and password.
-  """
+  @doc "Gets a user by email and password."
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
     user = Repo.get_by(__MODULE__, email: email)
     if valid_password?(user, password), do: user
   end
 
-  @doc """
-  Gets a single user.
-  """
+  @doc "Gets a user by Twitch ID."
+  def get_user_by_twitch_id(twitch_id) do
+    Repo.get_by(__MODULE__, twitch_id: twitch_id)
+  end
+
+  @doc "Gets a single user."
   def get_user!(id), do: Repo.get!(__MODULE__, id)
 
-  @doc """
-  Registers a Twitch user.
-  """
+  @doc "Registers a Twitch user."
   def register_twitch_user(attrs) do
     %__MODULE__{}
     |> registration_twitch_changeset(attrs)
     |> Repo.insert()
   end
 
+  @doc "Registration Twitch changeset"
   def registration_twitch_changeset(user, attrs, _opts \\ []) do
     user
     |> cast(attrs, [:email, :twitch_id, :twitch_avatar])
     |> validate_required([:email])
   end
 
-
-  @doc """
-  Registers a user.
-  """
+  @doc "Registers a user."
   def register_user(attrs) do
     %__MODULE__{}
     |> registration_changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-  """
+  @doc "Returns an `%Ecto.Changeset{}` for tracking user changes."
   def change_user_registration(%__MODULE__{} = user, attrs \\ %{}) do
     registration_changeset(user, attrs, hash_password: false, validate_email: false)
   end
@@ -110,13 +102,13 @@ defmodule TwitchStory.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
-    |> validate_required([:email, :password])
     |> validate_email(opts)
     |> validate_password(opts)
   end
 
   defp validate_email(changeset, opts) do
     changeset
+    |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> maybe_validate_unique_email(opts)
@@ -124,6 +116,7 @@ defmodule TwitchStory.Accounts.User do
 
   defp validate_password(changeset, opts) do
     changeset
+    |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")

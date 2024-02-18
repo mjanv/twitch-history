@@ -1,4 +1,4 @@
-defmodule TwitchStory.Twitch.Channel do
+defmodule TwitchStory.Twitch.Channels.Channel do
   @moduledoc false
 
   use Ecto.Schema

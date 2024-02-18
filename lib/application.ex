@@ -2,6 +2,7 @@ defmodule TwitchStory.Application do
   @moduledoc false
 
   use Application
+  use Boundary, top_level?: true, deps: [TwitchStory, TwitchStoryWeb]
 
   @impl true
   def start(_type, _args) do

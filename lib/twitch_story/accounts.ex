@@ -7,15 +7,16 @@ defmodule TwitchStory.Accounts do
 
   ## User
   defdelegate get_or_register_user(attrs), to: User
-
-  ## User lookup
   defdelegate get_user_by_email(email), to: User
   defdelegate get_user_by_email_and_password(email, password), to: User
   defdelegate get_user!(id), to: User
-
-  ## User registration
   defdelegate register_user(attrs), to: User
   defdelegate change_user_registration(user, attrs \\ %{}), to: User
+
+  ## Session
+  defdelegate generate_user_session_token(user), to: TwitchStory.Accounts.UserToken
+  defdelegate get_user_by_session_token(token), to: TwitchStory.Accounts.UserToken
+  defdelegate delete_user_session_token(token), to: TwitchStory.Accounts.UserToken
 
   ## Settings
   defdelegate change_user_email(user, attrs \\ %{}), to: Identity.Settings
@@ -27,11 +28,6 @@ defmodule TwitchStory.Accounts do
 
   defdelegate change_user_password(user, attrs \\ %{}), to: Identity.Settings
   defdelegate update_user_password(user, password, attrs), to: Identity.Settings
-
-  ## Session
-  defdelegate generate_user_session_token(user), to: Identity.Session
-  defdelegate get_user_by_session_token(token), to: Identity.Session
-  defdelegate delete_user_session_token(token), to: Identity.Session
 
   ## Confirmation
   defdelegate deliver_user_confirmation_instructions(user, confirmation_url_fun),
