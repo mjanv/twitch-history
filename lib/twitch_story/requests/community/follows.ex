@@ -1,7 +1,7 @@
-defmodule TwitchStory.Request.Community.Follows do
+defmodule TwitchStory.Requests.Community.Follows do
   @moduledoc false
 
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.Zipfile
 
   require Explorer.DataFrame, as: DataFrame
 

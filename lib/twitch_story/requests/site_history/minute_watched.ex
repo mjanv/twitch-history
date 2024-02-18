@@ -1,9 +1,9 @@
-defmodule TwitchStory.Request.SiteHistory.MinuteWatched do
+defmodule TwitchStory.Requests.SiteHistory.MinuteWatched do
   @moduledoc false
 
   alias Explorer.Series
-  alias TwitchStory.Request.SiteHistory
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.SiteHistory
+  alias TwitchStory.Requests.Zipfile
 
   require Explorer.DataFrame, as: DataFrame
 

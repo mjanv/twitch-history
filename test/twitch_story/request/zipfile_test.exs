@@ -1,9 +1,9 @@
-defmodule TwitchStory.Request.ZipfileTest do
+defmodule TwitchStory.Requests.ZipfileTest do
   @moduledoc false
 
   use ExUnit.Case
 
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.Zipfile
 
   @path ~c"priv/static/request-1.zip"
 

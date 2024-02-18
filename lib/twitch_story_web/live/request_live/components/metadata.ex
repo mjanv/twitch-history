@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.RequestLive.Components.Metadata do
 
   use TwitchStoryWeb, :live_component
 
-  alias TwitchStory.Request.Metadata
+  alias TwitchStory.Requests.Metadata
 
   def update(%{file: file, title: title}, socket) do
     socket

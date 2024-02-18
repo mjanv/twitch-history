@@ -1,9 +1,9 @@
-defmodule TwitchStory.Request.SiteHistory.ChatMessages do
+defmodule TwitchStory.Requests.SiteHistory.ChatMessages do
   @moduledoc false
 
   alias Explorer.Series
-  alias TwitchStory.Request.SiteHistory
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.SiteHistory
+  alias TwitchStory.Requests.Zipfile
 
   def read(file) do
     file

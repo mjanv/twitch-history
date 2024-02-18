@@ -1,7 +1,7 @@
-defmodule TwitchStory.Request.Commerce.Bits do
+defmodule TwitchStory.Requests.Commerce.Bits do
   @moduledoc false
 
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.Zipfile
 
   # ~c"request/commerce/bits/bits_acquired.csv"
   # ~c"request/commerce/bits/bits_cheered.csv"

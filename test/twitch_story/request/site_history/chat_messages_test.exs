@@ -1,10 +1,10 @@
-defmodule TwitchStory.Request.SiteHistory.ChatMessagesTest do
+defmodule TwitchStory.Requests.SiteHistory.ChatMessagesTest do
   @moduledoc false
 
   use ExUnit.Case
 
   alias Support.ExplorerCase
-  alias TwitchStory.Request.SiteHistory.ChatMessages
+  alias TwitchStory.Requests.SiteHistory.ChatMessages
 
   @zip ~c"priv/static/request-1.zip"
 

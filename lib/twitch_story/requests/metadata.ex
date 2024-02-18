@@ -1,9 +1,9 @@
-defmodule TwitchStory.Request.Metadata do
+defmodule TwitchStory.Requests.Metadata do
   @moduledoc false
 
   defstruct [:username, :user_id, :request_id, :start_time, :end_time]
 
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.Zipfile
 
   def read(file) do
     file

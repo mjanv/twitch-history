@@ -1,10 +1,10 @@
-defmodule TwitchStory.Request.SiteHistory.MinuteWatchedTest do
+defmodule TwitchStory.Requests.SiteHistory.MinuteWatchedTest do
   @moduledoc false
 
   use ExUnit.Case
 
   alias Support.ExplorerCase
-  alias TwitchStory.Request.SiteHistory.MinuteWatched
+  alias TwitchStory.Requests.SiteHistory.MinuteWatched
 
   @zip ~c"priv/static/request-1.zip"
 

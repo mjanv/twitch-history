@@ -1,4 +1,4 @@
-defmodule TwitchStory.Request.Zipfile do
+defmodule TwitchStory.Requests.Zipfile do
   @moduledoc false
 
   require Explorer.DataFrame, as: DataFrame

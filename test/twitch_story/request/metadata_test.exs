@@ -1,9 +1,9 @@
-defmodule TwitchStory.Request.MetadataTest do
+defmodule TwitchStory.Requests.MetadataTest do
   @moduledoc false
 
   use ExUnit.Case
 
-  alias TwitchStory.Request.Metadata
+  alias TwitchStory.Requests.Metadata
 
   @zip ~c"priv/static/request-1.zip"
 

@@ -1,10 +1,10 @@
-defmodule TwitchStory.Request.Community.FollowsTest do
+defmodule TwitchStory.Requests.Community.FollowsTest do
   @moduledoc false
 
   use ExUnit.Case
 
   alias Support.ExplorerCase
-  alias TwitchStory.Request.Community.Follows
+  alias TwitchStory.Requests.Community.Follows
 
   @zip ~c"priv/static/request-1.zip"
 

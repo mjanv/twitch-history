@@ -1,9 +1,9 @@
-defmodule TwitchStory.Request.Commerce.BitsTest do
+defmodule TwitchStory.Requests.Commerce.BitsTest do
   @moduledoc false
 
   use ExUnit.Case
 
-  alias TwitchStory.Request.Commerce.Bits
+  alias TwitchStory.Requests.Commerce.Bits
 
   @zip ~c"priv/static/request-1.zip"
 

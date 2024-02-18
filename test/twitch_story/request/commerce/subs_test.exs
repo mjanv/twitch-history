@@ -1,10 +1,10 @@
-defmodule TwitchStory.Request.Commerce.SubsTest do
+defmodule TwitchStory.Requests.Commerce.SubsTest do
   @moduledoc false
 
   use ExUnit.Case
 
   alias Support.ExplorerCase
-  alias TwitchStory.Request.Commerce.Subs
+  alias TwitchStory.Requests.Commerce.Subs
 
   @zip ~c"priv/static/request-1.zip"
 

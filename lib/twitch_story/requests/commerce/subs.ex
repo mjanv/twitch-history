@@ -1,8 +1,8 @@
-defmodule TwitchStory.Request.Commerce.Subs do
+defmodule TwitchStory.Requests.Commerce.Subs do
   @moduledoc false
 
   alias Explorer.{DataFrame, Series}
-  alias TwitchStory.Request.Zipfile
+  alias TwitchStory.Requests.Zipfile
 
   def read(file) do
     file

@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.RequestLive.Components.Channels do
 
   use TwitchStoryWeb, :live_component
 
-  alias TwitchStory.Request.Channels
+  alias TwitchStory.Requests.Channels
 
   def update(%{file: file}, socket) do
     socket

@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.RequestLive.Components.Graphs do
 
   use TwitchStoryWeb, :live_component
 
-  alias TwitchStory.Request.SiteHistory
+  alias TwitchStory.Requests.SiteHistory
 
   def update(%{file: file}, socket) do
     socket
