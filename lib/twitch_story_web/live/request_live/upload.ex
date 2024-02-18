@@ -4,7 +4,7 @@ defmodule TwitchStoryWeb.RequestLive.Upload do
   use TwitchStoryWeb, :live_view
 
   alias TwitchStory.Repositories.Filesystem
-  alias TwitchStory.Requests.Metadata
+  alias TwitchStory.Twitch.Requests.Metadata
 
   @impl true
   def mount(_params, _session, socket) do

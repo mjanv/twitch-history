@@ -6,7 +6,7 @@ defmodule TwitchStoryWeb.RequestLive.Messages do
   alias Phoenix.LiveView.AsyncResult
 
   alias TwitchStory.Repositories.Filesystem
-  alias TwitchStory.Requests.SiteHistory
+  alias TwitchStory.Twitch.Requests.SiteHistory
   alias TwitchStoryWeb.RequestLive.Components
 
   @impl true
