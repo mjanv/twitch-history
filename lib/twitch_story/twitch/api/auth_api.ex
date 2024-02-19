@@ -31,7 +31,7 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
     )
   end
 
-  def app_access_token() do
+  def app_access_token do
     token(
       client_id: @api[:client_id],
       client_secret: @api[:client_secret],

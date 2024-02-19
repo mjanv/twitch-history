@@ -3,8 +3,7 @@ defmodule TwitchStoryWeb.RequestLive.Upload do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Repositories.Filesystem
-  alias TwitchStory.Twitch.Requests.Metadata
+  alias TwitchStory.Twitch
 
   @impl true
   def mount(_params, _session, socket) do
@@ -27,14 +26,10 @@ defmodule TwitchStoryWeb.RequestLive.Upload do
   def handle_event("save", _params, socket) do
     socket
     |> consume_uploaded_entries(:request, fn %{path: path}, _entry ->
-      request = Metadata.read(to_charlist(path)).request_id
-      :ok = File.cp!(path, Filesystem.folder(request))
-      {:ok, request}
+      Twitch.create_request(path)
     end)
     |> List.first()
-    |> then(fn request ->
-      {:noreply, push_navigate(socket, to: ~p"/request/overview?id=#{request}")}
-    end)
+    |> then(fn id -> {:noreply, push_navigate(socket, to: ~p"/request/overview?id=#{id}")} end)
   end
 
   @impl true
