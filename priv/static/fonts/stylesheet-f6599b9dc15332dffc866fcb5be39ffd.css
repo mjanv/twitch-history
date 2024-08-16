@@ -1,0 +1,130 @@
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-Bold-f75be86629219640a69fe34b1d205305.eot?vsn=d');
+    src: local('gg sans Bold'), local('ggsans-Bold'),
+        url('ggsans-Bold.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-Bold-db6b320298071092b190ca887d06e95c.woff2?vsn=d') format('woff2'),
+        url('./ggsans-Bold-f79368d417757eb3e58651fbce16dc9b.woff?vsn=d') format('woff'),
+        url('./ggsans-Bold-6003145cd23f9dfe7d6ab12eeb65029c.ttf?vsn=d') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-SemiboldItalic-8eb3371544e480240f4beb1baa57ca5b.eot?vsn=d');
+    src: local('gg sans SemiBold Italic'), local('ggsans-SemiboldItalic'),
+        url('ggsans-SemiboldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-SemiboldItalic-932b058960ed3cdc9977cc161a52f5dc.woff2?vsn=d') format('woff2'),
+        url('./ggsans-SemiboldItalic-95a4d90a30c988ee99d9e4463a20d0f9.woff?vsn=d') format('woff'),
+        url('./ggsans-SemiboldItalic-9c1a770223d7fa2d46b6d7c24c56adaf.ttf?vsn=d') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-MediumItalic-09661eef3abeb4329da8238d424dc341.eot?vsn=d');
+    src: local('gg sans Medium Italic'), local('ggsans-MediumItalic'),
+        url('ggsans-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-MediumItalic-bd48d41d907530c8bf2851000a130122.woff2?vsn=d') format('woff2'),
+        url('./ggsans-MediumItalic-74c3a2f7a2c8980c08b72f1dfcb7683d.woff?vsn=d') format('woff'),
+        url('./ggsans-MediumItalic-81f1f1bc24e079bf7c2b996d7c54b8d2.ttf?vsn=d') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans Normal';
+    src: url('./ggsans-BoldItalic-829b5bd09a7c123f48d3eaf05b822d81.eot?vsn=d');
+    src: local('gg sans Bold Italic'), local('ggsans-BoldItalic'),
+        url('ggsans-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-BoldItalic-fe47f3c8e9952826326946766cdbc76e.woff2?vsn=d') format('woff2'),
+        url('./ggsans-BoldItalic-18b7397df917549f072f440598c8fab4.woff?vsn=d') format('woff'),
+        url('./ggsans-BoldItalic-038152f2b80d5e577d6f6eb22834a0d3.ttf?vsn=d') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-Semibold-af0282c353b6f35f53d26aec7939ce7a.eot?vsn=d');
+    src: local('gg sans SemiBold'), local('ggsans-Semibold'),
+        url('ggsans-Semibold.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-Semibold-890a9ab504c3657183ff118b1aff212b.woff2?vsn=d') format('woff2'),
+        url('./ggsans-Semibold-aed5a0913d0e1ac0ded78dc5c6db7c47.woff?vsn=d') format('woff'),
+        url('./ggsans-Semibold-8a48d9a2e176496ad7e5f5e6892acac3.ttf?vsn=d') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-Medium-d76c1376eb7295da043b414227789fcd.eot?vsn=d');
+    src: local('gg sans Medium'), local('ggsans-Medium'),
+        url('ggsans-Medium.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-Medium-6db712e9212169e71d90c9999b5d98f6.woff2?vsn=d') format('woff2'),
+        url('./ggsans-Medium-dad0605b413ea34e4dd61a243ed71827.woff?vsn=d') format('woff'),
+        url('./ggsans-Medium-dd5c63d279c0feec241bb11541bdc865.ttf?vsn=d') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-ExtraBold-bf19c44bb24df24a718799a2f8133758.eot?vsn=d');
+    src: local('gg sans ExtraBold'), local('ggsans-ExtraBold'),
+        url('ggsans-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-ExtraBold-897b88ce2f755a03b922de3141e45c72.woff2?vsn=d') format('woff2'),
+        url('./ggsans-ExtraBold-9a2b24565180a6db572ff40ddfe75bdb.woff?vsn=d') format('woff'),
+        url('./ggsans-ExtraBold-f510a73a987692907f5018b32d988330.ttf?vsn=d') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('./ggsans-ExtraBoldItalic-c8a1c65379e1e7e7961cbe626bba689e.eot?vsn=d');
+    src: local('gg sans ExtraBold Italic'), local('ggsans-ExtraBoldItalic'),
+        url('ggsans-ExtraBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-ExtraBoldItalic-7081fbe9934d1b8f6aa233f9761d5c74.woff2?vsn=d') format('woff2'),
+        url('./ggsans-ExtraBoldItalic-583c4aa4263ee0d27ec8fed6cf30389f.woff?vsn=d') format('woff'),
+        url('./ggsans-ExtraBoldItalic-fca6d3ce7512f4ca8ca8a93f5ca0822c.ttf?vsn=d') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans Normal';
+    src: url('./ggsans-Normal-89a54bc1d5533765a14d97bedb5e2294.eot?vsn=d');
+    src: local('gg sans Normal'), local('ggsans-Normal'),
+        url('ggsans-Normal.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-Normal-ef78ef4e179e7e1766882d2f044cb39d.woff2?vsn=d') format('woff2'),
+        url('./ggsans-Normal-56a0b2939847a7ef416c16471e8cd9b5.woff?vsn=d') format('woff'),
+        url('./ggsans-Normal-e973d64dcb8263f883a58e4899f67ad3.ttf?vsn=d') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'gg sans Normal';
+    src: url('./ggsans-NormalItalic-93381a60ef620a630fb0ddc924dc825b.eot?vsn=d');
+    src: local('gg sans Normal Italic'), local('ggsans-NormalItalic'),
+        url('ggsans-NormalItalic.eot?#iefix') format('embedded-opentype'),
+        url('./ggsans-NormalItalic-d7613267130135c7d2174c87978f95a6.woff2?vsn=d') format('woff2'),
+        url('./ggsans-NormalItalic-6bce9284ddfe3af75bf261a4ac129e85.woff?vsn=d') format('woff'),
+        url('./ggsans-NormalItalic-d1ddda53b65221f74e8807dc2b247953.ttf?vsn=d') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+

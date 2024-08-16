@@ -3,8 +3,8 @@ import Config
 config :twitch_story, :twitch_api,
   id_api_url: "https://id.twitch.tv",
   api_url: "https://api.twitch.tv",
-  client_id: System.get_env("TWITCH_CLIENT_ID"),
-  client_secret: System.get_env("TWITCH_CLIENT_SECRET")
+  client_id: System.fetch_env!("TWITCH_CLIENT_ID"),
+  client_secret: System.fetch_env!("TWITCH_CLIENT_SECRET")
 
 config :ueberauth, Ueberauth,
   providers: [
@@ -18,9 +18,9 @@ config :ueberauth, Ueberauth,
   ]
 
 config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
-  client_id: System.get_env("TWITCH_CLIENT_ID"),
-  client_secret: System.get_env("TWITCH_CLIENT_SECRET"),
-  redirect_uri: System.get_env("TWITCH_REDIRECT_URI")
+  client_id: System.fetch_env!("TWITCH_CLIENT_ID"),
+  client_secret: System.fetch_env!("TWITCH_CLIENT_SECRET"),
+  redirect_uri: System.fetch_env!("TWITCH_REDIRECT_URI")
 
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
@@ -45,7 +45,7 @@ config :twitch_story, Oban,
     {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24}
   ],
-  queues: [default: 10]
+  queues: [default: 10, twitch: 10]
 
 config :esbuild,
   version: "0.17.11",

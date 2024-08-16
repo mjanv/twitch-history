@@ -4,11 +4,12 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
   alias TwitchStory.Twitch.Api.UserApi
 
   setup do
-    token = %{
-      access_token: System.get_env("TWITCH_USER_ACCESS_TOKEN"),
-      refresh_token: System.get_env("TWITCH_USER_REFRESH_TOKEN"),
-      user_id: System.get_env("TWITCH_USER_ID")
-    }
+    token =
+      %{
+        access_token: System.fetch_env!("TWITCH_USER_ACCESS_TOKEN"),
+        refresh_token: System.fetch_env!("TWITCH_USER_REFRESH_TOKEN"),
+        user_id: System.fetch_env!("TWITCH_USER_ID")
+      }
 
     {:ok, %{token: token}}
   end
@@ -18,7 +19,7 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
 
     assert user == %{
              created_at: "2019-06-14T22:01:14Z",
-             display_name: "lanfeust313",
+             display_name: "Lanfeust313",
              email: "lanfeust_313@hotmail.com",
              id: token.user_id,
              login: "lanfeust313",

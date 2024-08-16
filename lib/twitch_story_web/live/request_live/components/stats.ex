@@ -3,20 +3,11 @@ defmodule TwitchStoryWeb.RequestLive.Components.Stats do
 
   use TwitchStoryWeb, :live_component
 
-  alias TwitchStory.Twitch.Requests.{Commerce, Community, SiteHistory}
+  alias TwitchStory.Twitch.Workers
 
   def update(%{file: file}, socket) do
     socket
-    |> assign_async(:stats, fn ->
-      stats = %{
-        follows: file |> Community.Follows.read() |> SiteHistory.n_rows(),
-        chat_messages: file |> SiteHistory.ChatMessages.read() |> SiteHistory.n_rows(),
-        hours_watched: file |> SiteHistory.MinuteWatched.read() |> SiteHistory.n_rows(60),
-        subscriptions: file |> Commerce.Subs.read() |> SiteHistory.n_rows()
-      }
-
-      {:ok, %{stats: stats}}
-    end)
+    |> assign_async(:stats, fn -> {:ok, %{stats: Workers.Stats.stats(file)}} end)
     |> then(fn socket -> {:ok, socket} end)
   end
 

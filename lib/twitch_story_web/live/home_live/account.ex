@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.RootLive.Account do
+defmodule TwitchStoryWeb.HomeLive.Account do
   @moduledoc false
 
   use TwitchStoryWeb, :live_view

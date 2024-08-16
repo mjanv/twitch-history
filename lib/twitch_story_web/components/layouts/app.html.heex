@@ -135,10 +135,14 @@
               </li>
             </ul>
           </li>
+          <li class="-mx-6 mt-auto">
+            <.live_component module={TwitchStoryWeb.Components.DarkMode} id="dark-mode" />
+          </li>
           <%= if @current_user do %>
             <li class="-mx-6 mt-auto">
               <a
-                href="#"
+                href={~p"/users/log_out"}
+                method="delete"
                 class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
               >
                 <img
@@ -146,8 +150,20 @@
                   src={@current_user.twitch_avatar}
                   alt=""
                 />
-                <span class="sr-only">Your profile</span>
-                <span aria-hidden="true"><%= @current_user.email %></span>
+                <span aria-hidden="true">Log out</span>
+                <svg
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+                  />
+                </svg>
               </a>
             </li>
           <% end %>

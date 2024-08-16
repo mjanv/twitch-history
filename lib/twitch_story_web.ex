@@ -17,8 +17,6 @@ defmodule TwitchStoryWeb do
   those modules here.
   """
 
-  use Boundary, deps: [TwitchStory], exports: [Endpoint]
-
   def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
   def router do

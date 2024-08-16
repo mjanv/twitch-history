@@ -50,6 +50,39 @@ defmodule TwitchStory.Twitch.Requests.RequestTest do
     end
   end
 
+  describe "update/2" do
+    test "with stats", %{metadata: metadata} do
+      {:ok, request} = Request.create(metadata)
+
+      stats = %{follows: 121, chat_messages: 435, hours_watched: 120, subscriptions: 5}
+
+      {:ok, request} = Request.update(request, stats: stats)
+
+      assert %TwitchStory.Twitch.Requests.Request{
+               user_id: "441903922",
+               username: "lanfeust313",
+               request_id: "MYCoARYOyQp7Kcwajqn3CmIo9PoFOQ8n",
+               start_time: ~U[2019-06-14 22:01:14Z],
+               end_time: ~U[2024-01-06 23:00:00Z],
+               stats: %{follows: 121, chat_messages: 435, hours_watched: 120, subscriptions: 5}
+             } = request
+    end
+  end
+
+  describe "delete/1" do
+    test "with valid request_id", %{metadata: metadata} do
+      {:ok, _request} = Request.create(metadata)
+
+      :ok = Request.delete(metadata.request_id)
+
+      {:error, :not_found} = Request.get(request_id: metadata.request_id)
+    end
+
+    test "with invalid request_id" do
+      :error = Request.delete("oops")
+    end
+  end
+
   describe "all/1" do
     setup do
       metadatas = [

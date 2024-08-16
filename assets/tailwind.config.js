@@ -6,6 +6,7 @@ const fs = require("fs")
 const path = require("path")
 
 module.exports = {
+  darkMode: 'selector',
   content: [
     "./js/**/*.js",
     "../lib/twitch_story_web.ex",
@@ -13,6 +14,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["gg sans"],
+      },
       colors: {
         brand: "#FD4F00",
       }

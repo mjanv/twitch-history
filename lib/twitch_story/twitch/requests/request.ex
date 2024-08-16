@@ -17,13 +17,15 @@ defmodule TwitchStory.Twitch.Requests.Request do
     field :start_time, :utc_datetime
     field :end_time, :utc_datetime
 
+    field :stats, :map
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(request, attrs) do
     request
-    |> cast(attrs, [:user_id, :request_id, :username, :start_time, :end_time])
+    |> cast(attrs, [:user_id, :request_id, :username, :start_time, :end_time, :stats])
     |> validate_required([:user_id, :request_id, :username, :start_time, :end_time])
   end
 
@@ -31,6 +33,22 @@ defmodule TwitchStory.Twitch.Requests.Request do
     %__MODULE__{}
     |> changeset(Map.from_struct(metadata))
     |> Repo.insert(on_conflict: :nothing)
+  end
+
+  def update(request, attrs) do
+    request
+    |> changeset(Enum.into(attrs, %{}))
+    |> Repo.update()
+  end
+
+  def delete(request_id) do
+    query = from r in __MODULE__, where: r.request_id == ^request_id
+
+    Repo.delete_all(query)
+    |> case do
+      {1, nil} -> :ok
+      _ -> :error
+    end
   end
 
   def get(opts) do

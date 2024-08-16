@@ -31,9 +31,9 @@ defmodule TwitchStory.Twitch.Requests.Commerce.Subs do
       ],
       nil_values: [""],
       dtypes: [
-        {"access_start", {:datetime, :microsecond}},
-        {"access_end", {:datetime, :microsecond}},
-        {"subscription_cancelled_at", {:datetime, :microsecond}}
+        {"access_start", {:naive_datetime, :microsecond}},
+        {"access_end", {:naive_datetime, :microsecond}},
+        {"subscription_cancelled_at", {:naive_datetime, :microsecond}}
       ]
     )
     |> DataFrame.mutate_with(

@@ -11,14 +11,14 @@ defmodule TwitchStory.Twitch.Api.ChannelApiTest do
   test "emotes/1" do
     {:ok, emotes} = ChannelApi.emotes(468_884_133)
 
-    assert length(emotes) == 37
+    assert length(emotes) == 39
 
     assert List.first(emotes) == %{
+             "channel_id" => "468884133",
+             "emote_set_id" => "300667317",
+             "format" => ["static"],
              "id" => "emotesv2_99b8a71a7de54664a489953555c6a596",
              "name" => "flonflFCana",
-             "emote_set_id" => "c220797d-6384-4bc7-939d-4242b221ebe0",
-             "channel_id" => "468884133",
-             "format" => ["static"],
              "scale" => ["1.0", "2.0", "3.0"],
              "theme_mode" => ["light", "dark"]
              # "images" => %{"url_1x" => "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_99b8a71a7de54664a489953555c6a596/static/light/1.0", "url_2x" => "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_99b8a71a7de54664a489953555c6a596/static/light/2.0", "url_4x" => "https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_99b8a71a7de54664a489953555c6a596/static/light/3.0"},
@@ -30,14 +30,23 @@ defmodule TwitchStory.Twitch.Api.ChannelApiTest do
 
     assert channel == %{
              "broadcaster_id" => "468884133",
+             "broadcaster_language" => "fr",
              "broadcaster_login" => "flonflon",
              "broadcaster_name" => "Flonflon",
-             "broadcaster_language" => "fr",
              "description" =>
                "Une chaine qui parle de musique : des émissions d'actu musicale, des playlists thématiques collaboratives, des interviews, des react Star Academy...",
-             "tags" => ["Français"],
+             "tags" => [
+               "Français",
+               "fr",
+               "actualités",
+               "musique",
+               "react",
+               "music",
+               "culture",
+               "newmusicfriday"
+             ],
              "thumbnail_url" =>
-               "https://static-cdn.jtvnw.net/jtv_user_pictures/f60e1ac9-f8fe-41db-b61c-9ffdb81fe982-profile_image-300x300.png"
+               "https://static-cdn.jtvnw.net/jtv_user_pictures/27d0d345-fa19-4f06-ad53-94a955d85f54-profile_image-300x300.png"
            }
   end
 end

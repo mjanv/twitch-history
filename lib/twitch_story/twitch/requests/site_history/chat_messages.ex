@@ -5,6 +5,8 @@ defmodule TwitchStory.Twitch.Requests.SiteHistory.ChatMessages do
   alias TwitchStory.Twitch.Requests.SiteHistory
   alias TwitchStory.Twitch.Requests.Zipfile
 
+  @dialyzer {:nowarn_function, group_channel: 1, group_month_year: 1}
+
   def read(file) do
     file
     |> Zipfile.csv(
@@ -18,7 +20,7 @@ defmodule TwitchStory.Twitch.Requests.SiteHistory.ChatMessages do
         "is_mention",
         "channel_points_modification"
       ],
-      dtypes: [{"time", {:datetime, :microsecond}}]
+      dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
   end
 

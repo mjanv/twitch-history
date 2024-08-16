@@ -34,7 +34,7 @@ defmodule TwitchStory.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
       {:ecto_sqlite3, ">= 0.0.0"},
-      {:phoenix_html, "~> 3.3"},
+      {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.20.5"},
       {:floki, ">= 0.30.0", only: :test},
@@ -45,24 +45,23 @@ defmodule TwitchStory.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, ">= 0.0.0"},
       {:bcrypt_elixir, "~> 3.0"},
-      {:ueberauth, "~> 0.10.7"},
-      {:ueberauth_twitch, "~> 0.1.0"},
+      {:ueberauth, "~> 0.10"},
+      {:ueberauth_twitch, "~> 0.2"},
       {:set_locale, "~> 0.2.1"},
       # Backend
-      {:req, "~> 0.4.9"},
+      {:req, "~> 0.5"},
       {:timex, "~> 3.7"},
       {:jason, "~> 1.2"},
       {:oban, "~> 2.16"},
-      {:explorer, "~> 0.8.0"},
+      {:explorer, "~> 0.9"},
       {:vega_lite, "~> 0.1.8"},
-      {:swoosh, "~> 1.4"},
+      {:swoosh, "~> 1.16"},
       # Monitoring
-      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       # Development tools
       {:credo, "~> 1.7"},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:boundary, "~> 0.10", runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 

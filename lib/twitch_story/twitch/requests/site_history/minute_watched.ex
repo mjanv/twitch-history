@@ -7,12 +7,18 @@ defmodule TwitchStory.Twitch.Requests.SiteHistory.MinuteWatched do
 
   require Explorer.DataFrame, as: DataFrame
 
+  @dialyzer {:nowarn_function,
+             group_channel: 1,
+             group_month_year: 1,
+             remove_unwatched_channels: 1,
+             remove_unwatched_channels: 2}
+
   def read(file) do
     file
     |> Zipfile.csv(
       ~c"request/site_history/minute_watched.csv",
       columns: ["time", "channel", "minutes_logged", "game"],
-      dtypes: [{"time", {:datetime, :microsecond}}]
+      dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
   end
 

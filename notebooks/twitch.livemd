@@ -31,7 +31,7 @@ defmodule TwitchExport do
     file
     |> DataFrame.from_csv!(
       columns: ["time", "channel", "minutes_logged", "game"],
-      dtypes: [{"time", {:datetime, :microsecond}}]
+      dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
   end
 end

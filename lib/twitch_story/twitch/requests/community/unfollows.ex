@@ -10,7 +10,7 @@ defmodule TwitchStory.Twitch.Requests.Community.Unfollows do
       file,
       ~c"request/community/follows/unfollow.csv",
       columns: ["time", "channel"],
-      dtypes: [{"time", {:datetime, :microsecond}}]
+      dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
   end
 

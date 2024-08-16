@@ -10,6 +10,8 @@ defmodule TwitchStory.Repo.Migrations.CreateTwitchRequests do
       add :start_time, :utc_datetime
       add :end_time, :utc_datetime
 
+      add :stats, :map, default: %{}
+
       timestamps(type: :utc_datetime)
     end
 
