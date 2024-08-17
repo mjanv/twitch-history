@@ -4,7 +4,7 @@ defmodule TwitchStory.Repo.Migrations.CreateEurovisionCeremonies do
   def change do
     create table(:eurovision_ceremonies) do
       add :name, :string, null: false
-      add :status, :string
+      add :status, :string, default: "started"
       add :countries, {:array, :string}, null: false
       add :winner, :map
 

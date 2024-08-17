@@ -1,0 +1,53 @@
+<div>
+  <h1>Ceremony</h1>
+
+  <br />
+
+  <h2>Summary</h2>
+
+  <div>
+    <p><strong>Name:</strong> <%= @ceremony.name %></p>
+    <p><strong>Countries:</strong> <%= Enum.join(@ceremony.countries, ", ") %></p>
+    <p><strong>Status:</strong> <%= @ceremony.status %></p>
+  </div>
+
+  <br />
+
+  <%= if @ceremony.status == :started do %>
+    <.button phx-click="complete_ceremony">Complete Ceremony</.button>
+    <.button phx-click="cancel_ceremony">Cancel Ceremony</.button>
+  <% end %>
+
+  <br />
+
+  <h2>Results</h2>
+
+  <p>Winner: <%= TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony) %></p>
+
+  <.table id="results" rows={@results}>
+    <:col :let={result} label="country"><%= result.country %></:col>
+    <:col :let={result} label="points"><%= result.points %></:col>
+    <:col :let={result} label="votes"><%= result.votes %></:col>
+  </.table>
+
+  <br />
+
+  <h2>Votes</h2>
+
+  <%= if @ceremony.status == :started do %>
+    <.simple_form for={@form} phx-change="validate_vote" phx-submit="save_vote">
+      <.input field={@form[:country]} type="select" options={@ceremony.countries} label="Country" />
+      <.input field={@form[:points]} type="select" options={1..20} label="Points" />
+      <:actions>
+        <.button>Add vote</.button>
+      </:actions>
+    </.simple_form>
+  <% end %>
+
+  <.table id="votes" rows={@streams.votes}>
+    <:col :let={{_, vote}} label="user"><%= vote.user_id %></:col>
+    <:col :let={{_, vote}} label="country"><%= vote.country %></:col>
+    <:col :let={{_, vote}} label="points"><%= vote.points %></:col>
+    <:col :let={{_, vote}} label="inserted_at"><%= vote.inserted_at %></:col>
+  </.table>
+</div>
