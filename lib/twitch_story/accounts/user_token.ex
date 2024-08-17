@@ -28,7 +28,9 @@ defmodule TwitchStory.Accounts.UserToken do
   def generate_user_session_token(%{id: id}) do
     @rand_size
     |> :crypto.strong_rand_bytes()
-    |> tap(fn token -> Repo.insert!(%__MODULE__{token: token, context: "session", user_id: id}) end)
+    |> tap(fn token ->
+      Repo.insert!(%__MODULE__{token: token, context: "session", user_id: id})
+    end)
   end
 
   @doc "Gets the user with the given signed token."

@@ -5,17 +5,19 @@ defmodule TwitchStoryWeb.AuthController do
 
   plug Ueberauth
 
-  alias TwitchStory.{Accounts, Twitch}
+  alias TwitchStory.Accounts
+  alias TwitchStory.Twitch.Auth
 
   def callback(%{assigns: %{ueberauth_auth: %Ueberauth.Auth{} = auth}} = conn, _params) do
     auth
-    |> Twitch.Auth.Callback.user_attrs()
+    |> Auth.Callback.user_attrs()
     |> Accounts.get_or_register_user()
     |> tap(fn
       {:ok, user} ->
         auth
-        |> Twitch.Auth.Callback.oauth_token_attrs()
-        |> Twitch.Auth.OauthToken.create(user)
+        |> Auth.Callback.oauth_token_attrs()
+        |> Auth.OauthToken.create(user)
+
       {:error, _} ->
         :ok
     end)
