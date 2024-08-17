@@ -3,6 +3,8 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
 
   alias TwitchStory.Twitch.Api.UserApi
 
+  @moduletag :api
+
   setup do
     token =
       %{
