@@ -8,16 +8,19 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
 
   alias TwitchStory.Accounts.User
   alias TwitchStory.Games.Eurovision.Vote
+  alias TwitchStory.Games.Eurovision.Winner
   alias TwitchStory.Repo
 
   schema "eurovision_ceremonies" do
     field :name, :string
-    field :status, Ecto.Enum, values: [:started, :stopped]
+    field :status, Ecto.Enum, values: [:started, :completed, :cancelled]
     field :countries, {:array, :string}
 
     belongs_to :user, User
     has_many :votes, Vote
     has_many :voters, through: [:votes, :user]
+
+    embeds_one :winner, Winner
 
     timestamps(type: :utc_datetime)
   end
@@ -27,6 +30,16 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> cast(attrs, [:name, :status, :countries, :user_id])
     |> validate_required([:name, :status, :countries, :user_id])
     |> assoc_constraint(:user)
+    |> cast_embed(:winner, required: false)
+  end
+
+  def get(id), do: Repo.get!(__MODULE__, id)
+
+  def all(user_id: id) do
+    from(c in __MODULE__,
+      where: c.user_id == ^id
+    )
+    |> Repo.all()
   end
 
   def create(attrs \\ %{}) do
@@ -35,9 +48,15 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> Repo.insert()
   end
 
-  def stop(%__MODULE__{} = ceremony) do
+  def complete(%__MODULE__{id: id} = ceremony) do
     ceremony
-    |> changeset(%{status: :stopped})
+    |> changeset(%{status: :completed, winner: Vote.winner(id)})
+    |> Repo.update()
+  end
+
+  def cancel(%__MODULE__{} = ceremony) do
+    ceremony
+    |> changeset(%{status: :cancelled})
     |> Repo.update()
   end
 
@@ -81,5 +100,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
   end
 
   def results(%__MODULE__{id: id}), do: Vote.results(id)
-  def winner(%__MODULE__{id: id}), do: Vote.winner(id)
+
+  def winner(%__MODULE__{status: :completed, winner: winner}), do: winner.country
+  def winner(%__MODULE__{}), do: nil
 end

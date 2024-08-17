@@ -39,6 +39,9 @@ defmodule TwitchStoryWeb.Router do
       on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserLive.SettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email
+
+      live "/games/eurovision", GamesLive.Eurovision.Homepage, :index
+      live "/games/eurovision/ceremony/:id", GamesLive.Eurovision.Ceremony, :index
     end
   end
 

@@ -3,13 +3,13 @@ defmodule TwitchStory.Games.EurovisionTest do
 
   import TwitchStory.AccountsFixtures
 
-  alias TwitchStory.Games.Eurovision.{Ceremony, Result, Vote, Winner}
+  alias TwitchStory.Games.Eurovision.{Ceremony, Result, Vote}
 
   setup do
     user = user_fixture()
 
     ceremony_attrs = %{
-      name: "a",
+      name: "ceremony",
       status: :started,
       countries: ["France", "Sweden", "Germany", "Italy", "Spain"],
       user_id: user.id
@@ -21,17 +21,45 @@ defmodule TwitchStory.Games.EurovisionTest do
   test "A ceremony can be created", %{ceremony_attrs: ceremony_attrs} do
     {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
 
-    assert ceremony.name == "a"
+    assert ceremony.name == "ceremony"
     assert ceremony.status == :started
     assert ceremony.countries == ["France", "Sweden", "Germany", "Italy", "Spain"]
   end
 
-  test "A ceremony can be stopped", %{ceremony_attrs: ceremony_attrs} do
+  test "A ceremony can be completed", %{ceremony_attrs: ceremony_attrs} do
     {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
 
-    {:ok, ceremony} = Ceremony.stop(ceremony)
+    {:ok, ceremony} = Ceremony.complete(ceremony)
 
-    assert ceremony.status == :stopped
+    assert ceremony.status == :completed
+  end
+
+  test "A ceremony can be cancelled", %{ceremony_attrs: ceremony_attrs} do
+    {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
+
+    {:ok, ceremony} = Ceremony.cancel(ceremony)
+
+    assert ceremony.status == :cancelled
+  end
+
+  test "The list of all ceremonies can be listed" do
+    user = user_fixture()
+
+    [
+      %{name: "a", status: :started, countries: [], user_id: user.id},
+      %{name: "b", status: :started, countries: [], user_id: user.id},
+      %{name: "c", status: :started, countries: [], user_id: user.id}
+    ]
+    |> Enum.each(fn ceremony -> Ceremony.create(ceremony) end)
+
+    [%Ceremony{} = a, %Ceremony{} = b, %Ceremony{} = c] = Ceremony.all(user_id: user.id)
+
+    assert a.name == "a"
+    assert a.countries == []
+    assert b.name == "b"
+    assert b.countries == []
+    assert c.name == "c"
+    assert c.countries == []
   end
 
   test "A vote can be added to a ceremony", %{ceremony_attrs: ceremony_attrs} do
@@ -171,7 +199,7 @@ defmodule TwitchStory.Games.EurovisionTest do
 
     votes = Ceremony.user_votes(ceremony, voter)
 
-    assert length(votes) == 0
+    assert Enum.empty?(votes)
   end
 
   setup %{ceremony_attrs: ceremony_attrs} do
@@ -221,9 +249,16 @@ defmodule TwitchStory.Games.EurovisionTest do
            ]
   end
 
-  test "The winner of a ceremony can be found", %{ceremony: ceremony} do
+  test "The winner of a started ceremony cannot be found", %{ceremony: ceremony} do
     result = Ceremony.winner(ceremony)
 
-    assert result == %Winner{country: "France", points: 23}
+    assert result == nil
+  end
+
+  test "The winner of a completed ceremony can be found", %{ceremony: ceremony} do
+    {:ok, ceremony} = Ceremony.complete(ceremony)
+    result = Ceremony.winner(ceremony)
+
+    assert result == "France"
   end
 end

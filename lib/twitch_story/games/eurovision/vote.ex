@@ -9,7 +9,6 @@ defmodule TwitchStory.Games.Eurovision.Vote do
   alias TwitchStory.Accounts.User
   alias TwitchStory.Games.Eurovision.Ceremony
   alias TwitchStory.Games.Eurovision.Result
-  alias TwitchStory.Games.Eurovision.Winner
   alias TwitchStory.Repo
 
   schema "eurovision_votes" do
@@ -100,7 +99,7 @@ defmodule TwitchStory.Games.Eurovision.Vote do
     from(v in __MODULE__,
       where: v.ceremony_id == ^ceremony_id,
       group_by: v.country,
-      select: %Winner{country: v.country, points: sum(v.points)},
+      select: %{country: v.country, points: sum(v.points)},
       order_by: [desc: sum(v.points)],
       limit: 1
     )

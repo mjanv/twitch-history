@@ -6,6 +6,7 @@ defmodule TwitchStory.Repo.Migrations.CreateEurovisionCeremonies do
       add :name, :string, null: false
       add :status, :string
       add :countries, {:array, :string}, null: false
+      add :winner, :map
 
       add :user_id, references(:users, on_delete: :nothing), null: false
 
