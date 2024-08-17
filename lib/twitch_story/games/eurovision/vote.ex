@@ -8,6 +8,8 @@ defmodule TwitchStory.Games.Eurovision.Vote do
 
   alias TwitchStory.Accounts.User
   alias TwitchStory.Games.Eurovision.Ceremony
+  alias TwitchStory.Games.Eurovision.Result
+  alias TwitchStory.Games.Eurovision.Winner
   alias TwitchStory.Repo
 
   schema "eurovision_votes" do
@@ -41,10 +43,24 @@ defmodule TwitchStory.Games.Eurovision.Vote do
     end
   end
 
-  def create(attrs) do
-    %__MODULE__{}
+  def create(%{ceremony_id: ceremony_id, user_id: user_id, country: country} = attrs) do
+    __MODULE__
+    |> Repo.get_by(ceremony_id: ceremony_id, user_id: user_id, country: country)
+    |> case do
+      nil -> %__MODULE__{}
+      vote -> vote
+    end
     |> changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert_or_update()
+  end
+
+  def delete(%__MODULE__{id: id}) do
+    __MODULE__
+    |> Repo.get(id)
+    |> case do
+      nil -> {:error, :vote_not_found}
+      vote -> Repo.delete(vote)
+    end
   end
 
   def all(ceremony_id) do
@@ -55,12 +71,39 @@ defmodule TwitchStory.Games.Eurovision.Vote do
     |> Repo.all()
   end
 
-  def total_points_per_country(ceremony_id) do
+  def user_votes(ceremony_id, user_id) do
+    from(v in __MODULE__,
+      where: v.ceremony_id == ^ceremony_id and v.user_id == ^user_id
+    )
+    |> Repo.all()
+  end
+
+  def total_votes(ceremony_id) do
+    Repo.aggregate(from(v in __MODULE__, where: v.ceremony_id == ^ceremony_id), :count, :id)
+  end
+
+  def total_points(ceremony_id) do
+    Repo.aggregate(from(v in __MODULE__, where: v.ceremony_id == ^ceremony_id), :sum, :points)
+  end
+
+  def results(ceremony_id) do
     from(v in __MODULE__,
       where: v.ceremony_id == ^ceremony_id,
       group_by: v.country,
-      select: %{country: v.country, total: sum(v.points)}
+      select: %Result{country: v.country, points: sum(v.points), votes: count(v.id)},
+      order_by: [desc: sum(v.points)]
     )
     |> Repo.all()
+  end
+
+  def winner(ceremony_id) do
+    from(v in __MODULE__,
+      where: v.ceremony_id == ^ceremony_id,
+      group_by: v.country,
+      select: %Winner{country: v.country, points: sum(v.points)},
+      order_by: [desc: sum(v.points)],
+      limit: 1
+    )
+    |> Repo.one()
   end
 end

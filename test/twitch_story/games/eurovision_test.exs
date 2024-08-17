@@ -3,31 +3,41 @@ defmodule TwitchStory.Games.EurovisionTest do
 
   import TwitchStory.AccountsFixtures
 
-  alias TwitchStory.Games.Eurovision.{Ceremony, Vote}
+  alias TwitchStory.Games.Eurovision.{Ceremony, Result, Vote, Winner}
 
   setup do
     user = user_fixture()
 
-    ceremony = %{
+    ceremony_attrs = %{
       name: "a",
+      status: :started,
       countries: ["France", "Sweden", "Germany", "Italy", "Spain"],
       user_id: user.id
     }
 
-    {:ok, %{ceremony: ceremony}}
+    {:ok, %{ceremony_attrs: ceremony_attrs}}
   end
 
-  test "A ceremony can be created", %{ceremony: ceremony} do
-    {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony)
+  test "A ceremony can be created", %{ceremony_attrs: ceremony_attrs} do
+    {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
 
     assert ceremony.name == "a"
+    assert ceremony.status == :started
     assert ceremony.countries == ["France", "Sweden", "Germany", "Italy", "Spain"]
   end
 
-  test "A vote can be added to a ceremony", %{ceremony: ceremony} do
+  test "A ceremony can be stopped", %{ceremony_attrs: ceremony_attrs} do
+    {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
+
+    {:ok, ceremony} = Ceremony.stop(ceremony)
+
+    assert ceremony.status == :stopped
+  end
+
+  test "A vote can be added to a ceremony", %{ceremony_attrs: ceremony_attrs} do
     voter = user_fixture()
 
-    {:ok, ceremony} = Ceremony.create(ceremony)
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
 
     vote = %{country: "France", points: 4, user_id: voter.id}
 
@@ -37,10 +47,31 @@ defmodule TwitchStory.Games.EurovisionTest do
     assert vote.points == 4
   end
 
-  test "A vote cannot be added to a ceremony if the country is unknown", %{ceremony: ceremony} do
+  test "Multiple votes can be added to a ceremony", %{ceremony_attrs: ceremony_attrs} do
     voter = user_fixture()
 
-    {:ok, ceremony} = Ceremony.create(ceremony)
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
+
+    votes = [
+      %{country: "France", points: 4, user_id: voter.id},
+      %{country: "Sweden", points: 12, user_id: voter.id}
+    ]
+
+    {:ok, [%Vote{} = vote1, %Vote{} = vote2]} = Ceremony.add_votes(ceremony, votes)
+
+    assert vote1.country == "France"
+    assert vote1.points == 4
+
+    assert vote2.country == "Sweden"
+    assert vote2.points == 12
+  end
+
+  test "A vote cannot be added to a ceremony if the country is unknown", %{
+    ceremony_attrs: ceremony_attrs
+  } do
+    voter = user_fixture()
+
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
 
     vote = %{country: "USA", points: 4, user_id: voter.id}
 
@@ -49,10 +80,10 @@ defmodule TwitchStory.Games.EurovisionTest do
     assert changeset.errors == [country: {"is not part of the countries in the ceremony", []}]
   end
 
-  test "The list of votes of a ceremony can be listed", %{ceremony: ceremony} do
+  test "The list of votes of a ceremony can be listed", %{ceremony_attrs: ceremony_attrs} do
     voter = user_fixture()
 
-    {:ok, ceremony} = Ceremony.create(ceremony)
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
 
     vote_fr = %{country: "France", points: 4, user_id: voter.id}
     {:ok, _} = Ceremony.add_vote(ceremony, vote_fr)
@@ -69,11 +100,11 @@ defmodule TwitchStory.Games.EurovisionTest do
     assert vote_sw.points == 12
   end
 
-  test "The list of voters of a ceremony can be listed", %{ceremony: ceremony} do
+  test "The list of voters of a ceremony can be listed", %{ceremony_attrs: ceremony_attrs} do
     voter_a = user_fixture()
     voter_b = user_fixture()
 
-    {:ok, ceremony} = Ceremony.create(ceremony)
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
 
     vote_fr = %{country: "France", points: 4, user_id: voter_a.id}
     {:ok, _} = Ceremony.add_vote(ceremony, vote_fr)
@@ -87,12 +118,68 @@ defmodule TwitchStory.Games.EurovisionTest do
     assert voter_b.id == voter_2.id
   end
 
-  test "The total number of points per country can be calculated", %{ceremony: ceremony} do
+  test "The list of a user votes of a ceremony can be listed", %{ceremony_attrs: ceremony_attrs} do
+    voter1 = user_fixture()
+    voter2 = user_fixture()
+
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
+
+    {:ok, vote_fr} =
+      Ceremony.add_vote(ceremony, %{country: "France", points: 4, user_id: voter1.id})
+
+    {:ok, vote_sw} =
+      Ceremony.add_vote(ceremony, %{country: "Sweden", points: 10, user_id: voter1.id})
+
+    {:ok, _} = Ceremony.add_vote(ceremony, %{country: "Germany", points: 8, user_id: voter2.id})
+
+    all_votes = Ceremony.votes(ceremony)
+    [vote1, vote2] = Ceremony.user_votes(ceremony, voter1)
+
+    assert length(all_votes) == 3
+    assert vote_fr == vote1
+    assert vote_sw == vote2
+  end
+
+  test "A vote can be modified for the same usesr and country", %{ceremony_attrs: ceremony_attrs} do
+    voter = user_fixture()
+
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
+
+    {:ok, vote_fr} =
+      Ceremony.add_vote(ceremony, %{country: "France", points: 4, user_id: voter.id})
+
+    {:ok, new_vote_fr} =
+      Ceremony.add_vote(ceremony, %{country: "France", points: 12, user_id: voter.id})
+
+    votes = Ceremony.user_votes(ceremony, voter)
+
+    assert length(votes) == 1
+    assert vote_fr.id == new_vote_fr.id
+    assert vote_fr.country == new_vote_fr.country
+    assert {vote_fr.points, new_vote_fr.points} == {4, 12}
+  end
+
+  test "A vote can be deleted", %{ceremony_attrs: ceremony_attrs} do
+    voter = user_fixture()
+
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
+
+    {:ok, vote_fr} =
+      Ceremony.add_vote(ceremony, %{country: "France", points: 4, user_id: voter.id})
+
+    {:ok, _} = Ceremony.delete_vote(ceremony, vote_fr)
+
+    votes = Ceremony.user_votes(ceremony, voter)
+
+    assert length(votes) == 0
+  end
+
+  setup %{ceremony_attrs: ceremony_attrs} do
     voter1 = user_fixture()
     voter2 = user_fixture()
     voter3 = user_fixture()
 
-    {:ok, ceremony} = Ceremony.create(ceremony)
+    {:ok, ceremony} = Ceremony.create(ceremony_attrs)
 
     [
       %{country: "France", points: 10, user_id: voter1.id},
@@ -113,16 +200,30 @@ defmodule TwitchStory.Games.EurovisionTest do
     ]
     |> Enum.each(fn vote -> {:ok, _} = Ceremony.add_vote(ceremony, vote) end)
 
-    result = Ceremony.total_points_per_country(ceremony)
+    {:ok, %{ceremony: ceremony}}
+  end
 
-    expected_result = [
-      %{country: "France", total: 23},
-      %{country: "Sweden", total: 22},
-      %{country: "Germany", total: 21},
-      %{country: "Italy", total: 22},
-      %{country: "Spain", total: 17}
-    ]
+  test "The totals per ceremony can be calculated", %{ceremony: ceremony} do
+    result = Ceremony.totals(ceremony)
 
-    assert Enum.sort_by(result, & &1.country) == Enum.sort_by(expected_result, & &1.country)
+    assert result == %{votes: 15, points: 105}
+  end
+
+  test "The results per country can be calculated", %{ceremony: ceremony} do
+    result = Ceremony.results(ceremony)
+
+    assert result == [
+             %Result{country: "France", points: 23, votes: 3},
+             %Result{country: "Sweden", points: 22, votes: 3},
+             %Result{country: "Italy", points: 22, votes: 3},
+             %Result{country: "Germany", points: 21, votes: 3},
+             %Result{country: "Spain", points: 17, votes: 3}
+           ]
+  end
+
+  test "The winner of a ceremony can be found", %{ceremony: ceremony} do
+    result = Ceremony.winner(ceremony)
+
+    assert result == %Winner{country: "France", points: 23}
   end
 end

@@ -3,6 +3,8 @@ defmodule TwitchStory.Twitch.Api.ChannelApiTest do
 
   alias TwitchStory.Twitch.Api.ChannelApi
 
+  @moduletag :api
+
   test "reverse_search/1" do
     assert ChannelApi.reverse_search("flonflon") == {:ok, 468_884_133}
     assert ChannelApi.reverse_search("giregejrigjeorig") == {:error, :not_found}
