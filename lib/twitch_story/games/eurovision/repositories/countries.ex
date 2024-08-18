@@ -4,7 +4,7 @@ defmodule TwitchStory.Games.Eurovision.Repositories.Countries do
   def all do
     [
       %{name: "France", code: "FR"},
-      %{name: "Sweden", code: "SW"},
+      %{name: "Sweden", code: "SE"},
       %{name: "Germany", code: "DE"},
       %{name: "Spain", code: "ES"},
       %{name: "Italy", code: "IT"}

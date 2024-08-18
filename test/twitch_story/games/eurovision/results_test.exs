@@ -23,9 +23,9 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
       %{country: "FR", points: 10, user_id: voter1.id},
       %{country: "FR", points: 5, user_id: voter2.id},
       %{country: "FR", points: 8, user_id: voter3.id},
-      %{country: "SW", points: 12, user_id: voter1.id},
-      %{country: "SW", points: 6, user_id: voter2.id},
-      %{country: "SW", points: 4, user_id: voter3.id},
+      %{country: "SE", points: 12, user_id: voter1.id},
+      %{country: "SE", points: 6, user_id: voter2.id},
+      %{country: "SE", points: 4, user_id: voter3.id},
       %{country: "DE", points: 7, user_id: voter1.id},
       %{country: "DE", points: 3, user_id: voter2.id},
       %{country: "DE", points: 11, user_id: voter3.id},
@@ -47,12 +47,12 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
     assert result == %{votes: 15, points: 105}
   end
 
-  test "The results per country can be calculated", %{ceremony: ceremony} do
-    result = Ceremony.results(ceremony)
+  test "The leaderboard can be calculated", %{ceremony: ceremony} do
+    result = Ceremony.leaderboard(ceremony)
 
     assert result == [
              %Result{country: "FR", points: 23, votes: 3},
-             %Result{country: "SW", points: 22, votes: 3},
+             %Result{country: "SE", points: 22, votes: 3},
              %Result{country: "IT", points: 22, votes: 3},
              %Result{country: "DE", points: 21, votes: 3},
              %Result{country: "ES", points: 17, votes: 3}
@@ -70,5 +70,23 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
     result = Ceremony.winner(ceremony)
 
     assert result == "FR"
+  end
+
+  test "A completed ceremony with no votes has no winner" do
+    user = user_fixture()
+
+    {:ok, ceremony} =
+      Ceremony.create(%{
+        name: "ceremony",
+        status: :started,
+        countries: Countries.codes(),
+        user_id: user.id
+      })
+
+    {:ok, ceremony} = Ceremony.complete(ceremony)
+
+    result = Ceremony.winner(ceremony)
+
+    assert result == nil
   end
 end

@@ -25,11 +25,13 @@ defmodule TwitchStory.Games.Eurovision.Vote do
     vote
     |> cast(attrs, [:country, :points, :ceremony_id, :user_id])
     |> validate_required([:country, :points, :ceremony_id, :user_id])
-    |> validate_number(:points, greater_than_or_equal_to: 0)
+    |> validate_number(:points, greater_than_or_equal_to: 0, less_than_or_equal_to: 12)
     |> validate_country_in_ceremony()
     |> assoc_constraint(:ceremony)
     |> assoc_constraint(:user)
   end
+
+  def points, do: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12]
 
   defp validate_country_in_ceremony(changeset) do
     with id when not is_nil(id) <- get_field(changeset, :ceremony_id),
@@ -85,7 +87,7 @@ defmodule TwitchStory.Games.Eurovision.Vote do
     Repo.aggregate(from(v in __MODULE__, where: v.ceremony_id == ^ceremony_id), :sum, :points)
   end
 
-  def results(ceremony_id) do
+  def leaderboard(ceremony_id) do
     from(v in __MODULE__,
       where: v.ceremony_id == ^ceremony_id,
       group_by: v.country,

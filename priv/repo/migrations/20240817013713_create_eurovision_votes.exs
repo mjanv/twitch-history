@@ -6,8 +6,8 @@ defmodule TwitchStory.Repo.Migrations.CreateEurovisionVotes do
       add :country, :string, null: false
       add :points, :integer, null: false
 
-      add :ceremony_id, references(:eurovision_ceremonies, on_delete: :nothing), null: false
-      add :user_id, references(:users, on_delete: :nothing), null: false
+      add :ceremony_id, references(:eurovision_ceremonies, on_delete: :delete_all), null: false
+      add :user_id, references(:users, on_delete: :nilify_all), null: false
 
       timestamps(type: :utc_datetime)
     end

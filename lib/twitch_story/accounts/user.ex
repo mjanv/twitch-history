@@ -11,13 +11,14 @@ defmodule TwitchStory.Accounts.User do
   schema "users" do
     field :email, :string
     field :provider, :string, default: "identity"
+    field :role, Ecto.Enum, values: [:admin, :streamer, :viewer]
 
-    # identity provider
+    # Identity provider
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
-    # twitch provider
+    # Twitch provider
     field :twitch_id, :string
     field :twitch_avatar, :string
     has_one :twitch_token, TwitchStory.Twitch.Auth.OauthToken
@@ -65,8 +66,8 @@ defmodule TwitchStory.Accounts.User do
   @doc "Registration Twitch changeset"
   def registration_twitch_changeset(user, attrs, _opts \\ []) do
     user
-    |> cast(attrs, [:email, :twitch_id, :twitch_avatar])
-    |> validate_required([:email])
+    |> cast(attrs, [:email, :provider, :twitch_id, :twitch_avatar])
+    |> validate_required([:email, :provider, :twitch_id])
   end
 
   @doc "Registers a user."

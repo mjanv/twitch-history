@@ -1,53 +1,104 @@
-<div>
-  <h1>Ceremony</h1>
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.back navigate={~p"/games/eurovision"}>Back to ceremonies</.back>
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="min-w-0 flex-1">
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+      Ceremony - <%= @ceremony.name %>
+      </h1>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= if @ceremony.status in [:created, :paused] do %>
+        <.button phx-click="start_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Start</.button>
+      <% end %>
 
-  <br />
+      <%= if @ceremony.status in [:started] do %>
+        <.button phx-click="pause_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Pause</.button>
+      <% end %>
 
-  <h2>Summary</h2>
+      <%= if @ceremony.status in [:started] do %>
+        <.button phx-click="complete_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Complete</.button>
+      <% end %>
 
-  <div>
-    <p><strong>Name:</strong> <%= @ceremony.name %></p>
-    <p><strong>Countries:</strong> <%= Enum.join(@ceremony.countries, ", ") %></p>
-    <p><strong>Status:</strong> <%= @ceremony.status %></p>
+      <%= if @ceremony.status in [:started] do %>
+        <.button phx-click="complete_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Cancel</.button>
+      <% end %>
+    </div>
   </div>
 
-  <br />
+  <div>
+    <dl class="mt-5 mb-6 grid grid-cols-1 gap-5 sm:grid-cols-6">
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
+        <dt class="truncate text-l font-semibold text-gray-800">Status</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= @ceremony.status %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
+        <dt class="truncate text-l font-semibold text-gray-800">Winner</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+        <%= if TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony) do %>
+          <TwitchStoryWeb.Components.Badges.flag height={12} code={TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony)} />
+        <% else %>
+          -
+        <% end %>
+        </dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
+        <dt class="truncate text-l font-semibold text-gray-800">Countries</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= length(@ceremony.countries) %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
+        <dt class="truncate text-l font-semibold text-gray-800">Voters</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= 0 %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
+        <dt class="truncate text-l font-semibold text-gray-800">Votes</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= 0 %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
+        <dt class="truncate text-l font-semibold text-gray-800">Points</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= 0 %></dd>
+      </div>
+    </dl>
+  </div>
 
-  <%= if @ceremony.status == :started do %>
-    <.button phx-click="complete_ceremony">Complete Ceremony</.button>
-    <.button phx-click="cancel_ceremony">Cancel Ceremony</.button>
-  <% end %>
+  <div>
+    <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+      <div class="ml-4 mt-2">
+        <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">Leaderboard</h2>
+      </div>
+      <div class="ml-4 mt-2 flex-shrink-0">
+        <button type="button" class="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800">
+        <.link href={~p"/games/eurovision/ceremony/#{@ceremony}/leaderboard"}>Go to leaderboard</.link>
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <br />
-
-  <h2>Results</h2>
-
-  <p>Winner: <%= TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony) %></p>
-
-  <.table id="results" rows={@results}>
-    <:col :let={result} label="country"><%= result.country %></:col>
-    <:col :let={result} label="points"><%= result.points %></:col>
-    <:col :let={result} label="votes"><%= result.votes %></:col>
+  <.table id="leaderboard" rows={@leaderboard}>
+    <:col :let={result} label="Country"><TwitchStoryWeb.Components.Badges.flag code={result.country} /></:col>
+    <:col :let={result} label="Points"><%= result.points %></:col>
+    <:col :let={result} label="Votes"><%= result.votes %></:col>
   </.table>
 
   <br />
 
-  <h2>Votes</h2>
-
-  <%= if @ceremony.status == :started do %>
-    <.simple_form for={@form} phx-change="validate_vote" phx-submit="save_vote">
-      <.input field={@form[:country]} type="select" options={@ceremony.countries} label="Country" />
-      <.input field={@form[:points]} type="select" options={1..20} label="Points" />
-      <:actions>
-        <.button>Add vote</.button>
-      </:actions>
-    </.simple_form>
-  <% end %>
+  <div>
+    <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+      <div class="ml-4 mt-2">
+        <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">Votes</h2>
+      </div>
+      <div class="ml-4 mt-2 flex-shrink-0">
+        <button type="button" class="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800">
+        <.link href={~p"/games/eurovision/ceremony/#{@ceremony}/vote"}>Go to vote</.link>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <.table id="votes" rows={@streams.votes}>
-    <:col :let={{_, vote}} label="user"><%= vote.user_id %></:col>
-    <:col :let={{_, vote}} label="country"><%= vote.country %></:col>
-    <:col :let={{_, vote}} label="points"><%= vote.points %></:col>
-    <:col :let={{_, vote}} label="inserted_at"><%= vote.inserted_at %></:col>
+    <:col :let={{_, vote}} label="User"><%= vote.user_id %></:col>
+    <:col :let={{_, vote}} label="Country"><%= vote.country %></:col>
+    <:col :let={{_, vote}} label="Points"><%= vote.points %></:col>
+    <:col :let={{_, vote}} label="Voted at"><%= vote.inserted_at %></:col>
   </.table>
 </div>
+

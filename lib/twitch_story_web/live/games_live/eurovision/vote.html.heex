@@ -1,0 +1,17 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <h1>Vote</h1>
+
+  <.live_component
+    id="vote"
+    module={TwitchStoryWeb.GamesLive.Eurovision.Components.Vote}
+    countries={@ceremony.countries |> IO.inspect |> Enum.map(&TwitchStory.Games.Eurovision.Country.get/1)}
+    group="grocery_list"
+  />
+
+  <.table id="votes" rows={@votes}>
+    <:col :let={{_, vote}} label="user"><%= vote.user_id %></:col>
+    <:col :let={{_, vote}} label="country"><%= vote.country %></:col>
+    <:col :let={{_, vote}} label="points"><%= vote.points %></:col>
+    <:col :let={{_, vote}} label="inserted_at"><%= vote.inserted_at %></:col>
+  </.table>
+</div>

@@ -13,7 +13,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
 
   schema "eurovision_ceremonies" do
     field :name, :string
-    field :status, Ecto.Enum, values: [:started, :completed, :cancelled]
+    field :status, Ecto.Enum, values: [:created, :started, :paused, :completed, :cancelled]
     field :countries, {:array, :string}
 
     belongs_to :user, User
@@ -33,7 +33,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> cast_embed(:winner, required: false)
   end
 
-  def get(id), do: Repo.get!(__MODULE__, id)
+  def get(id), do: Repo.get(__MODULE__, id)
 
   def all(user_id: id) do
     from(c in __MODULE__,
@@ -44,26 +44,59 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
 
   def create(attrs \\ %{}) do
     %__MODULE__{}
-    |> changeset(attrs)
+    |> changeset(Map.merge(attrs, %{status: :created}))
     |> Repo.insert()
   end
 
-  def complete(%__MODULE__{id: id} = ceremony) do
+  def start(%__MODULE__{status: status} = ceremony) when status in [:created, :paused] do
+    ceremony
+    |> changeset(%{status: :started})
+    |> Repo.update()
+  end
+
+  def start(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
+
+  def pause(%__MODULE__{status: status} = ceremony) when status in [:created, :started] do
+    ceremony
+    |> changeset(%{status: :paused})
+    |> Repo.update()
+  end
+
+  def pause(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
+
+  def complete(%__MODULE__{id: id, status: status} = ceremony)
+      when status in [:created, :started, :paused] do
     ceremony
     |> changeset(%{status: :completed, winner: Vote.winner(id)})
     |> Repo.update()
   end
 
-  def cancel(%__MODULE__{} = ceremony) do
+  def complete(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
+
+  def cancel(%__MODULE__{status: status} = ceremony)
+      when status in [:created, :started, :paused] do
     ceremony
     |> changeset(%{status: :cancelled})
     |> Repo.update()
+  end
+
+  def cancel(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
+
+  def delete(%__MODULE__{} = ceremony) do
+    ceremony
+    |> Repo.delete()
   end
 
   def add_vote(%__MODULE__{id: id}, attrs) do
     attrs
     |> Map.put(:ceremony_id, id)
     |> Vote.create()
+  end
+
+  def init_votes(%__MODULE__{countries: countries} = ceremony, voter) do
+    countries
+    |> Enum.map(fn country -> %{country: country, points: 0, user_id: voter.id} end)
+    |> then(fn votes -> add_votes(ceremony, votes) end)
   end
 
   def add_votes(%__MODULE__{id: id}, attrs) do
@@ -75,7 +108,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     end)
     |> Repo.transaction()
     |> case do
-      {:ok, results} -> {:ok, Map.values(results)}
+      {:ok, votes} -> {:ok, Map.values(votes)}
       {:error, reason} -> {:error, reason}
     end
   end
@@ -99,8 +132,9 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     Vote.user_votes(id, user_id)
   end
 
-  def results(%__MODULE__{id: id}), do: Vote.results(id)
+  def leaderboard(%__MODULE__{id: id}), do: Vote.leaderboard(id)
 
+  def winner(%__MODULE__{status: :completed, winner: nil}), do: nil
   def winner(%__MODULE__{status: :completed, winner: winner}), do: winner.country
   def winner(%__MODULE__{}), do: nil
 end

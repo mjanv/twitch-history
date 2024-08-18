@@ -5,6 +5,39 @@ defmodule TwitchStory.Accounts.UserTest do
 
   alias TwitchStory.Accounts.User
 
+  describe "get_or_register_user/1" do
+    test "returns an existing user when the user is already registered" do
+      existing_user = user_fixture()
+
+      assert {:ok, user} =
+               User.get_or_register_user(%{
+                 email: existing_user.email,
+                 provider: "twitch",
+                 twitch_id: "12345",
+                 twitch_avatar: "avatar_url"
+               })
+
+      assert user.id == existing_user.id
+    end
+
+    test "creates a new user when the user is not registered" do
+      assert is_nil(User.get_user_by_email("email@twitch.com"))
+
+      {:ok, user} =
+               User.get_or_register_user(%{
+                 email: "email@twitch.com",
+                 provider: "twitch",
+                 twitch_id: "12345",
+                 twitch_avatar: "avatar_url"
+               })
+
+      new_user = User.get_user_by_email("email@twitch.com")
+
+      assert new_user.id == user.id
+      assert new_user.role == :viewer
+    end
+  end
+
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
       refute User.get_user_by_email("unknown@example.com")

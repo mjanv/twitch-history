@@ -37,7 +37,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
 
     votes = [
       %{country: "FR", points: 4, user_id: voter.id},
-      %{country: "SW", points: 12, user_id: voter.id}
+      %{country: "SE", points: 12, user_id: voter.id}
     ]
 
     {:ok, [%Vote{} = vote1, %Vote{} = vote2]} = Ceremony.add_votes(ceremony, votes)
@@ -45,7 +45,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     assert vote1.country == "FR"
     assert vote1.points == 4
 
-    assert vote2.country == "SW"
+    assert vote2.country == "SE"
     assert vote2.points == 12
   end
 
@@ -67,7 +67,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     vote_fr = %{country: "FR", points: 4, user_id: voter.id}
     {:ok, _} = Ceremony.add_vote(ceremony, vote_fr)
 
-    vote_sw = %{country: "SW", points: 12, user_id: voter.id}
+    vote_sw = %{country: "SE", points: 12, user_id: voter.id}
     {:ok, _} = Ceremony.add_vote(ceremony, vote_sw)
 
     [vote_fr, vote_sw] = Ceremony.votes(ceremony)
@@ -75,7 +75,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     assert vote_fr.country == "FR"
     assert vote_fr.points == 4
 
-    assert vote_sw.country == "SW"
+    assert vote_sw.country == "SE"
     assert vote_sw.points == 12
   end
 
@@ -86,7 +86,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     vote_fr = %{country: "FR", points: 4, user_id: voter_a.id}
     {:ok, _} = Ceremony.add_vote(ceremony, vote_fr)
 
-    vote_sw = %{country: "SW", points: 12, user_id: voter_b.id}
+    vote_sw = %{country: "SE", points: 12, user_id: voter_b.id}
     {:ok, _} = Ceremony.add_vote(ceremony, vote_sw)
 
     [voter_1, voter_2] = Ceremony.voters(ceremony)
@@ -103,7 +103,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
       Ceremony.add_vote(ceremony, %{country: "FR", points: 4, user_id: voter1.id})
 
     {:ok, vote_sw} =
-      Ceremony.add_vote(ceremony, %{country: "SW", points: 10, user_id: voter1.id})
+      Ceremony.add_vote(ceremony, %{country: "SE", points: 10, user_id: voter1.id})
 
     {:ok, _} = Ceremony.add_vote(ceremony, %{country: "DE", points: 8, user_id: voter2.id})
 
@@ -115,7 +115,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     assert vote_sw == vote2
   end
 
-  test "A vote can be modified for the same usesr and country", %{ceremony: ceremony} do
+  test "A vote can be modified for the same user and country", %{ceremony: ceremony} do
     voter = user_fixture()
 
     {:ok, vote_fr} =
@@ -143,5 +143,19 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     votes = Ceremony.user_votes(ceremony, voter)
 
     assert Enum.empty?(votes)
+  end
+
+  test "User votes can be initialized with all ceremony countries and points to 0", %{ceremony: ceremony} do
+    voter = user_fixture()
+
+    {:ok, _} = Ceremony.init_votes(ceremony, voter)
+    votes = Ceremony.user_votes(ceremony, voter)
+
+    assert length(votes) == length(ceremony.countries)
+
+    for vote <- votes do
+      assert vote.country in ceremony.countries
+      assert vote.points == 0
+    end
   end
 end

@@ -37,11 +37,20 @@ defmodule TwitchStoryWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
+      live "/account", HomeLive.Account, :index
+
       live "/users/settings", UserLive.SettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email
 
       live "/games/eurovision", GamesLive.Eurovision.Homepage, :index
       live "/games/eurovision/ceremony/:id", GamesLive.Eurovision.Ceremony, :index
+      live "/games/eurovision/ceremony/:id/vote", GamesLive.Eurovision.Vote, :index
+      live "/games/eurovision/ceremony/:id/leaderboard", GamesLive.Eurovision.Leaderboard, :index
+
+      live "/request/new", RequestLive.Upload, :new
+      live "/request/overview", RequestLive.Request, :overview
+      live "/request/channels", RequestLive.Request, :channels
+      live "/request/messages", RequestLive.Messages, :index
     end
   end
 
@@ -53,17 +62,6 @@ defmodule TwitchStoryWeb.Router do
     live_session :current_user,
       on_mount: [{TwitchStoryWeb.UserAuth, :mount_current_user}] do
       live "/", HomeLive.Homepage, :index
-      live "/account", HomeLive.Account, :index
-      live "/test", HomeLive.Test, :index
-
-      live "/request/new", RequestLive.Upload, :new
-      live "/request/overview", RequestLive.Request, :overview
-      live "/request/channels", RequestLive.Request, :channels
-      live "/request/messages", RequestLive.Messages, :index
-
-      get "/channels", ChannelController, :index
-      post "/channels", ChannelController, :create
-      get "/channels/:name", ChannelController, :show
 
       live "/users/confirm/:token", UserLive.ConfirmationLive, :edit
       live "/users/confirm", UserLive.ConfirmationInstructionsLive, :new

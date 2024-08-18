@@ -25,4 +25,18 @@ defmodule TwitchStory.Games.Eurovision.Country do
     |> Enum.map(&Map.put(&1, :image, "https://flagsapi.com/#{&1.code}/shiny/64.png"))
     |> Enum.map(&struct(__MODULE__, &1))
   end
+
+  def get(code) do
+    Countries.all()
+    |> Enum.find(nil, fn c -> c.code == code end)
+    |> then(fn
+      nil ->
+        nil
+
+      country ->
+        country
+        |> then(&Map.put(&1, :image, "https://flagsapi.com/#{&1.code}/shiny/64.png"))
+        |> then(&struct(__MODULE__, &1))
+    end)
+  end
 end

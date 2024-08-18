@@ -1,19 +1,18 @@
-<div>
-  <h1>My Ceremonies</h1>
-
-  <.simple_form for={@form} phx-change="validate" phx-submit="save">
-    <.input field={@form[:name]} label="Name" />
-    <:actions>
-      <.button>Save</.button>
-    </:actions>
-  </.simple_form>
-
-  <br \ />
-  <div>
-    <h2>Existing Ceremonies</h2>
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="min-w-0 flex-1">
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">My Ceremonies</h1>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <button 
+      type="button" 
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">
+      New ceremony
+      </button>
+    </div>
+  </div>
 
     <.table id="ceremonies" rows={@streams.ceremonies}>
-      <:col :let={{_, ceremony}} label="id"><%= ceremony.id %></:col>
       <:col :let={{_, ceremony}} label="name">
         <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
           <%= ceremony.name %>
@@ -21,16 +20,42 @@
       </:col>
 
       <:col :let={{_, ceremony}} label="status">
-        <%= ceremony.status %>
+        <TwitchStoryWeb.Components.Badges.status status={ceremony.status} />
       </:col>
 
       <:col :let={{_, ceremony}} label="winner">
-        <%= Ceremony.winner(ceremony) %>
+        <TwitchStoryWeb.Components.Badges.flag code={Ceremony.winner(ceremony)} />
       </:col>
 
       <:col :let={{_, ceremony}} label="countries">
         <%= length(ceremony.countries) %> countries
       </:col>
+      <:action :let={{_id, ceremony}}>
+        <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>Edit</.link>
+      </:action>
+      <:action :let={{id, ceremony}}>
+        <.link
+          phx-click={"delete" |> JS.push(value: %{id: ceremony.id}) |> hide("##{id}")}
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      </:action>
     </.table>
+
+  <h2>Create a new ceremony</h2>
+
+  <.simple_form for={@form} phx-change="validate" phx-submit="save">
+    <.input field={@form[:name]} label="Name" />
+    <%= for country <- TwitchStory.Games.Eurovision.Repositories.Countries.codes() do %>
+      <.input field={@form[String.to_atom("country:" <> String.downcase(country))]} type="checkbox" label={country} />
+    <% end %>
+    <:actions>
+      <.button>Save</.button>
+    </:actions>
+  </.simple_form>
+
+  <div>
+
   </div>
 </div>

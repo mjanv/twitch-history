@@ -10,16 +10,7 @@
         <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
           <button type="button" class="-m-2.5 p-2.5" phx-click={close_sidebar()}>
             <span class="sr-only">Close sidebar</span>
-            <svg
-              class="h-6 w-6 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <TwitchStoryWeb.Components.Heroicons.close />
           </button>
         </div>
         <!-- Sidebar -->
@@ -81,14 +72,43 @@
   <!-- Desktop sidebar -->
   <div class="hidden xl:fixed xl:inset-y-0 xl:z-50 xl:flex xl:w-72 xl:flex-col">
     <!-- Sidebar -->
-    <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-black/10 px-6 ring-1 ring-white/5">
+    <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 ring-1 ring-white/5">
       <div class="flex h-16 shrink-0 items-center">
         <img class="h-8 w-auto" src="" alt="" />
       </div>
       <nav class="flex flex-1 flex-col">
         <ul role="list" class="flex flex-1 flex-col gap-y-7">
+          <%= if @current_user do %>
           <li>
-            <ul role="list" class="-mx-2 space-y-1">
+            <div class="text-xs font-semibold leading-6 text-gray-400">Games</div>
+            <ul role="list" class="-mx-2 mt-2 space-y-1">
+              <li>
+                <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
+                <a
+                  href={~p"/games/eurovision"}
+                  class="text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                >
+                  <svg
+                    class="w-6 h-6 shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"
+                    />
+                  </svg>
+                  Eurovision
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div class="text-xs font-semibold leading-6 text-gray-400">You</div>
+            <ul role="list" class="-mx-2 mt-2 space-y-1">
               <li>
                 <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
                 <a
@@ -114,7 +134,7 @@
               <li>
                 <!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
                 <a
-                  href={~p"/channels"}
+                  href={~p"/users/settings"}
                   class="text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                 >
                   <svg
@@ -127,18 +147,14 @@
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"
+                      d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                     />
                   </svg>
-                  Channels
+                  Settings
                 </a>
               </li>
             </ul>
           </li>
-          <li class="-mx-6 mt-auto">
-            <.live_component module={TwitchStoryWeb.Components.DarkMode} id="dark-mode" />
-          </li>
-          <%= if @current_user do %>
             <li class="-mx-6 mt-auto">
               <a
                 href={~p"/users/log_out"}

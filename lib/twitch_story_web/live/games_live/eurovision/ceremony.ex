@@ -7,14 +7,54 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(TwitchStory.PubSub, "eurovision:#{id}")
+    end
+
     ceremony = Ceremony.get(id)
 
     socket
     |> assign(:ceremony, ceremony)
     |> assign(:form, to_form(Vote.changeset(%Vote{}, %{})))
     |> stream(:votes, Ceremony.votes(ceremony))
-    |> assign(:results, Ceremony.results(ceremony))
+    |> assign(:leaderboard, Ceremony.leaderboard(ceremony))
     |> then(fn socket -> {:ok, socket} end)
+  end
+
+  @impl true
+  def handle_event("start_ceremony", _params, %{assigns: %{ceremony: ceremony}} = socket) do
+    ceremony
+    |> Ceremony.start()
+    |> case do
+      {:ok, ceremony} ->
+        socket
+        |> broadcast(:ceremony_started)
+        |> put_flash(:info, "Ceremony started")
+        |> assign(:ceremony, ceremony)
+
+      {:error, _} ->
+        socket
+        |> put_flash(:error, "Cannot complete ceremony")
+    end
+    |> then(fn socket -> {:noreply, socket} end)
+  end
+
+  @impl true
+  def handle_event("pause_ceremony", _params, %{assigns: %{ceremony: ceremony}} = socket) do
+    ceremony
+    |> Ceremony.pause()
+    |> case do
+      {:ok, ceremony} ->
+        socket
+        |> broadcast(:ceremony_paused)
+        |> put_flash(:info, "Ceremony paused")
+        |> assign(:ceremony, ceremony)
+
+      {:error, _} ->
+        socket
+        |> put_flash(:error, "Cannot pause ceremony")
+    end
+    |> then(fn socket -> {:noreply, socket} end)
   end
 
   @impl true
@@ -24,6 +64,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> case do
       {:ok, ceremony} ->
         socket
+        |> broadcast(:ceremony_completed)
         |> put_flash(:info, "Ceremony completed")
         |> assign(:ceremony, ceremony)
 
@@ -41,6 +82,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> case do
       {:ok, ceremony} ->
         socket
+        |> broadcast(:ceremony_cancelled)
         |> put_flash(:info, "Ceremony cancelled")
         |> assign(:ceremony, ceremony)
 
@@ -52,32 +94,24 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
   end
 
   @impl true
-  def handle_event("validate_vote", _params, socket) do
-    {:noreply, socket}
-  end
+  def handle_info(event, %{assigns: assigns} = socket)
+      when event in [:vote_registered, :ceremony_completed] do
+    ceremony = Ceremony.get(assigns.ceremony.id)
 
-  @impl true
-  def handle_event("save_vote", %{"vote" => params}, %{assigns: assigns} = socket) do
-    assigns.ceremony
-    |> Ceremony.add_vote(
-      params
-      |> string_to_atom_keys()
-      |> Map.put(:user_id, assigns.current_user.id)
-    )
-    |> case do
-      {:ok, vote} ->
-        socket
-        |> put_flash(:info, "Voted registered")
-        |> stream_insert(:votes, vote)
-        |> assign(:results, Ceremony.results(assigns.ceremony))
-
-      {:error, _} ->
-        socket
-    end
+    socket
+    |> assign(:ceremony, ceremony)
+    |> stream(:votes, Ceremony.votes(ceremony))
+    |> assign(:leaderboard, Ceremony.leaderboard(ceremony))
     |> then(fn socket -> {:noreply, socket} end)
   end
 
-  defp string_to_atom_keys(m) do
-    for {k, v} <- m, into: %{}, do: {String.to_atom(k), v}
+  @impl true
+  def handle_info(_, socket) do
+    {:noreply, socket}
+  end
+
+  defp broadcast(%{assigns: %{ceremony: ceremony}} = socket, event) do
+    Phoenix.PubSub.broadcast(TwitchStory.PubSub, "eurovision:#{ceremony.id}", event)
+    socket
   end
 end
