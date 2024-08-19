@@ -36,7 +36,7 @@ hooks.Sortable = {
       forceFallback: true,
       onEnd: e => {
         let params = {old: e.oldIndex, new: e.newIndex, to: e.to.dataset, ...e.item.dataset}
-        this.pushEventTo(this.el, "save_votes", params)
+        this.pushEventTo(this.el, "swap", params)
       }
     })
   }

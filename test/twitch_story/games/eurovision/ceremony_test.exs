@@ -23,7 +23,59 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
 
     assert ceremony.name == "ceremony"
     assert ceremony.status == :created
-    assert ceremony.countries == ["FR", "SE", "DE", "ES", "IT"]
+
+    assert ceremony.countries == [
+             "AL",
+             "AD",
+             "AM",
+             "AU",
+             "AT",
+             "AZ",
+             "BY",
+             "BE",
+             "BA",
+             "BG",
+             "HR",
+             "CY",
+             "CZ",
+             "DK",
+             "EE",
+             "FI",
+             "FR",
+             "GE",
+             "DE",
+             "GR",
+             "HU",
+             "IS",
+             "IE",
+             "IL",
+             "IT",
+             "KZ",
+             "LV",
+             "LI",
+             "LT",
+             "LU",
+             "MT",
+             "MD",
+             "MC",
+             "ME",
+             "NL",
+             "MK",
+             "NO",
+             "PL",
+             "PT",
+             "RO",
+             "SM",
+             "RS",
+             "SK",
+             "SI",
+             "ES",
+             "SE",
+             "CH",
+             "TR",
+             "UA",
+             "GB"
+           ]
   end
 
   test "A ceremony can be started", %{ceremony_attrs: ceremony_attrs} do

@@ -44,9 +44,18 @@ defmodule TwitchStory.Games.Eurovision.Vote do
     end
   end
 
-  def create(%{ceremony_id: ceremony_id, user_id: user_id, country: country} = attrs) do
+  def get_by(attrs) do
     __MODULE__
-    |> Repo.get_by(ceremony_id: ceremony_id, user_id: user_id, country: country)
+    |> Repo.get_by(attrs)
+    |> case do
+      nil -> %__MODULE__{}
+      vote -> vote
+    end
+  end
+
+  def create(%{ceremony_id: ceremony_id, user_id: user_id, country: country} = attrs) do
+    [ceremony_id: ceremony_id, user_id: user_id, country: country]
+    |> get_by()
     |> case do
       nil -> %__MODULE__{}
       vote -> vote
@@ -77,6 +86,16 @@ defmodule TwitchStory.Games.Eurovision.Vote do
       where: v.ceremony_id == ^ceremony_id and v.user_id == ^user_id
     )
     |> Repo.all()
+  end
+
+  def total_voters(ceremony_id) do
+    from(v in __MODULE__,
+      where: v.ceremony_id == ^ceremony_id,
+      group_by: v.user_id,
+      select: 1
+    )
+    |> Repo.all()
+    |> Enum.sum()
   end
 
   def total_votes(ceremony_id) do

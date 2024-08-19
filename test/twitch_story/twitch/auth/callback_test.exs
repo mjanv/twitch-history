@@ -68,6 +68,7 @@ defmodule TwitchStory.Twitch.Auth.CallbackTest do
     attrs = Callback.user_attrs(@ueberauth_auth)
 
     assert attrs == %{
+             name: "lanfeust313",
              email: "lanfeust_313@hotmail.com",
              provider: "twitch",
              twitch_id: "441903922",

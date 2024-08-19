@@ -3,6 +3,7 @@ defmodule TwitchStory.Repo.Migrations.CreateUsersAuthTables do
 
   def change do
     create table(:users) do
+      add :name, :string, null: false
       add :email, :string, null: false, collate: :nocase
       add :provider, :string, null: false
       add :role, :string, default: "viewer"

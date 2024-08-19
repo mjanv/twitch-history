@@ -24,9 +24,10 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
 
   @impl true
   def handle_event("save", %{"ceremony" => params}, %{assigns: assigns} = socket) do
-    countries = params
-    |> Enum.filter(fn {k, v} -> String.starts_with?(k, "country:") and v == "true" end)
-    |> Enum.map(fn {k, _} -> k |> String.split(":") |> List.last() |> String.upcase() end)
+    countries =
+      params
+      |> Enum.filter(fn {k, v} -> String.starts_with?(k, "country:") and v == "true" end)
+      |> Enum.map(fn {k, _} -> k |> String.split(":") |> List.last() |> String.upcase() end)
 
     params
     |> Map.merge(%{
@@ -40,7 +41,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
         socket
         |> broadcast(:ceremony_created)
         |> put_flash(:info, "Ceremony #{ceremony.name} created")
-        |> stream_insert(:ceremonies, ceremony)
+        |> stream_insert(:ceremonies, Ceremony.get(ceremony.id))
 
       {:error, changeset} ->
         socket
@@ -59,6 +60,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
       {:ok, ceremony} ->
         socket
         |> broadcast(:ceremony_deleted)
+        |> stream_delete(:ceremonies, ceremony)
         |> put_flash(:info, "Ceremony #{ceremony.name} deleted")
 
       {:error, _} ->

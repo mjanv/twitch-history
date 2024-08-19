@@ -32,6 +32,24 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     assert vote.points == 4
   end
 
+  test "A vote can be updated to a ceremony", %{ceremony: ceremony} do
+    voter = user_fixture()
+
+    vote = %{country: "FR", points: 4, user_id: voter.id}
+    {:ok, %Vote{} = vote1} = Ceremony.add_vote(ceremony, vote)
+
+    vote = %{country: "FR", points: 12, user_id: voter.id}
+    {:ok, %Vote{} = vote2} = Ceremony.add_vote(ceremony, vote)
+
+    assert vote1.id == vote2.id
+
+    assert vote1.country == "FR"
+    assert vote1.points == 4
+
+    assert vote2.country == "FR"
+    assert vote2.points == 12
+  end
+
   test "Multiple votes can be added to a ceremony", %{ceremony: ceremony} do
     voter = user_fixture()
 
@@ -47,6 +65,39 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
 
     assert vote2.country == "SE"
     assert vote2.points == 12
+  end
+
+  test "Multiple votes can be updated to a ceremony", %{ceremony: ceremony} do
+    voter = user_fixture()
+
+    votes = [
+      %{country: "FR", points: 4, user_id: voter.id},
+      %{country: "SE", points: 12, user_id: voter.id}
+    ]
+
+    {:ok, [%Vote{} = vote1, %Vote{} = vote2]} = Ceremony.add_votes(ceremony, votes)
+
+    votes = [
+      %{country: "FR", points: 12, user_id: voter.id},
+      %{country: "SE", points: 4, user_id: voter.id}
+    ]
+
+    {:ok, [%Vote{} = vote3, %Vote{} = vote4]} = Ceremony.add_votes(ceremony, votes)
+
+    assert vote1.id == vote3.id
+    assert vote2.id == vote4.id
+
+    assert vote1.country == "FR"
+    assert vote1.points == 4
+
+    assert vote2.country == "SE"
+    assert vote2.points == 12
+
+    assert vote3.country == "FR"
+    assert vote3.points == 12
+
+    assert vote4.country == "SE"
+    assert vote4.points == 4
   end
 
   test "A vote cannot be added to a ceremony if the country is unknown", %{
@@ -145,7 +196,9 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     assert Enum.empty?(votes)
   end
 
-  test "User votes can be initialized with all ceremony countries and points to 0", %{ceremony: ceremony} do
+  test "User votes can be initialized with all ceremony countries and points to 0", %{
+    ceremony: ceremony
+  } do
     voter = user_fixture()
 
     {:ok, _} = Ceremony.init_votes(ceremony, voter)

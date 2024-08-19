@@ -17,6 +17,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> assign(:ceremony, ceremony)
     |> assign(:form, to_form(Vote.changeset(%Vote{}, %{})))
     |> stream(:votes, Ceremony.votes(ceremony))
+    |> assign(:totals, Ceremony.totals(ceremony))
     |> assign(:leaderboard, Ceremony.leaderboard(ceremony))
     |> then(fn socket -> {:ok, socket} end)
   end
@@ -101,6 +102,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     socket
     |> assign(:ceremony, ceremony)
     |> stream(:votes, Ceremony.votes(ceremony))
+    |> assign(:totals, Ceremony.totals(ceremony))
     |> assign(:leaderboard, Ceremony.leaderboard(ceremony))
     |> then(fn socket -> {:noreply, socket} end)
   end

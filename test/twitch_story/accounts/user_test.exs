@@ -11,6 +11,7 @@ defmodule TwitchStory.Accounts.UserTest do
 
       assert {:ok, user} =
                User.get_or_register_user(%{
+                 name: "name",
                  email: existing_user.email,
                  provider: "twitch",
                  twitch_id: "12345",
@@ -24,12 +25,13 @@ defmodule TwitchStory.Accounts.UserTest do
       assert is_nil(User.get_user_by_email("email@twitch.com"))
 
       {:ok, user} =
-               User.get_or_register_user(%{
-                 email: "email@twitch.com",
-                 provider: "twitch",
-                 twitch_id: "12345",
-                 twitch_avatar: "avatar_url"
-               })
+        User.get_or_register_user(%{
+          name: "name",
+          email: "email@twitch.com",
+          provider: "twitch",
+          twitch_id: "12345",
+          twitch_avatar: "avatar_url"
+        })
 
       new_user = User.get_user_by_email("email@twitch.com")
 

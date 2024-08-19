@@ -1,61 +1,123 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
   <div class="md:flex md:items-center md:justify-between">
     <div class="min-w-0 flex-1">
-      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">My Ceremonies</h1>
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+        🇪🇺 Eurovision ceremonies
+      </h1>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <button 
-      type="button" 
-      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">
-      New ceremony
+      <button
+        type="button"
+        class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      >
+        New ceremony
       </button>
     </div>
   </div>
 
-    <.table id="ceremonies" rows={@streams.ceremonies}>
-      <:col :let={{_, ceremony}} label="name">
-        <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
-          <%= ceremony.name %>
-        </.link>
-      </:col>
+  <div class="mt-4 bg-white border sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-xl font-semibold leading-6 text-gray-900">What is a ceremony ?</h3>
+      <div class="mt-2 text-l text-gray-500">
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, totam at reprehenderit maxime aut beatae ad.
+        </p>
+      </div>
+      <div class="mt-3 text-base leading-6">
+        <a href="#" class="font-semibold text-purple-600 hover:text-purple-500">
+          Learn more <span aria-hidden="true"> &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
-      <:col :let={{_, ceremony}} label="status">
-        <TwitchStoryWeb.Components.Badges.status status={ceremony.status} />
-      </:col>
+  <div class="relative mt-8">
+    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+      <div class="w-full border-t border-gray-300"></div>
+    </div>
+    <div class="relative flex justify-start">
+      <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">
+        My ceremonies
+      </span>
+    </div>
+  </div>
 
-      <:col :let={{_, ceremony}} label="winner">
-        <TwitchStoryWeb.Components.Badges.flag code={Ceremony.winner(ceremony)} />
-      </:col>
+  <.table id="ceremonies" rows={@streams.ceremonies}>
+    <:col :let={{_, ceremony}} label="Name">
+      <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
+        <%= ceremony.name %>
+      </.link>
+    </:col>
 
-      <:col :let={{_, ceremony}} label="countries">
-        <%= length(ceremony.countries) %> countries
-      </:col>
-      <:action :let={{_id, ceremony}}>
-        <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>Edit</.link>
-      </:action>
-      <:action :let={{id, ceremony}}>
-        <.link
-          phx-click={"delete" |> JS.push(value: %{id: ceremony.id}) |> hide("##{id}")}
-          data-confirm="Are you sure?"
-        >
-          Delete
-        </.link>
-      </:action>
-    </.table>
+    <:col :let={{_, ceremony}} label="Author">
+      <%= ceremony.user.name %>
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Status">
+      <TwitchStoryWeb.Components.Badges.status status={ceremony.status} />
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Winner">
+      <TwitchStoryWeb.Components.Badges.flag code={Ceremony.winner(ceremony)} />
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Countries">
+      <%= length(ceremony.countries) %> countries
+    </:col>
+    <:action :let={{_id, ceremony}}>
+      <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>Edit</.link>
+    </:action>
+    <:action :let={{id, ceremony}}>
+      <.link
+        phx-click={"delete" |> JS.push(value: %{id: ceremony.id}) |> hide("##{id}")}
+        data-confirm="Are you sure?"
+      >
+        Delete
+      </.link>
+    </:action>
+  </.table>
+
+  <div class="relative mt-12">
+    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+      <div class="w-full border-t border-gray-300"></div>
+    </div>
+    <div class="relative flex justify-start">
+      <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">
+        Active ceremonies
+      </span>
+    </div>
+  </div>
+
+  <div class="relative mt-12">
+    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+      <div class="w-full border-t border-gray-300"></div>
+    </div>
+    <div class="relative flex justify-start">
+      <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">
+        Past ceremonies
+      </span>
+    </div>
+  </div>
 
   <h2>Create a new ceremony</h2>
 
   <.simple_form for={@form} phx-change="validate" phx-submit="save">
     <.input field={@form[:name]} label="Name" />
-    <%= for country <- TwitchStory.Games.Eurovision.Repositories.Countries.codes() do %>
-      <.input field={@form[String.to_atom("country:" <> String.downcase(country))]} type="checkbox" label={country} />
-    <% end %>
+    <div class="flex flex-wrap space-x-4">
+      <%= for country <- TwitchStory.Games.Eurovision.Repositories.Countries.codes() do %>
+        <div class="flex items-center space-x-2">
+          <.input
+            field={@form[String.to_atom("country:" <> String.downcase(country))]}
+            type="checkbox"
+            label={TwitchStory.Games.Eurovision.Country.get(country).name}
+          />
+        </div>
+      <% end %>
+    </div>
     <:actions>
       <.button>Save</.button>
     </:actions>
   </.simple_form>
 
-  <div>
-
-  </div>
+  <div></div>
 </div>

@@ -40,4 +40,9 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Leaderboard do
     |> stream(:leaderboard, leaderboard)
     |> then(fn socket -> {:noreply, socket} end)
   end
+
+  @impl true
+  def handle_info(_, socket) do
+    {:noreply, socket}
+  end
 end

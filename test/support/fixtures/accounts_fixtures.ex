@@ -4,12 +4,16 @@ defmodule TwitchStory.AccountsFixtures do
   entities via the `TwitchStory.Accounts` context.
   """
 
+  def unique_user_name, do: "user#{System.unique_integer()}"
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
 
   def valid_user_attributes(attrs \\ %{}) do
+    name = unique_user_name()
+
     Enum.into(attrs, %{
-      email: unique_user_email(),
+      name: name,
+      email: name <> "@example.com",
       password: valid_user_password()
     })
   end

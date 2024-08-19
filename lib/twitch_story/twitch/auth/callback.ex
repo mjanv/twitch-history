@@ -4,9 +4,10 @@ defmodule TwitchStory.Twitch.Auth.Callback do
   def user_attrs(%Ueberauth.Auth{
         uid: uid,
         provider: :twitch,
-        info: %Ueberauth.Auth.Info{email: email, image: image}
+        info: %Ueberauth.Auth.Info{name: name, email: email, image: image}
       }) do
     %{
+      name: name,
       email: email,
       provider: "twitch",
       twitch_id: uid,

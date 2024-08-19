@@ -44,7 +44,7 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
   test "The totals per ceremony can be calculated", %{ceremony: ceremony} do
     result = Ceremony.totals(ceremony)
 
-    assert result == %{votes: 15, points: 105}
+    assert result == %{votes: 15, voters: 3, points: 105}
   end
 
   test "The leaderboard can be calculated", %{ceremony: ceremony} do

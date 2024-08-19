@@ -9,6 +9,7 @@ defmodule TwitchStory.Accounts.User do
   alias TwitchStory.Repo
 
   schema "users" do
+    field :name, :string
     field :email, :string
     field :provider, :string, default: "identity"
     field :role, Ecto.Enum, values: [:admin, :streamer, :viewer]
@@ -66,8 +67,8 @@ defmodule TwitchStory.Accounts.User do
   @doc "Registration Twitch changeset"
   def registration_twitch_changeset(user, attrs, _opts \\ []) do
     user
-    |> cast(attrs, [:email, :provider, :twitch_id, :twitch_avatar])
-    |> validate_required([:email, :provider, :twitch_id])
+    |> cast(attrs, [:name, :email, :provider, :twitch_id, :twitch_avatar])
+    |> validate_required([:name, :email, :provider, :twitch_id])
   end
 
   @doc "Registers a user."
@@ -102,7 +103,7 @@ defmodule TwitchStory.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:name, :email, :password])
     |> validate_email(opts)
     |> validate_password(opts)
   end

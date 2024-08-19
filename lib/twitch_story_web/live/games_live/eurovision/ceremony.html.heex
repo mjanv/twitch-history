@@ -3,102 +3,200 @@
   <div class="md:flex md:items-center md:justify-between">
     <div class="min-w-0 flex-1">
       <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-      Ceremony - <%= @ceremony.name %>
+        Ceremony - <%= @ceremony.name %>
       </h1>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
       <%= if @ceremony.status in [:created, :paused] do %>
-        <.button phx-click="start_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Start</.button>
+        <.button
+          phx-click="start_ceremony"
+          class="ml-3 inline-flex items-center rounded-md bg-indigo-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-800"
+        >
+          Start
+        </.button>
       <% end %>
 
       <%= if @ceremony.status in [:started] do %>
-        <.button phx-click="pause_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Pause</.button>
+        <.button
+          phx-click="pause_ceremony"
+          class="ml-3 inline-flex items-center rounded-md bg-indigo-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-800"
+        >
+          Pause
+        </.button>
       <% end %>
 
       <%= if @ceremony.status in [:started] do %>
-        <.button phx-click="complete_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Complete</.button>
+        <.button
+          phx-click="complete_ceremony"
+          class="ml-3 inline-flex items-center rounded-md bg-indigo-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-800"
+        >
+          Complete
+        </.button>
       <% end %>
 
       <%= if @ceremony.status in [:started] do %>
-        <.button phx-click="complete_ceremony" class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800">Cancel</.button>
+        <.button
+          phx-click="complete_ceremony"
+          class="ml-3 inline-flex items-center rounded-md bg-indigo-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-800"
+        >
+          Cancel
+        </.button>
       <% end %>
     </div>
+  </div>
+
+  <div class="p-1">
+    <%= for country <- @ceremony.countries do %>
+      <TwitchStoryWeb.Components.Badges.flag height={8} text={false} code={country} />
+    <% end %>
   </div>
 
   <div>
     <dl class="mt-5 mb-6 grid grid-cols-1 gap-5 sm:grid-cols-6">
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Status</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= @ceremony.status %></dd>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          <%= @ceremony.status %>
+        </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Winner</dt>
         <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-        <%= if TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony) do %>
-          <TwitchStoryWeb.Components.Badges.flag height={12} code={TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony)} />
-        <% else %>
-          -
-        <% end %>
+          <%= if TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony) do %>
+            <TwitchStoryWeb.Components.Badges.flag
+              height={12}
+              code={TwitchStory.Games.Eurovision.Ceremony.winner(@ceremony)}
+            />
+          <% else %>
+            -
+          <% end %>
         </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Countries</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= length(@ceremony.countries) %></dd>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          <%= length(@ceremony.countries) %>
+        </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Voters</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= 0 %></dd>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          <%= @totals.voters %>
+        </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Votes</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= 0 %></dd>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          <%= @totals.votes %>
+        </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Points</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><%= 0 %></dd>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          <%= @totals.points %>
+        </dd>
       </div>
     </dl>
   </div>
 
   <div>
-    <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+    <div class="-ml-4 mt-6 flex flex-wrap items-center justify-between sm:flex-nowrap">
       <div class="ml-4 mt-2">
-        <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">Leaderboard</h2>
+        <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">
+          Leaderboard
+        </h2>
       </div>
       <div class="ml-4 mt-2 flex-shrink-0">
-        <button type="button" class="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800">
-        <.link href={~p"/games/eurovision/ceremony/#{@ceremony}/leaderboard"}>Go to leaderboard</.link>
+        <button
+          type="button"
+          class="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800"
+        >
+          <.link href={~p"/games/eurovision/ceremony/#{@ceremony}/leaderboard"}>
+            Go to leaderboard
+          </.link>
         </button>
       </div>
     </div>
   </div>
 
-  <.table id="leaderboard" rows={@leaderboard}>
-    <:col :let={result} label="Country"><TwitchStoryWeb.Components.Badges.flag code={result.country} /></:col>
-    <:col :let={result} label="Points"><%= result.points %></:col>
-    <:col :let={result} label="Votes"><%= result.votes %></:col>
-  </.table>
+  <%= if length(@leaderboard) > 0 do %>
+    <.table id="leaderboard" rows={@leaderboard}>
+      <:col :let={result} label="Country">
+        <TwitchStoryWeb.Components.Badges.flag code={result.country} />
+      </:col>
+      <:col :let={result} label="Points"><%= result.points %></:col>
+      <:col :let={result} label="Votes"><%= result.votes %></:col>
+    </.table>
+  <% else %>
+    <div class="flex flex-col items-center justify-center h-full p-8 mt-4 text-center border border-gray-300 rounded-lg">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-16 h-16 text-gray-400 mb-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m20.893 13.393-1.135-1.135a2.252 2.252 0 0 1-.421-.585l-1.08-2.16a.414.414 0 0 0-.663-.107.827.827 0 0 1-.812.21l-1.273-.363a.89.89 0 0 0-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 0 1-1.81 1.025 1.055 1.055 0 0 1-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 0 1-1.383-2.46l.007-.042a2.25 2.25 0 0 1 .29-.787l.09-.15a2.25 2.25 0 0 1 2.37-1.048l1.178.236a1.125 1.125 0 0 0 1.302-.795l.208-.73a1.125 1.125 0 0 0-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 0 1-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 0 1-1.458-1.137l1.411-2.353a2.25 2.25 0 0 0 .286-.76m11.928 9.869A9 9 0 0 0 8.965 3.525m11.928 9.868A9 9 0 1 1 8.965 3.525"
+        />
+      </svg>
 
-  <br />
+      <h3 class="text-lg font-semibold text-gray-600">No scores available</h3>
+      <p class="text-gray-500 mt-2">
+        A first vote should be available to calculate the leaderboard
+      </p>
+    </div>
+  <% end %>
 
   <div>
-    <div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+    <div class="-ml-4 mt-6 flex flex-wrap items-center justify-between sm:flex-nowrap">
       <div class="ml-4 mt-2">
-        <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">Votes</h2>
+        <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">
+          Votes
+        </h2>
       </div>
       <div class="ml-4 mt-2 flex-shrink-0">
-        <button type="button" class="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800">
-        <.link href={~p"/games/eurovision/ceremony/#{@ceremony}/vote"}>Go to vote</.link>
+        <button
+          type="button"
+          class="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800"
+        >
+          <.link href={~p"/games/eurovision/ceremony/#{@ceremony}/vote"}>Go to vote</.link>
         </button>
       </div>
     </div>
   </div>
 
-  <.table id="votes" rows={@streams.votes}>
-    <:col :let={{_, vote}} label="User"><%= vote.user_id %></:col>
-    <:col :let={{_, vote}} label="Country"><%= vote.country %></:col>
-    <:col :let={{_, vote}} label="Points"><%= vote.points %></:col>
-    <:col :let={{_, vote}} label="Voted at"><%= vote.inserted_at %></:col>
-  </.table>
-</div>
+  <%= if length(@leaderboard) > 0 do %>
+    <.table id="votes" rows={@streams.votes}>
+      <:col :let={{_, vote}} label="User"><%= vote.user.name %></:col>
+      <:col :let={{_, vote}} label="Country"><%= vote.country %></:col>
+      <:col :let={{_, vote}} label="Points"><%= vote.points %></:col>
+      <:col :let={{_, vote}} label="Voted at"><%= vote.inserted_at %></:col>
+    </.table>
+  <% else %>
+    <div class="flex flex-col items-center justify-center h-full p-8 mt-4 text-center border border-gray-300 rounded-lg">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-16 h-16 text-gray-400 mb-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+        />
+      </svg>
 
+      <h3 class="text-lg font-semibold text-gray-600">No votes available</h3>
+      <p class="text-gray-500 mt-2">A first vote by a viewer should be submitted</p>
+    </div>
+  <% end %>
+</div>

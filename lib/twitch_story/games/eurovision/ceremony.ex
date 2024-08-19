@@ -33,12 +33,17 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> cast_embed(:winner, required: false)
   end
 
-  def get(id), do: Repo.get(__MODULE__, id)
+  def get(id) do
+    __MODULE__
+    |> Repo.get(id)
+    |> Repo.preload([:user])
+  end
 
   def all(user_id: id) do
     from(c in __MODULE__,
       where: c.user_id == ^id
     )
+    |> preload(:user)
     |> Repo.all()
   end
 
@@ -104,7 +109,18 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> Enum.map(fn vote -> Map.put(vote, :ceremony_id, id) end)
     |> Enum.with_index()
     |> Enum.reduce(Ecto.Multi.new(), fn {vote, i}, multi ->
-      Ecto.Multi.insert(multi, i, Vote.changeset(%Vote{}, vote))
+      Ecto.Multi.insert_or_update(
+        multi,
+        i,
+        Vote.changeset(
+          Vote.get_by(
+            ceremony_id: vote.ceremony_id,
+            user_id: vote.user_id,
+            country: vote.country
+          ),
+          vote
+        )
+      )
     end)
     |> Repo.transaction()
     |> case do
@@ -125,7 +141,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
   end
 
   def totals(%__MODULE__{id: id}) do
-    %{votes: Vote.total_votes(id), points: Vote.total_points(id)}
+    %{votes: Vote.total_votes(id), voters: Vote.total_voters(id), points: Vote.total_points(id)}
   end
 
   def user_votes(%__MODULE__{id: id}, %{id: user_id}) do
