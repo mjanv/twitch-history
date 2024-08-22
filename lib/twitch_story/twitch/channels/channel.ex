@@ -8,9 +8,8 @@ defmodule TwitchStory.Twitch.Channels.Channel do
 
   alias TwitchStory.Repo
 
-  @primary_key {:broadcaster_id, :binary_id, autogenerate: true}
-
   schema "channels" do
+    field :broadcaster_id, :string
     field :broadcaster_login, :string
     field :broadcaster_name, :string
     field :broadcaster_language, :string
@@ -49,7 +48,7 @@ defmodule TwitchStory.Twitch.Channels.Channel do
   def change(%__MODULE__{} = channel, attrs \\ %{}), do: __MODULE__.changeset(channel, attrs)
 
   def list, do: Repo.all(__MODULE__)
-  def get!(id), do: Repo.get!(__MODULE__, id)
+  def get!(id), do: Repo.get_by!(__MODULE__, broadcaster_id: id)
   def create(attrs \\ %{}), do: Repo.insert(__MODULE__.changeset(%__MODULE__{}, attrs))
 
   def update(%__MODULE__{} = channel, attrs),

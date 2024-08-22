@@ -52,8 +52,8 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
 
     assert result == [
              %Result{country: "FR", points: 23, votes: 3},
-             %Result{country: "SE", points: 22, votes: 3},
              %Result{country: "IT", points: 22, votes: 3},
+             %Result{country: "SE", points: 22, votes: 3},
              %Result{country: "DE", points: 21, votes: 3},
              %Result{country: "ES", points: 17, votes: 3}
            ]

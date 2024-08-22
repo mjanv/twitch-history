@@ -8,10 +8,10 @@ defmodule TwitchStory.Twitch.Channels.Emote do
 
   alias TwitchStory.Repo
 
-  @primary_key {:id, :binary_id, autogenerate: true}
-
   schema "emotes" do
+    field :emote_id, :string
     field :name, :string
+    field :channel_id, :string
     field :emote_set_id, :string
     field :formats, {:array, :string}
     field :scales, {:array, :string}
@@ -24,7 +24,16 @@ defmodule TwitchStory.Twitch.Channels.Emote do
     timestamps(type: :utc_datetime)
   end
 
-  @attrs [:name, :emote_set_id, :formats, :scales, :themes, :thumbnail_url, :thumbnail]
+  @attrs [
+    :name,
+    :channel_id,
+    :emote_set_id,
+    :formats,
+    :scales,
+    :themes,
+    :thumbnail_url,
+    :thumbnail
+  ]
 
   def changeset(emote, attrs), do: emote |> cast(attrs, @attrs) |> validate_required(@attrs)
   def change(%__MODULE__{} = emote, attrs \\ %{}), do: __MODULE__.changeset(emote, attrs)

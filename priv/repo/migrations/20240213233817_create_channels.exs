@@ -2,8 +2,8 @@ defmodule TwitchStory.Repo.Migrations.CreateChannels do
   use Ecto.Migration
 
   def change do
-    create table(:channels, primary_key: false) do
-      add :broadcaster_id, :string, primary_key: true
+    create table(:channels) do
+      add :broadcaster_id, :string
       add :broadcaster_login, :string
       add :broadcaster_name, :string
       add :broadcaster_language, :string
@@ -15,6 +15,8 @@ defmodule TwitchStory.Repo.Migrations.CreateChannels do
 
       timestamps(type: :utc_datetime)
     end
+
+    create unique_index(:channels, [:broadcaster_id])
   end
 
   def down do

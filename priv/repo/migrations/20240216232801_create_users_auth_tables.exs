@@ -2,9 +2,11 @@ defmodule TwitchStory.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do
+    execute "CREATE EXTENSION IF NOT EXISTS citext", ""
+
     create table(:users) do
       add :name, :string, null: false
-      add :email, :string, null: false, collate: :nocase
+      add :email, :citext, null: false
       add :provider, :string, null: false
       add :role, :string, default: "viewer"
 
@@ -21,7 +23,7 @@ defmodule TwitchStory.Repo.Migrations.CreateUsersAuthTables do
 
     create table(:users_tokens) do
       add :user_id, references(:users, on_delete: :delete_all), null: false
-      add :token, :binary, null: false, size: 32
+      add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string
 

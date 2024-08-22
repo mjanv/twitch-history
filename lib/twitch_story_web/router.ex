@@ -43,6 +43,7 @@ defmodule TwitchStoryWeb.Router do
       live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email
 
       live "/games/eurovision", GamesLive.Eurovision.Homepage, :index
+      live "/games/eurovision/new", GamesLive.Eurovision.Homepage, :new
       live "/games/eurovision/ceremony/:id", GamesLive.Eurovision.Ceremony, :index
       live "/games/eurovision/ceremony/:id/vote", GamesLive.Eurovision.Vote, :index
       live "/games/eurovision/ceremony/:id/leaderboard", GamesLive.Eurovision.Leaderboard, :index

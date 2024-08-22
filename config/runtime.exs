@@ -9,7 +9,11 @@ if config_env() == :prod do
     files: System.fetch_env!("FILES_PATH") || raise("FILES_PATH missing.")
 
   config :twitch_story, TwitchStory.Repo,
-    database: System.fetch_env!("DATABASE_PATH") || raise("DATABASE_PATH missing."),
+    database: System.get_env("POSTGRES_DATABASE", "twitch_story_dev"),
+    username: System.get_env("POSTGRES_USERNAME", "postgres"),
+    password: System.get_env("POSTGRES_PASSWORD", "postgres"),
+    hostname: System.get_env("POSTGRES_HOSTNAME", "localhost"),
+    port: String.to_integer(System.get_env("DB_PORT", "5432")),
     pool_size: String.to_integer(System.get_env("POOL_SIZE", "5"))
 
   config :twitch_story, :dns_cluster_query, System.fetch_env!("DNS_CLUSTER_QUERY")

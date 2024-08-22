@@ -33,6 +33,7 @@ defmodule TwitchStory.TwitchFixtures do
     |> Enum.into(%{
       id: "some id",
       name: "some name",
+      channel_id: "some channel_id",
       emote_set_id: "some emote_set_id",
       formats: ["option1", "option2"],
       scales: ["option1", "option2"],

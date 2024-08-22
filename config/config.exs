@@ -39,13 +39,13 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
 config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Local
 
 config :twitch_story, Oban,
-  engine: Oban.Engines.Lite,
+  engine: Oban.Engines.Basic,
   repo: TwitchStory.Repo,
   plugins: [
     {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24}
   ],
-  queues: [default: 10, twitch: 10]
+  queues: [twitch: 10]
 
 config :esbuild,
   version: "0.17.11",

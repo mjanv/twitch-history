@@ -3,7 +3,11 @@ import Config
 config :bcrypt_elixir, :log_rounds, 1
 
 config :twitch_story, TwitchStory.Repo,
-  database: Path.expand("../twitch_story_test.db", Path.dirname(__ENV__.file)),
+  database: "twitch_story_test",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  port: 5432,
   pool_size: 5,
   pool: Ecto.Adapters.SQL.Sandbox
 

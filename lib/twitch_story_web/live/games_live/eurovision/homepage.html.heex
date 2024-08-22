@@ -6,21 +6,52 @@
       </h1>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <button
+      <.link
         type="button"
         class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+        patch={~p"/games/eurovision/new"}
       >
         New ceremony
-      </button>
+      </.link>
     </div>
   </div>
+
+  <.modal
+    :if={@live_action in [:new]}
+    id="confirm"
+    show
+    on_cancel={JS.patch(~p"/games/eurovision")}
+  >
+    <h2>Create a new ceremony</h2>
+
+    <.simple_form for={@form} phx-change="validate" phx-submit="save">
+      <.input field={@form[:name]} label="Name" />
+      <div class="flex flex-wrap space-x-4">
+        <%= for country <- TwitchStory.Games.Eurovision.Repositories.Countries.codes() do %>
+          <div class="flex items-center space-x-2">
+            <.input
+              field={@form[String.to_atom("country:" <> String.downcase(country))]}
+              type="checkbox"
+              label={TwitchStory.Games.Eurovision.Country.get(country).name}
+            />
+          </div>
+        <% end %>
+      </div>
+      <:actions>
+        <.button>Save</.button>
+      </:actions>
+    </.simple_form>
+  </.modal>
 
   <div class="mt-4 bg-white border sm:rounded-lg">
     <div class="px-4 py-5 sm:p-6">
       <h3 class="text-xl font-semibold leading-6 text-gray-900">What is a ceremony ?</h3>
       <div class="mt-2 text-l text-gray-500">
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, totam at reprehenderit maxime aut beatae ad.
+          Think of a "Eurovision" ceremony as a fun event you can host and enjoy with other Twitch users. Once you"ve linked your Twitch account,
+          <b>you can create your own ceremony—just pick a name and choose the countries</b>
+          you want to include. After that, you"re ready to kick things off! Others can join your ceremony from the "Active Ceremonies" section, where they can vote or check out the leaderboard. During the ceremony, <b>everyone gets to rank the countries by giving out points—12, 10, 9, all the way down to 1</b>. Once everyone's voted, the points are added up, and when the creator decide to wrap it up,
+          <b>the country with the most points wins!</b>
         </p>
       </div>
       <div class="mt-3 text-base leading-6">
@@ -77,7 +108,7 @@
     </:action>
   </.table>
 
-  <div class="relative mt-12">
+  <div class="relative mt-20">
     <div class="absolute inset-0 flex items-center" aria-hidden="true">
       <div class="w-full border-t border-gray-300"></div>
     </div>
@@ -88,7 +119,37 @@
     </div>
   </div>
 
-  <div class="relative mt-12">
+  <.table id="active-ceremonies" rows={@streams.active_ceremonies}>
+    <:col :let={{_, ceremony}} label="Name">
+      <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
+        <%= ceremony.name %>
+      </.link>
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Author">
+      <%= ceremony.user.name %>
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Status">
+      <TwitchStoryWeb.Components.Badges.status status={ceremony.status} />
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Winner">
+      <TwitchStoryWeb.Components.Badges.flag code={Ceremony.winner(ceremony)} />
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Countries">
+      <%= length(ceremony.countries) %> countries
+    </:col>
+    <:action :let={{_id, ceremony}}>
+      <.link href={~p"/games/eurovision/ceremony/#{ceremony}/vote"}>Vote</.link>
+    </:action>
+    <:action :let={{_id, ceremony}}>
+      <.link href={~p"/games/eurovision/ceremony/#{ceremony}/leaderboard"}>Leaderboard</.link>
+    </:action>
+  </.table>
+
+  <div class="relative mt-20">
     <div class="absolute inset-0 flex items-center" aria-hidden="true">
       <div class="w-full border-t border-gray-300"></div>
     </div>
@@ -99,25 +160,27 @@
     </div>
   </div>
 
-  <h2>Create a new ceremony</h2>
+  <.table id="past-ceremonies" rows={@streams.past_ceremonies}>
+    <:col :let={{_, ceremony}} label="Name">
+      <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
+        <%= ceremony.name %>
+      </.link>
+    </:col>
 
-  <.simple_form for={@form} phx-change="validate" phx-submit="save">
-    <.input field={@form[:name]} label="Name" />
-    <div class="flex flex-wrap space-x-4">
-      <%= for country <- TwitchStory.Games.Eurovision.Repositories.Countries.codes() do %>
-        <div class="flex items-center space-x-2">
-          <.input
-            field={@form[String.to_atom("country:" <> String.downcase(country))]}
-            type="checkbox"
-            label={TwitchStory.Games.Eurovision.Country.get(country).name}
-          />
-        </div>
-      <% end %>
-    </div>
-    <:actions>
-      <.button>Save</.button>
-    </:actions>
-  </.simple_form>
+    <:col :let={{_, ceremony}} label="Author">
+      <%= ceremony.user.name %>
+    </:col>
 
-  <div></div>
+    <:col :let={{_, ceremony}} label="Status">
+      <TwitchStoryWeb.Components.Badges.status status={ceremony.status} />
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Winner">
+      <TwitchStoryWeb.Components.Badges.flag code={Ceremony.winner(ceremony)} />
+    </:col>
+
+    <:col :let={{_, ceremony}} label="Countries">
+      <%= length(ceremony.countries) %> countries
+    </:col>
+  </.table>
 </div>

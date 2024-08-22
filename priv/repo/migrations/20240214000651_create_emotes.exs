@@ -2,9 +2,10 @@ defmodule TwitchStory.Repo.Migrations.CreateEmotes do
   use Ecto.Migration
 
   def change do
-    create table(:emotes, primary_key: false) do
-      add :id, :string, primary_key: true
+    create table(:emotes) do
+      add :emote_id, :string
       add :name, :string
+      add :channel_id, :string
       add :emote_set_id, :string
       add :formats, {:array, :string}
       add :scales, {:array, :string}
@@ -17,7 +18,7 @@ defmodule TwitchStory.Repo.Migrations.CreateEmotes do
       timestamps(type: :utc_datetime)
     end
 
-    # create index(:emotes, [:channel_id])
+    create index(:emotes, [:emote_id])
   end
 
   def down do

@@ -31,6 +31,7 @@ defmodule TwitchStory.Twitch.Channels.EmoteTest do
     valid_attrs = %{
       formats: ["option1", "option2"],
       name: "some name",
+      channel_id: "some channel_id",
       emote_set_id: "some emote_set_id",
       scales: ["option1", "option2"],
       themes: ["option1", "option2"],

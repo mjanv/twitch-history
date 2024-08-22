@@ -1,7 +1,11 @@
 import Config
 
 config :twitch_story, TwitchStory.Repo,
-  database: Path.expand("../twitch_story_dev.db", Path.dirname(__ENV__.file)),
+  database: "twitch_story_dev",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  port: 5432,
   pool_size: 5,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true

@@ -47,6 +47,18 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> Repo.all()
   end
 
+  def actives do
+    from(c in __MODULE__, where: c.status == :started)
+    |> preload(:user)
+    |> Repo.all()
+  end
+
+  def pasts do
+    from(c in __MODULE__, where: c.status in [:completed, :cancelled])
+    |> preload(:user)
+    |> Repo.all()
+  end
+
   def create(attrs \\ %{}) do
     %__MODULE__{}
     |> changeset(Map.merge(attrs, %{status: :created}))

@@ -12,9 +12,25 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
     end
 
     socket
-    |> assign(:form, to_form(Ceremony.changeset(%Ceremony{}, %{})))
     |> stream(:ceremonies, Ceremony.all(user_id: assigns.current_user.id))
+    |> stream(:active_ceremonies, Ceremony.actives())
+    |> stream(:past_ceremonies, Ceremony.pasts())
     |> then(fn socket -> {:ok, socket} end)
+  end
+
+  @impl true
+  def handle_params(_params, _url, socket) do
+    socket.assigns.live_action
+    |> case do
+      :index ->
+        socket
+        |> assign(:form, nil)
+
+      :new ->
+        socket
+        |> assign(:form, to_form(Ceremony.changeset(%Ceremony{}, %{})))
+    end
+    |> then(fn socket -> {:noreply, socket} end)
   end
 
   @impl true
@@ -42,11 +58,12 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
         |> broadcast(:ceremony_created)
         |> put_flash(:info, "Ceremony #{ceremony.name} created")
         |> stream_insert(:ceremonies, Ceremony.get(ceremony.id))
+        |> push_navigate(to: ~p"/games/eurovision/ceremony/#{ceremony}")
 
-      {:error, changeset} ->
+      {:error, _changeset} ->
         socket
         |> put_flash(:error, "Cannot create ceremony")
-        |> assign(:form, to_form(changeset))
+        |> push_patch(to: ~p"/games/eurovision")
     end
     |> then(fn socket -> {:noreply, socket} end)
   end

@@ -27,6 +27,11 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
       emote
       |> Map.put("channel_id", Integer.to_string(broadcaster_id))
       |> Map.take(["id", "name", "emote_set_id", "channel_id", "format", "scale", "theme_mode"])
+      |> Enum.map(fn
+        {"id", code} -> {"emote_id", code}
+        pair -> pair
+      end)
+      |> Enum.into(%{})
     end)
     |> then(fn data -> {:ok, data} end)
   end
