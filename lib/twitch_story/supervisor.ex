@@ -9,7 +9,7 @@ defmodule TwitchStory.Supervisor do
 
   def init(_args) do
     children = [
-      TwitchStory.Repositories.Supervisor,
+      TwitchStory.Repos.Supervisor,
       {Oban, Application.fetch_env!(:twitch_story, Oban)}
     ]
 

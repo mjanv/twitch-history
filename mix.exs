@@ -8,6 +8,7 @@ defmodule TwitchStory.MixProject do
       app: :twitch_story,
       version: "0.1.0",
       elixir: "~> 1.14",
+      consolidate_protocols: Mix.env() != :test,
       elixirc_options: [warnings_as_errors: true],
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -50,6 +51,7 @@ defmodule TwitchStory.MixProject do
       {:ueberauth_twitch, "~> 0.2"},
       {:set_locale, "~> 0.2.1"},
       # Backend
+      {:uniq, "~> 0.1"},
       {:uuid, "~> 1.1"},
       {:req, "~> 0.5"},
       {:timex, "~> 3.7"},
@@ -58,6 +60,7 @@ defmodule TwitchStory.MixProject do
       {:explorer, "~> 0.9"},
       {:vega_lite, "~> 0.1.8"},
       {:swoosh, "~> 1.16"},
+      {:eventstore, "~> 1.4"},
       # Monitoring
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
@@ -70,11 +73,12 @@ defmodule TwitchStory.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "event_store.create", "event_store.init"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "ecto.seed": ["ecto.setup", "run priv/repo/seeds.exs"],
       quality: ["format", "credo --strict", "dialyzer"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      start: ["phx.server"],
+      test: ["ecto.setup", "test"],
+      start: ["ecto.setup", "phx.server"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],

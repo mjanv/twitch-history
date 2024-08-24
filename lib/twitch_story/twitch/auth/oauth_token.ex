@@ -1,10 +1,7 @@
 defmodule TwitchStory.Twitch.Auth.OauthToken do
   @moduledoc false
 
-  use Ecto.Schema
-
-  import Ecto.Changeset
-  import Ecto.Query
+  use TwitchStory.Schema
 
   alias TwitchStory.Accounts.User
   alias TwitchStory.Repo

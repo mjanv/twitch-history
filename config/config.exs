@@ -24,7 +24,14 @@ config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
 
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
+  event_stores: [TwitchStory.EventStore],
   generators: [timestamp_type: :utc_datetime]
+
+config :twitch_story, TwitchStory.Repo, migration_primary_key: [type: :uuid]
+
+config :twitch_story, TwitchStory.EventStore,
+  serializer: EventStore.JsonSerializer,
+  schema: "events"
 
 config :twitch_story, TwitchStoryWeb.Endpoint,
   url: [host: "localhost"],

@@ -1,10 +1,7 @@
 defmodule TwitchStory.Twitch.Requests.Request do
   @moduledoc false
 
-  use Ecto.Schema
-
-  import Ecto.Changeset
-  import Ecto.Query
+  use TwitchStory.Schema
 
   alias TwitchStory.Repo
   alias TwitchStory.Twitch.Requests.Metadata

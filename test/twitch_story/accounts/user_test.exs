@@ -72,7 +72,7 @@ defmodule TwitchStory.Accounts.UserTest do
   describe "get_user!/1" do
     test "raises if id is invalid" do
       assert_raise Ecto.NoResultsError, fn ->
-        User.get_user!(-1)
+        User.get_user!("48ba4926-19d3-41ed-bedf-c217e9060f82")
       end
     end
 
@@ -125,6 +125,14 @@ defmodule TwitchStory.Accounts.UserTest do
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
+    end
+
+    test "dispatch a CreatedUser event in case of success" do
+      {:ok, user} = User.register_user(valid_user_attributes(email: unique_user_email()))
+
+      {:ok, events} = TwitchStory.EventStore.all(user.id)
+
+      assert events == [%UserCreated{id: user.id}]
     end
   end
 

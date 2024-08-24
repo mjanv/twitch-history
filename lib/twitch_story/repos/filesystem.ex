@@ -1,4 +1,4 @@
-defmodule TwitchStory.Repositories.Filesystem do
+defmodule TwitchStory.Repos.Filesystem do
   @moduledoc false
 
   def folder(request) do

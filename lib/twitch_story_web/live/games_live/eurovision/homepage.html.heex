@@ -27,7 +27,7 @@
     <.simple_form for={@form} phx-change="validate" phx-submit="save">
       <.input field={@form[:name]} label="Name" />
       <div class="flex flex-wrap space-x-4">
-        <%= for country <- TwitchStory.Games.Eurovision.Repositories.Countries.codes() do %>
+        <%= for country <- TwitchStory.Games.Eurovision.Repos.Countries.codes() do %>
           <div class="flex items-center space-x-2">
             <.input
               field={@form[String.to_atom("country:" <> String.downcase(country))]}

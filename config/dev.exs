@@ -10,6 +10,14 @@ config :twitch_story, TwitchStory.Repo,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true
 
+config :twitch_story, TwitchStory.EventStore,
+  database: "twitch_story_dev",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  port: 5432,
+  pool_size: 5
+
 config :twitch_story, TwitchStoryWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,

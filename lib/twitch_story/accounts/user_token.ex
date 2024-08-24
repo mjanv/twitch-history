@@ -1,7 +1,7 @@
 defmodule TwitchStory.Accounts.UserToken do
   @moduledoc false
 
-  use Ecto.Schema
+  use TwitchStory.Schema
 
   import Ecto.Query
 

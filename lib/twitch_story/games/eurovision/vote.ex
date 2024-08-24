@@ -1,10 +1,7 @@
 defmodule TwitchStory.Games.Eurovision.Vote do
   @moduledoc false
 
-  use Ecto.Schema
-
-  import Ecto.Changeset
-  import Ecto.Query, warn: false
+  use TwitchStory.Schema
 
   alias TwitchStory.Accounts.User
   alias TwitchStory.Games.Eurovision.Ceremony

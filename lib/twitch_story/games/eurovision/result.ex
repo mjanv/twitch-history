@@ -1,7 +1,7 @@
 defmodule TwitchStory.Games.Eurovision.Result do
   @moduledoc false
 
-  use Ecto.Schema
+  use TwitchStory.Schema
 
   @primary_key false
   embedded_schema do

@@ -1,4 +1,4 @@
-defmodule TwitchStory.Games.Eurovision.Repositories.Countries do
+defmodule TwitchStory.Games.Eurovision.Repos.Countries do
   @moduledoc false
 
   def all do

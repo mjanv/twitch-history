@@ -1,11 +1,9 @@
 defmodule TwitchStory.Games.Eurovision.Country do
   @moduledoc false
 
-  use Ecto.Schema
+  use TwitchStory.Schema
 
-  import Ecto.Changeset
-
-  alias TwitchStory.Games.Eurovision.Repositories.Countries
+  alias TwitchStory.Games.Eurovision.Repos.Countries
 
   @primary_key false
   embedded_schema do

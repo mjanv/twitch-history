@@ -4,7 +4,7 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
   import TwitchStory.AccountsFixtures
 
   alias TwitchStory.Games.Eurovision.{Ceremony, Vote}
-  alias TwitchStory.Games.Eurovision.Repositories.Countries
+  alias TwitchStory.Games.Eurovision.Repos.Countries
 
   setup do
     user = user_fixture()

@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.RequestLive.Request do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Repositories.Filesystem
+  alias TwitchStory.Repos.Filesystem
   alias TwitchStoryWeb.RequestLive.Components
 
   @impl true

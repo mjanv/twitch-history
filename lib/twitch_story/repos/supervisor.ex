@@ -1,4 +1,4 @@
-defmodule TwitchStory.Repositories.Supervisor do
+defmodule TwitchStory.Repos.Supervisor do
   @moduledoc false
 
   use Supervisor
@@ -10,6 +10,7 @@ defmodule TwitchStory.Repositories.Supervisor do
   def init(_args) do
     children = [
       TwitchStory.Repo,
+      TwitchStory.EventStore,
       {Ecto.Migrator,
        repos: Application.fetch_env!(:twitch_story, :ecto_repos),
        skip: System.get_env("SKIP_MIGRATIONS") == "true"}

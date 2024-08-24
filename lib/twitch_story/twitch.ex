@@ -1,7 +1,7 @@
 defmodule TwitchStory.Twitch do
   @moduledoc false
 
-  alias TwitchStory.Repositories.Filesystem
+  alias TwitchStory.Repos.Filesystem
   alias TwitchStory.Twitch.{Api, Channels, Requests, Workers}
 
   def create_request(path) do

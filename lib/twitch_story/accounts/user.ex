@@ -1,11 +1,9 @@
 defmodule TwitchStory.Accounts.User do
   @moduledoc false
 
-  use Ecto.Schema
+  use TwitchStory.Schema
 
-  import Ecto.Changeset
-  import Ecto.Query, warn: false
-
+  alias TwitchStory.EventStore
   alias TwitchStory.Repo
 
   schema "users" do
@@ -76,6 +74,7 @@ defmodule TwitchStory.Accounts.User do
     %__MODULE__{}
     |> registration_changeset(attrs)
     |> Repo.insert()
+    |> EventStore.ok(fn user -> %UserCreated{id: user.id} end)
   end
 
   @doc "Returns an `%Ecto.Changeset{}` for tracking user changes."
