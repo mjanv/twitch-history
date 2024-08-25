@@ -136,6 +136,25 @@ defmodule TwitchStory.Accounts.UserTest do
     end
   end
 
+  describe "assign_role/1" do
+    test "assigns a role to an existing user" do
+      before_user = user_fixture()
+
+      {:ok, after_user} = User.assign_role(before_user, :admin)
+
+      assert before_user.role == nil
+      assert after_user.role == :admin
+    end
+
+    test "dispatch a RoleAssigned event in case of success" do
+      {:ok, user} = User.assign_role(user_fixture(), :admin)
+
+      {:ok, events} = TwitchStory.EventStore.all(user.id)
+
+      assert %RoleAssigned{id: user.id, role: "admin"} in events
+    end
+  end
+
   describe "change_user_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = User.change_user_registration(%User{})

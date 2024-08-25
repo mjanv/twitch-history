@@ -25,7 +25,11 @@ config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
   event_stores: [TwitchStory.EventStore],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime],
+  event_bus: [
+    TwitchStory.Notifications.Log,
+    TwitchStory.EventStore
+  ]
 
 config :twitch_story, TwitchStory.Repo, migration_primary_key: [type: :uuid]
 

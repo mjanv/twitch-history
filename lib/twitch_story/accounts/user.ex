@@ -3,7 +3,7 @@ defmodule TwitchStory.Accounts.User do
 
   use TwitchStory.Schema
 
-  alias TwitchStory.EventStore
+  alias ExTwitchStory.EventBus
   alias TwitchStory.Repo
 
   schema "users" do
@@ -60,6 +60,7 @@ defmodule TwitchStory.Accounts.User do
     %__MODULE__{}
     |> registration_twitch_changeset(attrs)
     |> Repo.insert()
+    |> EventBus.ok(fn user -> %UserCreated{id: user.id} end)
   end
 
   @doc "Registration Twitch changeset"
@@ -69,12 +70,21 @@ defmodule TwitchStory.Accounts.User do
     |> validate_required([:name, :email, :provider, :twitch_id])
   end
 
+  @doc "Assigns a role to an user."
+  def assign_role(user, role) do
+    user
+    |> cast(%{role: role}, [:role])
+    |> validate_required([:role])
+    |> Repo.update()
+    |> EventBus.ok(fn user -> %RoleAssigned{id: user.id, role: user.role} end)
+  end
+
   @doc "Registers a user."
   def register_user(attrs) do
     %__MODULE__{}
     |> registration_changeset(attrs)
     |> Repo.insert()
-    |> EventStore.ok(fn user -> %UserCreated{id: user.id} end)
+    |> EventBus.ok(fn user -> %UserCreated{id: user.id} end)
   end
 
   @doc "Returns an `%Ecto.Changeset{}` for tracking user changes."

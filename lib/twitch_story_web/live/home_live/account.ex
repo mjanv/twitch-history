@@ -7,9 +7,11 @@ defmodule TwitchStoryWeb.HomeLive.Account do
   alias TwitchStory.Twitch.Requests.Request
 
   @impl true
-  def mount(_params, _session, socket) do
-    token = OauthToken.get(socket.assigns.current_user)
-    {:ok, requests} = Request.all(socket.assigns.current_user.twitch_id)
-    {:ok, assign(socket, requests: requests, token: token)}
+  def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
+    token = OauthToken.get(current_user)
+    {:ok, requests} = Request.all(current_user.twitch_id)
+    {:ok, events} = TwitchStory.EventStore.all(current_user.id, true)
+
+    {:ok, assign(socket, requests: requests, events: events, token: token)}
   end
 end

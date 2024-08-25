@@ -14,7 +14,9 @@
               />
               <div>
                 <dt class="text-sm font-semibold leading-6 text-gray-800">
-                  <%= String.capitalize(@current_user.provider) %> account
+                  <%= String.capitalize(@current_user.provider) %> account (<%= String.capitalize(
+                    Atom.to_string(@current_user.role)
+                  ) %>)
                 </dt>
                 <dd class="mt-1 text-base font-semibold leading-6 text-gray-800">
                   <%= @current_user.email %>
@@ -183,6 +185,29 @@
 
     <div class="lg:col-start-3 ring-1 ring-gray-800 px-4 py-4 shadow-sm rounded-md">
       <!-- Activity feed -->
+      <ul role="list" class="space-y-6">
+        <%= for event <- @events do %>
+          <li class="relative flex gap-x-4">
+            <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
+              <div class="w-px bg-gray-200"></div>
+            </div>
+            <div class="relative flex h-6 w-6 flex-none items-center justify-center bg-white">
+              <div class="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+            </div>
+            <p class="flex-auto py-0.5 text-xs leading-5 text-gray-500">
+              <span class="font-medium text-gray-900">
+                <%= EventImpl.humanize(event, :name) %>
+              </span>
+            </p>
+            <time
+              datetime="2023-01-23T10:32"
+              class="flex-none py-0.5 text-xs leading-5 text-gray-500"
+            >
+              <%= EventImpl.humanize(event, :at) %> ago
+            </time>
+          </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>
