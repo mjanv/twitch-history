@@ -19,7 +19,7 @@ defmodule TwitchStoryWeb.Components.Live.Graph do
   def render(assigns) do
     ~H"""
     <div
-      style="width:100%; height: 500px;"
+      style="width:100%; height: 400px;"
       phx-hook="VegaLite"
       phx-update="ignore"
       id={@id}

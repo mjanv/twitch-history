@@ -71,6 +71,7 @@ defmodule TwitchStory.Twitch.Auth.CallbackTest do
              name: "lanfeust313",
              email: "lanfeust_313@hotmail.com",
              provider: "twitch",
+             role: :admin,
              twitch_id: "441903922",
              twitch_avatar:
                "https://static-cdn.jtvnw.net/user-default-pictures-uv/75305d54-c7cc-40d1-bb9c-91fbe85943c7-profile_image-300x300.png"
@@ -84,7 +85,8 @@ defmodule TwitchStory.Twitch.Auth.CallbackTest do
              user_id: "441903922",
              access_token: "hzt0dmrje10l31yaalswp73laauqd5",
              refresh_token: "qcvjs5l6efp22lzvhowzlwmlvbi76lnoxn2pze8yv7i18om724",
-             scopes: ["user:read:email"]
+             scopes: ["user:read:email"],
+             expires_at: ~U[2024-02-17 05:28:56Z]
            }
   end
 end

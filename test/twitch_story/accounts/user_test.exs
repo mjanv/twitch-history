@@ -29,6 +29,7 @@ defmodule TwitchStory.Accounts.UserTest do
           name: "name",
           email: "email@twitch.com",
           provider: "twitch",
+          role: :viewer,
           twitch_id: "12345",
           twitch_avatar: "avatar_url"
         })

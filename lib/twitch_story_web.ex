@@ -56,6 +56,14 @@ defmodule TwitchStoryWeb do
     end
   end
 
+  def component do
+    quote do
+      use Phoenix.Component
+
+      unquote(html_helpers())
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent
@@ -78,7 +86,8 @@ defmodule TwitchStoryWeb do
   defp html_helpers do
     quote do
       import Phoenix.HTML
-      import TwitchStoryWeb.CoreComponents
+      import TwitchStoryWeb.Components.CoreComponents
+      import TwitchStoryWeb.Components.Titles
       import TwitchStoryWeb.Gettext
 
       alias Phoenix.LiveView.JS

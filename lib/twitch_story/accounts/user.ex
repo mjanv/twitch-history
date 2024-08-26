@@ -25,6 +25,15 @@ defmodule TwitchStory.Accounts.User do
     timestamps(type: :utc_datetime)
   end
 
+  def count_roles do
+    from(u in __MODULE__, group_by: u.role, select: {u.role, count(u.id)})
+    |> Repo.all()
+  end
+
+  def all, do: Repo.all(__MODULE__)
+
+  def get(id), do: Repo.get(__MODULE__, id)
+
   @doc "Get or register a user by email"
   def get_or_register_user(%{email: email, provider: "twitch"} = attrs) do
     email
@@ -66,17 +75,22 @@ defmodule TwitchStory.Accounts.User do
   @doc "Registration Twitch changeset"
   def registration_twitch_changeset(user, attrs, _opts \\ []) do
     user
-    |> cast(attrs, [:name, :email, :provider, :twitch_id, :twitch_avatar])
-    |> validate_required([:name, :email, :provider, :twitch_id])
+    |> cast(attrs, [:name, :email, :provider, :role, :twitch_id, :twitch_avatar])
+    |> validate_required([:name, :email, :provider, :role, :twitch_id])
   end
 
   @doc "Assigns a role to an user."
   def assign_role(user, role) do
     user
-    |> cast(%{role: role}, [:role])
-    |> validate_required([:role])
+    |> update_changeset(%{role: role})
     |> Repo.update()
     |> EventBus.ok(fn user -> %RoleAssigned{id: user.id, role: user.role} end)
+  end
+
+  def update_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:role])
+    |> validate_required([:role])
   end
 
   @doc "Registers a user."

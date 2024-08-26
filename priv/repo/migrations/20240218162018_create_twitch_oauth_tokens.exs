@@ -7,8 +7,9 @@ defmodule TwitchStory.Repo.Migrations.CreateTwitchOauthTokens do
       add :access_token, :binary, null: false
       add :refresh_token, :binary, null: false
       add :scopes, {:array, :string}, null: false
+      add :expires_at, :timestamp, null: false
 
-      timestamps(updated_at: false)
+      timestamps()
     end
 
     create index(:twitch_oauth_tokens, [:user_id])

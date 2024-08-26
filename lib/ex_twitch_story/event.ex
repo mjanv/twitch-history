@@ -15,7 +15,9 @@ defmodule TwitchStory.Event do
   end
 
   def humanize(%{__struct__: struct}, :name) do
-    Atom.to_string(struct)
+    struct
+    |> Module.split()
+    |> Enum.join(".")
   end
 
   def humanize(%{at: at}, :at) do

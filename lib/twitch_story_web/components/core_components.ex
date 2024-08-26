@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.CoreComponents do
+defmodule TwitchStoryWeb.Components.CoreComponents do
   @moduledoc """
   Provides core UI components.
 

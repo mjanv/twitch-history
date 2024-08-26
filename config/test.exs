@@ -2,6 +2,9 @@ import Config
 
 config :bcrypt_elixir, :log_rounds, 1
 
+config :twitch_story,
+  event_bus: [TwitchStory.EventStore]
+
 config :twitch_story, TwitchStory.Repo,
   database: "twitch_story_test",
   username: "postgres",

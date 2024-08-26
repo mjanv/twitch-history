@@ -32,11 +32,36 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
   end
 
   def app_access_token do
-    token(
+    [
       client_id: @api[:client_id],
       client_secret: @api[:client_secret],
       grant_type: "client_credentials"
+    ]
+    |> token()
+    |> case do
+      {:ok, %{"access_token" => access_token}} -> access_token
+      _ -> ""
+    end
+  end
+
+  def refresh_access_token(refresh_token) do
+    token(
+      client_id: @api[:client_id],
+      client_secret: @api[:client_secret],
+      grant_type: "refresh_token",
+      refresh_token: refresh_token
     )
+    |> case do
+      {:ok, body} ->
+        body
+        |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+        |> Enum.into(%{})
+        |> Map.drop([:scope, :token_type, :expires_in])
+        |> then(fn body -> {:ok, body} end)
+
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   defp token(params) do
@@ -50,12 +75,15 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
       {:ok,
        %Req.Response{
          status: 200,
-         body: %{"token_type" => "bearer", "access_token" => access_token}
+         body: %{"token_type" => "bearer"} = body
        }} ->
-        access_token
+        {:ok, body}
+
+      {:ok, %Req.Response{}} ->
+        {:ok, %{}}
 
       {:error, %Req.Response{}} ->
-        ""
+        {:error, %{}}
     end
   end
 end

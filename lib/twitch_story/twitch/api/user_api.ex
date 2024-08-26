@@ -21,8 +21,8 @@ defmodule TwitchStory.Twitch.Api.UserApi do
 
   @fields ["color"]
 
-  def color(token) do
-    AuthApi.get(url: "/helix/chat/color?user_id=#{token.user_id}", token: token.access_token)
+  def color(token, id) do
+    AuthApi.get(url: "/helix/chat/color?user_id=#{id}", token: token.access_token)
     |> case do
       {:ok, %Req.Response{status: 200, body: %{"data" => [color | _]}}} ->
         color

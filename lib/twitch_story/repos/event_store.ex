@@ -23,6 +23,17 @@ defmodule TwitchStory.EventStore do
     end
   end
 
+  def last(n \\ 100) do
+    -1
+    |> read_all_streams_backward(n)
+    |> case do
+      {:ok, events} -> events
+      {:error, _reason} -> []
+    end
+    |> Enum.map(fn %{data: data, created_at: at} -> Map.put(data, :at, at) end)
+    |> then(fn events -> {:ok, events} end)
+  end
+
   def all(stream_uuid, with_timestamps \\ false) do
     stream_uuid
     |> read_stream_forward()

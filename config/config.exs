@@ -54,7 +54,12 @@ config :twitch_story, Oban,
   repo: TwitchStory.Repo,
   plugins: [
     {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
-    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24}
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24},
+    {Oban.Plugins.Cron,
+     crontab: [
+       # Oauth token renewal every 15 minutes for token expiring in less than 30 minutes
+       {"*/15 * * * *", TwitchStory.Twitch.Workers.OauthWorker, args: %{n: 30 * 60}}
+     ]}
   ],
   queues: [twitch: 10]
 

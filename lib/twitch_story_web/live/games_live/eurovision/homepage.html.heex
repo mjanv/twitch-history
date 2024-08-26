@@ -1,20 +1,13 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
-  <div class="md:flex md:items-center md:justify-between">
-    <div class="min-w-0 flex-1">
-      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-        🇪🇺 Eurovision ceremonies
-      </h1>
-    </div>
-    <div class="mt-4 flex md:ml-4 md:mt-0">
-      <.link
-        type="button"
-        class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
-        patch={~p"/games/eurovision/new"}
-      >
-        New ceremony
-      </.link>
-    </div>
-  </div>
+  <.heading title="🇪🇺 Eurovision ceremonies">
+    <.link
+      type="button"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      patch={~p"/games/eurovision/new"}
+    >
+      New ceremony
+    </.link>
+  </.heading>
 
   <.modal
     :if={@live_action in [:new]}
@@ -47,33 +40,37 @@
     <div class="px-4 py-5 sm:p-6">
       <h3 class="text-xl font-semibold leading-6 text-gray-900">What is a ceremony ?</h3>
       <div class="mt-2 text-l text-gray-500">
-        <p>
-          Think of a "Eurovision" ceremony as a fun event you can host and enjoy with other Twitch users. Once you"ve linked your Twitch account,
-          <b>you can create your own ceremony—just pick a name and choose the countries</b>
-          you want to include. After that, you"re ready to kick things off! Others can join your ceremony from the "Active Ceremonies" section, where they can vote or check out the leaderboard. During the ceremony, <b>everyone gets to rank the countries by giving out points—12, 10, 9, all the way down to 1</b>. Once everyone's voted, the points are added up, and when the creator decide to wrap it up,
-          <b>the country with the most points wins!</b>
-        </p>
+        <p></p>
       </div>
       <div class="mt-3 text-base leading-6">
-        <a href="#" class="font-semibold text-purple-600 hover:text-purple-500">
+        <.link
+          phx-click={show_modal("learn-more-modal")}
+          class="font-semibold text-purple-600 hover:text-purple-500"
+        >
           Learn more <span aria-hidden="true"> &rarr;</span>
-        </a>
+        </.link>
       </div>
     </div>
   </div>
 
-  <div class="relative mt-8">
-    <div class="absolute inset-0 flex items-center" aria-hidden="true">
-      <div class="w-full border-t border-gray-300"></div>
-    </div>
-    <div class="relative flex justify-start">
-      <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">
-        My ceremonies
-      </span>
-    </div>
-  </div>
+  <.modal id="learn-more-modal">
+    <p>
+      Think of a "Eurovision" ceremony as a fun event you can host and enjoy with other Twitch users. Once you"ve linked your Twitch account,
+      <b>you can create your own ceremony—just pick a name and choose the countries</b>
+      you want to include.
+    </p>
 
-  <.table id="ceremonies" rows={@streams.ceremonies}>
+    <br />
+
+    <p>
+      After that, you"re ready to kick things off! Others can join your ceremony from the "Active Ceremonies" section, where they can vote or check out the leaderboard. During the ceremony, <b>everyone gets to rank the countries by giving out points—12, 10, 9, all the way down to 1</b>. Once everyone's voted, the points are added up, and when the creator decide to wrap it up,
+      <b>the country with the most points wins!</b>
+    </p>
+  </.modal>
+
+  <.section title="My ceremonies" />
+
+  <.table id="my-ceremonies" rows={@streams.ceremonies}>
     <:col :let={{_, ceremony}} label="Name">
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
         <%= ceremony.name %>
@@ -95,9 +92,11 @@
     <:col :let={{_, ceremony}} label="Countries">
       <%= length(ceremony.countries) %> countries
     </:col>
-    <:action :let={{_id, ceremony}}>
+
+    <:action :let={{_, ceremony}}>
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>Edit</.link>
     </:action>
+
     <:action :let={{id, ceremony}}>
       <.link
         phx-click={"delete" |> JS.push(value: %{id: ceremony.id}) |> hide("##{id}")}
@@ -108,16 +107,7 @@
     </:action>
   </.table>
 
-  <div class="relative mt-20">
-    <div class="absolute inset-0 flex items-center" aria-hidden="true">
-      <div class="w-full border-t border-gray-300"></div>
-    </div>
-    <div class="relative flex justify-start">
-      <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">
-        Active ceremonies
-      </span>
-    </div>
-  </div>
+  <.section title="Active ceremonies" />
 
   <.table id="active-ceremonies" rows={@streams.active_ceremonies}>
     <:col :let={{_, ceremony}} label="Name">
@@ -149,16 +139,7 @@
     </:action>
   </.table>
 
-  <div class="relative mt-20">
-    <div class="absolute inset-0 flex items-center" aria-hidden="true">
-      <div class="w-full border-t border-gray-300"></div>
-    </div>
-    <div class="relative flex justify-start">
-      <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">
-        Past ceremonies
-      </span>
-    </div>
-  </div>
+  <.section title="Past ceremonies" />
 
   <.table id="past-ceremonies" rows={@streams.past_ceremonies}>
     <:col :let={{_, ceremony}} label="Name">

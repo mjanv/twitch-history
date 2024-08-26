@@ -31,7 +31,7 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
   end
 
   test "color/1", %{token: token} do
-    {:ok, color} = UserApi.color(token)
+    {:ok, color} = UserApi.color(token, %{id: nil})
 
     assert color == %{color: "#E4AE26"}
   end

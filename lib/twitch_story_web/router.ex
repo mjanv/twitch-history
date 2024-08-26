@@ -56,6 +56,17 @@ defmodule TwitchStoryWeb.Router do
   end
 
   scope "/", TwitchStoryWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_admin_user]
+
+    live_session :require_admin_user,
+      on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
+      live "/admin/dashboard", AdminLive.Dashboard, :index
+      live "/admin/dashboard/user/:id", AdminLive.Dashboard, :show_user
+      live "/admin/dashboard/user/:id/edit", AdminLive.Dashboard, :edit_user
+    end
+  end
+
+  scope "/", TwitchStoryWeb do
     pipe_through [:browser]
 
     delete "/users/log_out", UserSessionController, :delete
