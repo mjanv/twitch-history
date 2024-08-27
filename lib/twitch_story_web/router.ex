@@ -38,6 +38,7 @@ defmodule TwitchStoryWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
       live "/account", HomeLive.Account, :index
+      live "/channels", HomeLive.Channels, :index
 
       live "/users/settings", UserLive.SettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email

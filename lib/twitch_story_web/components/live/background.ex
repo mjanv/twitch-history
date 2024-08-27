@@ -1,4 +1,4 @@
-defmodule TwitchStoryWeb.Components.Background do
+defmodule TwitchStoryWeb.Components.Live.Background do
   @moduledoc false
 
   use Phoenix.LiveComponent

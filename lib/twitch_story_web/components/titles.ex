@@ -3,6 +3,8 @@ defmodule TwitchStoryWeb.Components.Titles do
 
   use Phoenix.Component
 
+  import TwitchStoryWeb.Components.CoreComponents
+
   attr :title, :string, required: true
   slot :inner_block
 
@@ -23,7 +25,7 @@ defmodule TwitchStoryWeb.Components.Titles do
 
   def section(assigns) do
     ~H"""
-    <div class="relative mt-8">
+    <div class="relative mt-8 mb-2">
       <div class="absolute inset-0 flex items-center" aria-hidden="true">
         <div class="w-full border-t border-gray-300"></div>
       </div>
@@ -32,6 +34,22 @@ defmodule TwitchStoryWeb.Components.Titles do
           <%= @title %>
         </span>
       </div>
+    </div>
+    """
+  end
+
+  attr :title, :string, required: true
+  attr :description, :string, required: false, default: ""
+  attr :icon, :string, required: false
+
+  def empty(assigns) do
+    ~H"""
+    <div class="flex flex-col items-center justify-center h-full p-8 mt-4 text-center border border-gray-300 rounded-lg">
+      <.icon name={@icon} class="w-16 h-16 text-gray-400 mb-2 size-6" />
+      <h3 class="text-lg font-semibold text-gray-600"><%= @title %></h3>
+      <%= if @description do %>
+        <p class="text-gray-500 mt-2"><%= @description %></p>
+      <% end %>
     </div>
     """
   end

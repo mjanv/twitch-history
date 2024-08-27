@@ -16,8 +16,9 @@ defmodule TwitchStory.Twitch.Services.Renewal do
 
   def sync_user(user) do
     with {:ok, token} <- renew_access_token(user),
-         {:ok, %{color: color}} <- Api.UserApi.color(token, user.twitch_id) do
-      {:ok, %{color: color}}
+         {:ok, %{color: color}} <- Api.UserApi.color(token, user.twitch_id),
+         {:ok, channels} <- Api.UserApi.followed_channels(token, user.twitch_id) do
+      {:ok, %{color: color, channels: channels}}
     else
       {:error, reason} -> {:error, reason}
     end

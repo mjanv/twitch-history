@@ -1,0 +1,26 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.heading title="Live channels"></.heading>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <%= for channel <- @channels do %>
+      <div class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-2 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div class="flex-shrink-0"></div>
+        <div class="min-w-0 flex-1">
+          <a href="#" class="focus:outline-none">
+            <span class="absolute inset-0" aria-hidden="true"></span>
+            <p class="text-base font-medium text-gray-900"><%= channel.title %></p>
+            <img src={
+              channel.thumbnail_url
+              |> String.replace("{height}", "300")
+              |> String.replace("{width}", "700")
+            } />
+            <.link class="truncate text-sm font-semibold text-purple-600 hover:text-purple-500">
+              <%= channel.user_name %> (<%= channel.viewer_count %> viewers)
+              <span aria-hidden="true"> &rarr;</span>
+            </.link>
+          </a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

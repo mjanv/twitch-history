@@ -37,7 +37,7 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
   end
 
   test "followed_channels/1", %{token: token} do
-    {:ok, channels} = UserApi.followed_channels(token)
+    {:ok, channels} = UserApi.followed_channels(token, %{id: nil})
 
     assert length(channels) > 0
 

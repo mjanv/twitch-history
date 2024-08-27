@@ -105,6 +105,14 @@
         Delete
       </.link>
     </:action>
+
+    <:empty>
+      <.empty
+        title="No ceremony created"
+        description="Click 'New ceremony' to create a new one !"
+        icon="hero-star"
+      />
+    </:empty>
   </.table>
 
   <.section title="Active ceremonies" />
@@ -137,6 +145,14 @@
     <:action :let={{_id, ceremony}}>
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}/leaderboard"}>Leaderboard</.link>
     </:action>
+
+    <:empty>
+      <.empty
+        title="No active ceremonies"
+        description="Created ceremonies should be started before being accessible"
+        icon="hero-fire"
+      />
+    </:empty>
   </.table>
 
   <.section title="Past ceremonies" />
@@ -163,5 +179,9 @@
     <:col :let={{_, ceremony}} label="Countries">
       <%= length(ceremony.countries) %> countries
     </:col>
+
+    <:empty>
+      <.empty title="No past ceremonies" icon="hero-folder-open" />
+    </:empty>
   </.table>
 </div>

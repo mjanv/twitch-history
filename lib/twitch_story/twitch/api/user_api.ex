@@ -35,18 +35,36 @@ defmodule TwitchStory.Twitch.Api.UserApi do
     end
   end
 
-  @fields ["user_id", "user_login", "user_name"]
+  @doc """
+   %{
+       id: "41004855461",
+       type: "live",
+       started_at: "2024-08-27T09:22:20Z",
+       title: "c'est reparti pour du gamedev Unity Multiplayer",
+       language: "fr",
+       tags: ["chill", "radio", "maman", "Français", "Unity", "IndieGameDev",
+        "Angers"],
+       user_id: "462818643",
+       user_name: "Aqueuse",
+       game_id: "1469308723",
+       game_name: "Software and Game Development",
+       is_mature: false,
+       tag_ids: [],
+       thumbnail_url: "https://static-cdn.jtvnw.net/previews-ttv/live_user_aqueuse-{width}x{height}.jpg",
+       user_login: "aqueuse",
+       viewer_count: 30
+     }
+  """
 
-  def followed_channels(token) do
+  def followed_channels(token, id) do
     AuthApi.get(
-      url: "/helix/streams/followed?user_id=#{token.user_id}",
+      url: "/helix/streams/followed?user_id=#{id}&first=100",
       token: token.access_token
     )
     |> case do
       {:ok, %Req.Response{status: 200, body: %{"data" => data}}} -> data
       _ -> []
     end
-    |> Enum.map(&Map.take(&1, @fields))
     |> Enum.map(&string_to_atom_keys/1)
     |> then(fn channels -> {:ok, channels} end)
   end
