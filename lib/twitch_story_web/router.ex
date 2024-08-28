@@ -43,6 +43,8 @@ defmodule TwitchStoryWeb.Router do
       on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
       live "/account", HomeLive.Account, :index
       live "/channels", HomeLive.Channels, :index
+      live "/schedule", HomeLive.Schedule, :index
+      live "/schedule/:broadcaster_id", HomeLive.Schedule, :broadcaster
 
       live "/users/settings", UserLive.SettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email

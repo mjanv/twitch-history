@@ -1,4 +1,6 @@
 defmodule TwitchStoryWeb.Layouts do
+  @moduledoc false
+
   use TwitchStoryWeb, :html
 
   embed_templates "layouts/*"

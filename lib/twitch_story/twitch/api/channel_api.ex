@@ -36,6 +36,37 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
     |> then(fn data -> {:ok, data} end)
   end
 
+  def schedule(broadcaster_id) do
+    AuthApi.get(url: "/helix/schedule?broadcaster_id=#{broadcaster_id}")
+    |> case do
+      {:ok, %Req.Response{status: 200, body: %{"data" => %{"segments" => segments}}}} -> segments
+      _ -> []
+    end
+    |> Enum.map(fn entry ->
+      entry
+      |> Map.update("category", nil, fn %{"name" => name} -> name end)
+      |> Map.update("start_time", nil, fn t -> t |> DateTime.from_iso8601() |> elem(1) end)
+      |> Map.update("end_time", nil, fn t -> t |> DateTime.from_iso8601() |> elem(1) end)
+      |> Enum.map(fn
+        {"canceled_until", nil} -> {"is_canceled", false}
+        {"canceled_until", _} -> {"is_canceled", true}
+        pair -> pair
+      end)
+      |> Enum.into(%{})
+      |> Map.take([
+        "id",
+        "title",
+        "start_time",
+        "end_time",
+        "is_recurring",
+        "is_canceled",
+        "category"
+      ])
+      |> string_to_atom_keys()
+    end)
+    |> then(fn data -> {:ok, data} end)
+  end
+
   def channel(broadcaster_id) do
     with {:ok, channel} <- channels(broadcaster_id),
          {:ok, user} <- users(broadcaster_id) do
@@ -75,5 +106,9 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
       _ ->
         {:error, :not_found}
     end
+  end
+
+  defp string_to_atom_keys(m) do
+    for {k, v} <- m, into: %{}, do: {String.to_atom(k), v}
   end
 end

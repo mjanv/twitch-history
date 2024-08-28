@@ -19,7 +19,7 @@ defmodule TwitchStory.Twitch.Api.ChannelApiTest do
              "channel_id" => "468884133",
              "emote_set_id" => "300667317",
              "format" => ["static"],
-             "id" => "emotesv2_99b8a71a7de54664a489953555c6a596",
+             "emote_id" => "emotesv2_99b8a71a7de54664a489953555c6a596",
              "name" => "flonflFCana",
              "scale" => ["1.0", "2.0", "3.0"],
              "theme_mode" => ["light", "dark"]
@@ -44,11 +44,24 @@ defmodule TwitchStory.Twitch.Api.ChannelApiTest do
                "musique",
                "react",
                "music",
-               "culture",
-               "newmusicfriday"
+               "culture"
              ],
              "thumbnail_url" =>
                "https://static-cdn.jtvnw.net/jtv_user_pictures/27d0d345-fa19-4f06-ad53-94a955d85f54-profile_image-300x300.png"
            }
+  end
+
+  test "schedule/1" do
+    {:ok, segments} = ChannelApi.schedule(468_884_133)
+
+    for segment <- segments do
+      assert is_binary(segment.id)
+      assert is_binary(segment.title)
+      assert is_binary(segment.category)
+      assert is_binary(DateTime.to_string(segment.start_time))
+      assert is_binary(DateTime.to_string(segment.end_time))
+      assert is_boolean(segment.is_recurring)
+      assert is_boolean(segment.is_canceled)
+    end
   end
 end
