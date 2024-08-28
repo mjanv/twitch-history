@@ -34,7 +34,10 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/twitch_story_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/twitch_story_web/(controllers|live|components)/.*(ex|heex)$",
+      ~r"lib/twitch_story_web/(live|components)/.*neex$",
+      ~r"lib/twitch_story_web/styles/*.ex$",
+      ~r"priv/static/*.styles$"
     ]
   ]
 
@@ -49,3 +52,8 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :phoenix_live_view, :debug_heex_annotations, true
+
+# Mobile
+config :live_view_native_stylesheet,
+  annotations: true,
+  pretty: true

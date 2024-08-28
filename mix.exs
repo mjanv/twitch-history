@@ -50,6 +50,11 @@ defmodule TwitchStory.MixProject do
       {:ueberauth, "~> 0.10"},
       {:ueberauth_twitch, "~> 0.2"},
       {:set_locale, "~> 0.2.1"},
+      # Mobile
+      {:live_view_native, "~> 0.3.0"},
+      {:live_view_native_stylesheet, "~> 0.3.0"},
+      {:live_view_native_swiftui, "~> 0.3.0"},
+      {:live_view_native_live_form, "~> 0.3.0"},
       # Backend
       {:uniq, "~> 0.1"},
       {:uuid, "~> 1.1"},

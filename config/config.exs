@@ -93,4 +93,14 @@ config :twitch_story, TwitchStoryWeb.Gettext,
   locales: ~w(en fr),
   default_locale: "en"
 
+# Mobile
+config :phoenix_template, :format_encoders, swiftui: Phoenix.HTML.Engine
+config :mime, :types, %{"text/styles" => ["styles"], "text/swiftui" => ["swiftui"]}
+config :live_view_native, plugins: [LiveViewNative.SwiftUI]
+config :phoenix, :template_engines, neex: LiveViewNative.Engine
+
+config :live_view_native_stylesheet,
+  content: [swiftui: ["lib/**/swiftui/*", "lib/**/*swiftui*"]],
+  output: "priv/static/assets"
+
 import_config "#{config_env()}.exs"
