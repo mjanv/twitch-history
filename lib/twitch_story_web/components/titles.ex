@@ -10,7 +10,7 @@ defmodule TwitchStoryWeb.Components.Titles do
 
   def heading(assigns) do
     ~H"""
-    <div class="md:flex md:items-center md:justify-between">
+    <div class="mb-2 md:flex md:items-center md:justify-between">
       <div class="min-w-0 flex-1">
         <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
           <%= @title %>
@@ -25,9 +25,10 @@ defmodule TwitchStoryWeb.Components.Titles do
 
   def section(assigns) do
     ~H"""
-    <div class="relative mt-8 mb-2">
+    <div class="relative mt-12 mb-2">
       <div class="absolute inset-0 flex items-center" aria-hidden="true">
-        <div class="w-full border-t border-gray-300"></div>
+        <div class="w-full border-t border-gray-300 shadow-[2px_2px_0_0] shadow-purple-500/30 transform hover:shadow-[8px_8px_0_0] hover:shadow-purple-600/50 transition-shadow duration-300">
+        </div>
       </div>
       <div class="relative flex justify-start">
         <span class="bg-white pr-3 text-xl font-semibold leading-6 text-gray-900">

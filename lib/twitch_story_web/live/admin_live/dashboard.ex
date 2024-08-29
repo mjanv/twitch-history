@@ -4,10 +4,11 @@ defmodule TwitchStoryWeb.AdminLive.Dashboard do
   use TwitchStoryWeb, :live_view
 
   alias TwitchStory.Accounts.User
+  alias TwitchStory.Twitch.Channels.Channel
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, users: User.all(), roles: User.count_roles())}
+    {:ok, assign(socket, users: User.all(), roles: User.count_roles(), channels: Channel.all())}
   end
 
   @impl true

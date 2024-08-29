@@ -32,20 +32,23 @@ defmodule TwitchStory.Twitch.Channels.Channel do
   @validations [
     :broadcaster_id,
     :broadcaster_login,
-    :broadcaster_name,
-    :broadcaster_language,
-    :description,
-    :tags
+    :broadcaster_name
   ]
 
   @doc false
-  def changeset(channel, attrs),
-    do: channel |> cast(attrs, @casts) |> validate_required(@validations)
+  def changeset(channel, attrs) do
+    channel
+    |> cast(attrs, @casts)
+    |> validate_required(@validations)
+  end
 
   def change(%__MODULE__{} = channel, attrs \\ %{}), do: __MODULE__.changeset(channel, attrs)
 
-  def list, do: Repo.all(__MODULE__)
-  def get!(id), do: Repo.get_by!(__MODULE__, broadcaster_id: id)
+  def all, do: Repo.all(__MODULE__)
+  def count, do: Repo.one(from c in __MODULE__, select: count(c.id))
+
+
+  def get!(id), do: Repo.get_by(__MODULE__, broadcaster_id: id)
   def create(attrs \\ %{}), do: Repo.insert(__MODULE__.changeset(%__MODULE__{}, attrs))
 
   def update(%__MODULE__{} = channel, attrs),

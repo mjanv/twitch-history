@@ -26,7 +26,7 @@ defmodule TwitchStory.Twitch do
     end
   end
 
-  defdelegate channels, to: Channels.Channel, as: :list
+  defdelegate channels, to: Channels.Channel, as: :all
   def channel_changeset, do: Channels.Channel.change(%Channels.Channel{})
 
   def create_channel(name) do

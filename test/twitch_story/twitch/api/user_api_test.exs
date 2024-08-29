@@ -36,13 +36,19 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
     assert color == %{color: "#E4AE26"}
   end
 
-  test "followed_channels/1", %{token: token} do
-    {:ok, channels} = UserApi.followed_channels(token, %{id: nil})
+  test "live_streams/1", %{token: token} do
+    {:ok, channels} = UserApi.live_streams(token, %{id: nil})
 
     assert length(channels) > 0
 
     for channel <- channels do
       assert Map.keys(channel) == [:user_id, :user_login, :user_name]
     end
+  end
+
+  test "followed_channels/1", %{token: token} do
+    {:ok, _channels} = UserApi.followed_channels(token, %{id: nil})
+
+    # TODO asserts
   end
 end

@@ -56,7 +56,7 @@ defmodule TwitchStory.Twitch.Api.UserApi do
      }
   """
 
-  def followed_channels(token, id) do
+  def live_streams(token, id) do
     AuthApi.get(
       url: "/helix/streams/followed?user_id=#{id}&first=100",
       token: token.access_token
@@ -66,7 +66,39 @@ defmodule TwitchStory.Twitch.Api.UserApi do
       _ -> []
     end
     |> Enum.map(&string_to_atom_keys/1)
-    |> then(fn channels -> {:ok, channels} end)
+    |> then(fn streams -> {:ok, streams} end)
+  end
+
+  @doc """
+  %{
+    "broadcaster_id" => "49632767",
+    "broadcaster_login" => "blitzstream",
+    "broadcaster_name" => "BlitzStream",
+    "followed_at" => "2020-04-13T20:13:50Z"
+  }
+  """
+  def followed_channels(token, id, cursor \\ nil) do
+    url =
+      case cursor do
+        nil -> "/helix/channels/followed?user_id=#{id}&first=100"
+        cursor -> "/helix/channels/followed?user_id=#{id}&after=#{cursor}"
+      end
+
+    AuthApi.get(url: url, token: token.access_token)
+    |> case do
+      {:ok, %Req.Response{status: 200, body: %{"data" => data, "pagination" => pagination}}} ->
+        {:ok, next} =
+          case pagination do
+            %{"cursor" => cursor} -> followed_channels(token, id, cursor)
+            _ -> {:ok, []}
+          end
+
+        Enum.map(data, &string_to_atom_keys/1) ++ next
+
+      _ ->
+        []
+    end
+    |> then(fn streams -> {:ok, streams} end)
   end
 
   defp string_to_atom_keys(m) do

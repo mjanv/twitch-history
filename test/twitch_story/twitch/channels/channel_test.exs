@@ -18,9 +18,9 @@ defmodule TwitchStory.Twitch.Channels.ChannelTest do
     thumbnail: nil
   }
 
-  test "list/0 returns all channels" do
+  test "all/0 returns all channels" do
     channel = channel_fixture()
-    assert Channel.list() == [channel]
+    assert Channel.all() == [channel]
   end
 
   test "get!/1 returns the channel with given id" do
@@ -89,7 +89,7 @@ defmodule TwitchStory.Twitch.Channels.ChannelTest do
   test "delete/1 deletes the channel" do
     channel = channel_fixture()
     assert {:ok, %Channel{}} = Channel.delete(channel)
-    assert_raise Ecto.NoResultsError, fn -> Channel.get!(channel.broadcaster_id) end
+    assert Channel.get!(channel.broadcaster_id) == nil
   end
 
   test "change/1 returns a channel changeset" do

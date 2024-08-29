@@ -3,8 +3,8 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Twitch.Api.ChannelApi
-  alias TwitchStory.Twitch.Services.Renewal
+  alias TwitchStory.Twitch.Api
+  alias TwitchStory.Twitch.Auth
 
   @impl true
   def mount(
@@ -18,7 +18,8 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
           [%{id: params["broadcaster_id"]}]
 
         _ ->
-          {:ok, %{channels: channels}} = Renewal.sync_user(current_user)
+          {:ok, token} = Auth.OauthToken.get(current_user)
+          {:ok, channels} = Api.UserApi.live_streams(token, current_user.twitch_id)
           channels
       end
       |> work()
@@ -42,7 +43,7 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
     {:ok, pid} =
       Task.start_link(fn ->
         Enum.each(channels, fn channel ->
-          {:ok, schedule} = ChannelApi.schedule(String.to_integer(channel.id))
+          {:ok, schedule} = Api.ChannelApi.schedule(String.to_integer(channel.id))
           send(parent, {:schedule, schedule})
         end)
       end)
