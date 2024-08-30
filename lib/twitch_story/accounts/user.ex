@@ -22,6 +22,9 @@ defmodule TwitchStory.Accounts.User do
     field :twitch_avatar, :string
     has_one :twitch_token, TwitchStory.Twitch.Auth.OauthToken
 
+    many_to_many :followed_channels, TwitchStory.Twitch.Channels.Channel,
+      join_through: TwitchStory.Accounts.FollowedChannel
+
     timestamps(type: :utc_datetime)
   end
 

@@ -71,10 +71,10 @@ defmodule TwitchStory.Twitch.Api.UserApi do
 
   @doc """
   %{
-    "broadcaster_id" => "49632767",
-    "broadcaster_login" => "blitzstream",
-    "broadcaster_name" => "BlitzStream",
-    "followed_at" => "2020-04-13T20:13:50Z"
+    broadcaster_id: "49632767",
+    broadcaster_login: "blitzstream",
+    broadcaster_name: "BlitzStream",
+    followed_at: "2020-04-13T20:13:50Z"
   }
   """
   def followed_channels(token, id, cursor \\ nil) do

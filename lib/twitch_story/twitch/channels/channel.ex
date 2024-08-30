@@ -15,6 +15,9 @@ defmodule TwitchStory.Twitch.Channels.Channel do
     field :thumbnail_url, :string
     field :thumbnail, :binary
 
+    many_to_many :users, TwitchStory.Accounts.User,
+      join_through: TwitchStory.Accounts.FollowedChannel
+
     timestamps(type: :utc_datetime)
   end
 
@@ -46,7 +49,6 @@ defmodule TwitchStory.Twitch.Channels.Channel do
 
   def all, do: Repo.all(__MODULE__)
   def count, do: Repo.one(from c in __MODULE__, select: count(c.id))
-
 
   def get!(id), do: Repo.get_by(__MODULE__, broadcaster_id: id)
   def create(attrs \\ %{}), do: Repo.insert(__MODULE__.changeset(%__MODULE__{}, attrs))

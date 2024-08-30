@@ -3,6 +3,7 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
 
   use TwitchStoryWeb, :live_view
 
+  alias TwitchStory.Accounts.User
   alias TwitchStory.Twitch.Api
   alias TwitchStory.Twitch.Auth
   alias TwitchStory.Twitch.Workers
@@ -24,6 +25,7 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
     case live_action do
       :sync ->
         Workers.ChannelWorker.start(current_user.id)
+
         socket
         |> put_flash(:info, "Sync started...")
 
@@ -32,8 +34,11 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
         assign(socket, channels: [], live_streams: streams)
 
       :index ->
-        {:ok, channels} = Api.UserApi.followed_channels(token, current_user.twitch_id)
-        assign(socket, channels: channels, live_streams: [])
+        current_user.id
+        |> User.get()
+        |> TwitchStory.Repo.preload(:followed_channels)
+        |> Map.get(:followed_channels)
+        |> then(fn channels -> assign(socket, channels: channels, live_streams: []) end)
     end
     |> then(fn socket -> {:noreply, socket} end)
   end
@@ -42,6 +47,13 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
   def handle_info({:sync_planned, n}, socket) do
     socket
     |> put_flash(:info, "Planned #{n} channels...")
+    |> then(fn socket -> {:noreply, socket} end)
+  end
+
+  @impl true
+  def handle_info(:sync_finished, socket) do
+    socket
+    |> put_flash(:info, "Finished sync !")
     |> then(fn socket -> {:noreply, socket} end)
   end
 

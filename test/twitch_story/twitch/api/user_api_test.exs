@@ -49,6 +49,6 @@ defmodule TwitchStory.Twitch.Api.UserApiTest do
   test "followed_channels/1", %{token: token} do
     {:ok, _channels} = UserApi.followed_channels(token, %{id: nil})
 
-    # TODO asserts
+    assert false
   end
 end
