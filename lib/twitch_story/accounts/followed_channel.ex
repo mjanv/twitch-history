@@ -22,11 +22,20 @@ defmodule TwitchStory.Accounts.FollowedChannel do
     |> Ecto.Changeset.validate_required([:user_id, :channel_id, :followed_at])
   end
 
-  @doc "Get all followed channels by a specific user"
-  def all(user_id) do
+  @doc """
+  - Get all followed channels by a specific user
+  - Get all users following a specific user
+  """
+  def all(user_id: user_id) do
     from(c in __MODULE__, where: c.user_id == ^user_id)
     |> Repo.all()
     |> Repo.preload(:channel)
+  end
+
+  def all(channel_id: channel_id) do
+    from(c in __MODULE__, where: c.channel_id == ^channel_id)
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc "Register followed channels"
@@ -34,15 +43,14 @@ defmodule TwitchStory.Accounts.FollowedChannel do
     channels
     |> Enum.map(fn %{broadcaster_id: broadcaster_id, followed_at: followed_at} ->
       channel = Channel.get!(broadcaster_id)
-      attrs = %{user_id: user.id, channel_id: channel.id, followed_at: followed_at}
-      changeset(%__MODULE__{}, attrs)
+      %{user_id: user.id, channel_id: channel.id, followed_at: followed_at}
     end)
-    |> Enum.reduce(Ecto.Multi.new(), fn changeset, multi ->
-      Ecto.Multi.insert(multi, UUID.uuid4(), changeset)
+    |> Enum.reduce(Ecto.Multi.new(), fn attrs, multi ->
+      Ecto.Multi.insert(multi, UUID.uuid4(), changeset(%__MODULE__{}, attrs))
     end)
     |> Repo.transaction()
     |> case do
-      {:ok, _} -> {:ok, all(user.id)}
+      {:ok, _} -> {:ok, all(user_id: user.id)}
       {:error, reason} -> {:error, reason}
     end
   end

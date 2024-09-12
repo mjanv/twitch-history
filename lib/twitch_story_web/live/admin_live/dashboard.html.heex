@@ -2,25 +2,12 @@
   <.heading title="Dashboard"></.heading>
 
   <.section title="Users" />
-
-  <div>
-    <dl class="mt-5 mb-6 grid grid-cols-1 gap-5 sm:grid-cols-7">
-      <div class="overflow-hidden rounded-lg bg-white px-4 pt-3 pb-5 border border-gray-700/20 shadow-[4px_4px_0_0] shadow-purple-500/30 transform hover:shadow-[8px_8px_0_0] hover:shadow-purple-600/50 transition-shadow duration-300">
-        <dt class="truncate text-l font-semibold text-gray-800">Users</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= Enum.sum(Keyword.values(@roles)) %>
-        </dd>
-      </div>
-      <%= for {key, name} <- [{:streamer, "Streamers"}, {:viewer, "Viewers"}, {:admin, "Admins"}] do %>
-        <div class="overflow-hidden rounded-lg bg-white px-4 pt-3 pb-5 border border-gray-700/20 shadow-[4px_4px_0_0] shadow-purple-500/30 transform hover:shadow-[8px_8px_0_0] hover:shadow-purple-600/50 transition-shadow duration-300">
-          <dt class="truncate text-l font-semibold text-gray-800"><%= name %></dt>
-          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-            <%= Keyword.get(@roles, key, 0) %>
-          </dd>
-        </div>
-      <% end %>
-    </dl>
-  </div>
+  <.stats rows={[
+    {"Users", Enum.sum(Keyword.values(@roles))},
+    {"Streamers", Keyword.get(@roles, :streamer, 0)},
+    {"Viewers", Keyword.get(@roles, :viewer, 0)},
+    {"Admins", Keyword.get(@roles, :admin, 0)}
+  ]} />
 
   <.table id="users" rows={@users}>
     <:col :let={user} label="Name">
@@ -140,34 +127,8 @@
   </.modal>
 
   <.section title="Channels" />
-
-  <div>
-    <dl class="mt-5 mb-6 grid grid-cols-1 gap-5 sm:grid-cols-7">
-      <div class="overflow-hidden rounded-lg bg-white px-4 pt-3 pb-5 border border-gray-700/20 shadow-[4px_4px_0_0] shadow-purple-500/30 transform hover:shadow-[8px_8px_0_0] hover:shadow-purple-600/50 transition-shadow duration-300">
-        <dt class="truncate text-l font-semibold text-gray-800">Channels</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= length(@channels) %>
-        </dd>
-      </div>
-    </dl>
-  </div>
-
-  <.table id="channels" rows={@channels}>
-    <:col :let={channel} label="Name"><%= channel.broadcaster_name %></:col>
-    <:col :let={channel} label="Description"><%= channel.description %></:col>
-    <:col :let={channel} label="Tags">
-      <%= for tag <- channel.tags || [] do %>
-        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
-          <%= tag %>
-        </span>
-      <% end %>
-    </:col>
-    <:col :let={channel} label="Language"><%= channel.broadcaster_language %></:col>
-    <:col :let={channel} label="Inserted at"><%= inspect(channel.inserted_at) %></:col>
-    <:col :let={channel} label="Updated at"><%= inspect(channel.updated_at) %></:col>
-  </.table>
+  <.stats rows={[{"Channels", @channels}]} />
 
   <.section title="Events" />
-
   <.live_component module={TwitchStoryWeb.AdminLive.Components.Events} id="events" />
 </div>

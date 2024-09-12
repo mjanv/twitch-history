@@ -24,6 +24,10 @@ defmodule TwitchStory.Accounts.UserToken do
     timestamps(updated_at: false)
   end
 
+  def all do
+    Repo.all(__MODULE__) |> Repo.preload(:user)
+  end
+
   @doc "Generates a session token."
   def generate_user_session_token(%{id: id}) do
     @rand_size

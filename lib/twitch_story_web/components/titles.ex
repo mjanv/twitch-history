@@ -54,4 +54,23 @@ defmodule TwitchStoryWeb.Components.Titles do
     </div>
     """
   end
+
+  attr :rows, :list, default: []
+
+  def stats(assigns) do
+    ~H"""
+    <div>
+      <dl class="mt-5 mb-6 grid grid-cols-1 gap-5 sm:grid-cols-7">
+        <%= for {title, value} <- @rows do %>
+          <div class="overflow-hidden rounded-lg bg-white px-4 pt-3 pb-5 border border-gray-700/20 shadow-[4px_4px_0_0] shadow-purple-500/30 transform hover:shadow-[8px_8px_0_0] hover:shadow-purple-600/50 transition-shadow duration-300">
+            <dt class="truncate text-l font-semibold text-gray-800"><%= title %></dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+              <%= value %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+    """
+  end
 end

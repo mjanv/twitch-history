@@ -20,6 +20,10 @@ defmodule TwitchStory.Twitch.Auth.OauthToken do
     Repo.one(from t in __MODULE__, select: count(t.id))
   end
 
+  def all do
+    Repo.all(__MODULE__) |> Repo.preload(:user)
+  end
+
   def get(%{id: user_id}) do
     __MODULE__
     |> Repo.get_by(user_id: user_id)

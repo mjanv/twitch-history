@@ -1,0 +1,48 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.section title="User tokens" />
+
+  <.table id="tokens" rows={@user_tokens}>
+    <:col :let={token} label="User">
+      <%= token.user.name %>
+    </:col>
+    <:col :let={token} label="Email">
+      <%= token.user.email %>
+    </:col>
+    <:col :let={token} label="Context">
+      <%= token.context %>
+    </:col>
+    <:col :let={token} label="Sent to">
+      <%= token.sent_to %>
+    </:col>
+    <:col :let={token} label="Inserted at">
+      <%= token.inserted_at %>
+    </:col>
+  </.table>
+
+  <.section title="Oauth tokens" />
+
+  <.table id="tokens" rows={@oauth_tokens}>
+    <:col :let={token} label="User Id">
+      <%= token.user_id %>
+    </:col>
+    <:col :let={token} label="User">
+      <%= token.user.name %>
+    </:col>
+    <:col :let={token} label="Email">
+      <%= token.user.email %>
+    </:col>
+    <:col :let={token} label="Scopes">
+      <%= for scope <- token.scopes || [] do %>
+        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
+          <%= scope %>
+        </span>
+      <% end %>
+    </:col>
+    <:col :let={token} label="Inserted at">
+      <%= token.inserted_at %>
+    </:col>
+    <:col :let={token} label="Expires at">
+      <%= token.expires_at %>
+    </:col>
+  </.table>
+</div>

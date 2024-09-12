@@ -8,7 +8,7 @@ defmodule TwitchStoryWeb.AdminLive.Dashboard do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, users: User.all(), roles: User.count_roles(), channels: Channel.all())}
+    {:ok, assign(socket, users: User.all(), roles: User.count_roles(), channels: Channel.count())}
   end
 
   @impl true
