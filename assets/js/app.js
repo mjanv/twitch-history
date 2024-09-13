@@ -21,9 +21,10 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import VegaLite from "./vegalite"
 import Sortable from "../vendor/sortable"
+import InfiniteScroll from "./infinite_scroll"
 
 
-let hooks = { VegaLite }
+let hooks = {VegaLite, InfiniteScroll}
 hooks.Sortable = {
   mounted() {
     let group = this.el.dataset.group

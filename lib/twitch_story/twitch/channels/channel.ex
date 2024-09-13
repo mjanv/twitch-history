@@ -48,7 +48,15 @@ defmodule TwitchStory.Twitch.Channels.Channel do
   def change(%__MODULE__{} = channel, attrs \\ %{}), do: __MODULE__.changeset(channel, attrs)
 
   def all, do: Repo.all(__MODULE__)
-  def count, do: Repo.one(from c in __MODULE__, select: count(c.id))
+
+  def page(page, page_size \\ 10, order_by \\ [asc: :broadcaster_id]) do
+    __MODULE__
+    |> order_by(^order_by)
+    |> Repo.paginate(page: page, page_size: page_size)
+    |> Map.get(:entries)
+  end
+
+  def count, do: Repo.count(__MODULE__)
 
   def get!(id), do: Repo.get_by(__MODULE__, broadcaster_id: id)
   def create(attrs \\ %{}), do: Repo.insert(__MODULE__.changeset(%__MODULE__{}, attrs))

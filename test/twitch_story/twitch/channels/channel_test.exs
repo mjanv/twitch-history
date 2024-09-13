@@ -23,6 +23,24 @@ defmodule TwitchStory.Twitch.Channels.ChannelTest do
     assert Channel.all() == [channel]
   end
 
+  test "page/1 return paginated results" do
+    channels =
+      1..20
+      |> Enum.map(fn _ -> channel_fixture() end)
+      |> Enum.sort_by(&Map.fetch(&1, :broadcaster_id))
+
+    pages = Enum.chunk_every(channels, 10)
+
+    for n <- 1..2 do
+      page = Channel.page(n)
+      assert length(page) == 10
+      assert page == Enum.at(pages, n - 1)
+    end
+
+    assert Channel.page(2) == Channel.page(3)
+    assert Channel.page(2) == Channel.page(4)
+  end
+
   test "get!/1 returns the channel with given id" do
     channel = channel_fixture()
     assert Channel.get!(channel.broadcaster_id) == channel

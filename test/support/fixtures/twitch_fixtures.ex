@@ -12,8 +12,8 @@ defmodule TwitchStory.TwitchFixtures do
   def channel_fixture(attrs \\ %{}) do
     attrs
     |> Enum.into(%{
-      broadcaster_id: "some broadcaster_id",
-      broadcaster_language: "some broadcaster_language",
+      broadcaster_id: UUID.uuid4(),
+      broadcaster_language: Enum.random(["fr", "en"]),
       broadcaster_login: "some broadcaster_login",
       broadcaster_name: "some broadcaster_name",
       description: "some description",
