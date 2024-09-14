@@ -16,7 +16,7 @@ defmodule TwitchStoryWeb.AuthController do
       {:ok, user} ->
         auth
         |> Auth.Callback.oauth_token_attrs()
-        |> Auth.OauthToken.create(user)
+        |> Auth.OauthToken.create_or_update(user)
 
       {:error, _} ->
         :ok

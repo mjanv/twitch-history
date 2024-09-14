@@ -16,7 +16,8 @@
     <:col :let={{_, channel}} label="Language"><%= channel.broadcaster_language %></:col>
     <:col :let={{_, channel}} label="Inserted at"><%= inspect(channel.inserted_at) %></:col>
     <:col :let={{_, channel}} label="Updated at"><%= inspect(channel.updated_at) %></:col>
+    <:empty><.empty title="No channels" description="" icon="hero-film" /></:empty>
   </.table>
 
-  <div id="infinite-scroll-marker" phx-hook="InfiniteScroll" data-page={@page}></div>
+  <.infinite_scroll page={@page} />
 </div>

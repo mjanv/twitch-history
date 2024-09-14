@@ -3,8 +3,8 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
 
   use TwitchStoryWeb, :live_view
 
+  alias TwitchStory.Accounts.FollowedChannel
   alias TwitchStory.Twitch.Api
-  alias TwitchStory.Twitch.Auth
 
   @impl true
   def mount(
@@ -15,12 +15,10 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
     pid =
       case live_action do
         :broadcaster ->
-          [%{id: params["broadcaster_id"]}]
+          [%{broadcaster_id: params["broadcaster_id"]}]
 
         _ ->
-          {:ok, token} = Auth.OauthToken.get(current_user)
-          {:ok, channels} = Api.UserApi.live_streams(token, current_user.twitch_id)
-          channels
+          FollowedChannel.all(user_id: current_user.id)
       end
       |> work()
 
@@ -42,8 +40,11 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
 
     {:ok, pid} =
       Task.start_link(fn ->
-        Enum.each(channels, fn channel ->
-          {:ok, schedule} = Api.ChannelApi.schedule(String.to_integer(channel.id))
+        channels
+        |> Enum.each(fn channel ->
+          {:ok, schedule} =
+            Api.ChannelApi.schedule(String.to_integer(channel.channel.broadcaster_id))
+
           send(parent, {:schedule, schedule})
         end)
       end)

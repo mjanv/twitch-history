@@ -44,7 +44,7 @@
   <% end %>
 
   <%= if @live_action == :index do %>
-    <.heading title={"Followed channels (#{length(@channels)})"}>
+    <.heading title="Followed channels">
       <.link
         type="button"
         class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
@@ -53,13 +53,20 @@
         <.icon name="hero-arrow-path" class="mr-2" /> Sync my channels
       </.link>
     </.heading>
+
+    <.stats rows={[{"Channels", length(@channels)}]} />
+
     <.table id="channels" rows={@channels}>
       <:col :let={channel} label="Name">
-        <%= channel.broadcaster_name %>
+        <%= channel.channel.broadcaster_name %>
       </:col>
 
-      <:col :let={channel} label="Inserted at">
-        <%= channel.inserted_at %>
+      <:col :let={channel} label="Description">
+        <%= channel.channel.description %>
+      </:col>
+
+      <:col :let={channel} label="Followed at">
+        <%= channel.followed_at %>
       </:col>
     </.table>
   <% end %>

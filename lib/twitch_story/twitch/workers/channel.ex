@@ -23,11 +23,7 @@ defmodule TwitchStory.Twitch.Workers.ChannelWorker do
       |> __MODULE__.new()
       |> Oban.insert()
 
-      Phoenix.PubSub.broadcast(
-        TwitchStory.PubSub,
-        "channels:user:#{user_id}",
-        {:sync_planned, length(jobs)}
-      )
+      TwitchStory.PubSub.broadcast("channels:user:#{user_id}", {:sync_planned, length(jobs)})
 
       :ok
     end

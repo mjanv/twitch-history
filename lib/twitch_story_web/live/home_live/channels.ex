@@ -3,14 +3,14 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Accounts.User
+  alias TwitchStory.Accounts.FollowedChannel
   alias TwitchStory.Twitch.Api
   alias TwitchStory.Twitch.Auth
   alias TwitchStory.Twitch.Workers
 
   @impl true
   def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
-    Phoenix.PubSub.subscribe(TwitchStory.PubSub, "channels:user:#{current_user.id}")
+    TwitchStory.PubSub.subscribe("channels:user:#{current_user.id}")
     {:ok, socket}
   end
 
@@ -30,15 +30,11 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
         |> put_flash(:info, "Sync started...")
 
       :live ->
-        {:ok, streams} = Api.UserApi.live_streams(token, current_user.twitch_id)
+        {:ok, streams} = Api.UserApi.live_streams(token)
         assign(socket, channels: [], live_streams: streams)
 
       :index ->
-        current_user.id
-        |> User.get()
-        |> TwitchStory.Repo.preload(:followed_channels)
-        |> Map.get(:followed_channels)
-        |> then(fn channels -> assign(socket, channels: channels, live_streams: []) end)
+        assign(socket, channels: FollowedChannel.all(user_id: current_user.id), live_streams: [])
     end
     |> then(fn socket -> {:noreply, socket} end)
   end
@@ -54,13 +50,14 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
   def handle_info(:sync_finished, socket) do
     socket
     |> put_flash(:info, "Finished sync !")
+    |> push_navigate(to: "/channels")
     |> then(fn socket -> {:noreply, socket} end)
   end
 
   @impl true
   def handle_event("live-sync", _params, %{assigns: %{current_user: current_user}} = socket) do
     {:ok, token} = Auth.OauthToken.get(current_user)
-    {:ok, streams} = Api.UserApi.live_streams(token, current_user.twitch_id)
+    {:ok, streams} = Api.UserApi.live_streams(token)
 
     socket
     |> assign(channels: [], live_streams: streams)

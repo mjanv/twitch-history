@@ -8,7 +8,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
   @impl true
   def mount(_params, _session, %{assigns: assigns} = socket) do
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(TwitchStory.PubSub, "eurovision")
+      TwitchStory.PubSub.subscribe("eurovision")
     end
 
     socket

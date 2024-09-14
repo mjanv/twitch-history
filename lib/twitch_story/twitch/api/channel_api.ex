@@ -1,8 +1,11 @@
 defmodule TwitchStory.Twitch.Api.ChannelApi do
   @moduledoc false
 
+  use TwitchStory.Twitch.Api.Client
+
   alias TwitchStory.Twitch.Api.AuthApi
 
+  @spec reverse_search(String.t()) :: result(non_neg_integer(), :not_found | :invalid_request)
   def reverse_search(login) do
     AuthApi.get(url: "/helix/users?login=#{login}")
     |> case do
@@ -39,15 +42,19 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
   def schedule(broadcaster_id) do
     AuthApi.get(url: "/helix/schedule?broadcaster_id=#{broadcaster_id}")
     |> case do
+      {:ok, %Req.Response{status: 200, body: %{"data" => %{"segments" => nil}}}} -> []
       {:ok, %Req.Response{status: 200, body: %{"data" => %{"segments" => segments}}}} -> segments
       _ -> []
     end
     |> Enum.map(fn entry ->
       entry
-      |> Map.update("category", nil, fn %{"name" => name} -> name end)
-      |> Map.update("start_time", nil, fn t -> t |> DateTime.from_iso8601() |> elem(1) end)
-      |> Map.update("end_time", nil, fn t -> t |> DateTime.from_iso8601() |> elem(1) end)
       |> Enum.map(fn
+        {"start_time", nil} -> {"start_time", nil}
+        {"start_time", t} -> {"start_time", t |> DateTime.from_iso8601() |> elem(1)}
+        {"end_time", nil} -> {"end_time", nil}
+        {"end_time", t} -> {"end_time", t |> DateTime.from_iso8601() |> elem(1)}
+        {"category", nil} -> {"category", nil}
+        {"category", %{"name" => name}} -> {"category", name}
         {"canceled_until", nil} -> {"is_canceled", false}
         {"canceled_until", _} -> {"is_canceled", true}
         pair -> pair
@@ -95,20 +102,16 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
     end
   end
 
-  @fields ["description", "profile_image_url"]
-
   defp users(broadcaster_id) do
     case AuthApi.get(url: "/helix/users?id=#{broadcaster_id}") do
       {:ok, %Req.Response{status: 200, body: %{"data" => [data | _]}}} ->
-        {url, data} = Map.pop(Map.take(data, @fields), "profile_image_url")
+        {url, data} =
+          Map.pop(Map.take(data, ["description", "profile_image_url"]), "profile_image_url")
+
         {:ok, Map.put(data, "thumbnail_url", url)}
 
       _ ->
         {:error, :not_found}
     end
-  end
-
-  defp string_to_atom_keys(m) do
-    for {k, v} <- m, into: %{}, do: {String.to_atom(k), v}
   end
 end

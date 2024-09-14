@@ -12,7 +12,7 @@ defmodule TwitchStory.Repo.Migrations.CreateTwitchOauthTokens do
       timestamps()
     end
 
-    create index(:twitch_oauth_tokens, [:user_id])
+    create unique_index(:twitch_oauth_tokens, [:user_id])
     create unique_index(:twitch_oauth_tokens, [:access_token, :refresh_token])
   end
 

@@ -44,7 +44,8 @@ defmodule TwitchStory.Twitch.Api.ChannelApiTest do
                "musique",
                "react",
                "music",
-               "culture"
+               "culture",
+               "NewMusicFriday"
              ],
              "thumbnail_url" =>
                "https://static-cdn.jtvnw.net/jtv_user_pictures/27d0d345-fa19-4f06-ad53-94a955d85f54-profile_image-300x300.png"

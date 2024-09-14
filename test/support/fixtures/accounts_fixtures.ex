@@ -14,7 +14,8 @@ defmodule TwitchStory.AccountsFixtures do
     Enum.into(attrs, %{
       name: name,
       email: name <> "@example.com",
-      password: valid_user_password()
+      password: valid_user_password(),
+      twitch_id: "945"
     })
   end
 

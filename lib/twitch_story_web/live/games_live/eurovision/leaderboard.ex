@@ -9,7 +9,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Leaderboard do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(TwitchStory.PubSub, "eurovision:#{id}")
+      TwitchStory.PubSub.subscribe("eurovision:#{id}")
     end
 
     ceremony = Ceremony.get(id)

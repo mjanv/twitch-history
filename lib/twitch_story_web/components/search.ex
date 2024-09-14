@@ -5,6 +5,12 @@ defmodule TwitchStoryWeb.Components.Search do
 
   alias Phoenix.LiveView.JS
 
+  def infinite_scroll(assigns) do
+    ~H"""
+    <div id="infinite-scroll-marker" phx-hook="InfiniteScroll" data-page={@page}></div>
+    """
+  end
+
   def search_bar(assigns) do
     ~H"""
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">

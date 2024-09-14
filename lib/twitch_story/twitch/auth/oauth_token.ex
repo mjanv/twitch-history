@@ -16,17 +16,18 @@ defmodule TwitchStory.Twitch.Auth.OauthToken do
     timestamps()
   end
 
-  def count do
-    Repo.one(from t in __MODULE__, select: count(t.id))
-  end
+  def count, do: Repo.count(__MODULE__)
 
   def all do
-    Repo.all(__MODULE__) |> Repo.preload(:user)
+    __MODULE__
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   def get(%{id: user_id}) do
     __MODULE__
     |> Repo.get_by(user_id: user_id)
+    |> Repo.preload(:user)
     |> case do
       nil -> {:error, nil}
       token -> {:ok, token}
@@ -52,6 +53,13 @@ defmodule TwitchStory.Twitch.Auth.OauthToken do
     |> Repo.get_by(user_id: user_id)
     |> changeset(Map.put(attrs, :user_id, user_id))
     |> Repo.update()
+  end
+
+  def create_or_update(attrs, user) do
+    case get(user) do
+      {:ok, _} -> __MODULE__.update(attrs, user)
+      {:error, _} -> __MODULE__.create(attrs, user)
+    end
   end
 
   defp changeset(oauth_token, attrs) do
