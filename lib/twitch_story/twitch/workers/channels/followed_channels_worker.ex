@@ -1,4 +1,4 @@
-defmodule TwitchStory.Twitch.Workers.ChannelWorker do
+defmodule TwitchStory.Twitch.Workers.Channels.FollowedChannelsWorker do
   @moduledoc false
 
   use Oban.Worker,
@@ -30,8 +30,8 @@ defmodule TwitchStory.Twitch.Workers.ChannelWorker do
   end
 
   @impl Oban.Worker
-  def perform(%Oban.Job{args: %{"broadcaster_id" => id}}) do
-    Services.Channels.sync_channel(id)
+  def perform(%Oban.Job{args: %{"broadcaster_id" => broadcaster_id}}) do
+    Services.Channels.sync_channel(broadcaster_id)
     :ok
   end
 
@@ -39,11 +39,7 @@ defmodule TwitchStory.Twitch.Workers.ChannelWorker do
   def perform(%Oban.Job{args: %{"job" => "end", "user_id" => user_id}}) do
     Services.Channels.sync_followed_channels(user_id)
 
-    Phoenix.PubSub.broadcast(
-      TwitchStory.PubSub,
-      "channels:user:#{user_id}",
-      :sync_finished
-    )
+    TwitchStory.PubSub.broadcast("channels:user:#{user_id}", :sync_finished)
 
     :ok
   end

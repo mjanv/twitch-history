@@ -46,6 +46,7 @@ defmodule TwitchStoryWeb.Router do
       live "/channels", HomeLive.Channels, :index
       live "/channels/sync", HomeLive.Channels, :sync
       live "/channels/live", HomeLive.Channels, :live
+      live "/channels/:broadcaster_id", HomeLive.Channels.Channel, :index
       live "/schedule", HomeLive.Schedule, :index
       live "/schedule/:broadcaster_id", HomeLive.Schedule, :broadcaster
 
@@ -74,6 +75,7 @@ defmodule TwitchStoryWeb.Router do
       live "/admin/dashboard/user/:id", AdminLive.Dashboard, :show_user
       live "/admin/dashboard/user/:id/edit", AdminLive.Dashboard, :edit_user
       live "/admin/channels", AdminLive.Channels, :index
+      live "/admin/channels/clips", AdminLive.Channels.Clips, :index
       live "/admin/oauth", AdminLive.Oauth, :index
     end
   end

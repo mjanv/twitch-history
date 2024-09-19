@@ -5,10 +5,19 @@ defmodule TwitchStoryWeb.AdminLive.Dashboard do
 
   alias TwitchStory.Accounts.User
   alias TwitchStory.Twitch.Channels.Channel
+  alias TwitchStory.Twitch.Channels.Clip
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, users: User.all(), roles: User.count_roles(), channels: Channel.count())}
+    channels = [
+      {"Channels", Channel.count()},
+      {"Clips", Clip.count()}
+    ]
+
+    jobs = Enum.map(TwitchStory.Oban.jobs(), fn {k, v} -> {"#{String.capitalize(k)} jobs", v} end)
+
+    {:ok,
+     assign(socket, users: User.all(), roles: User.count_roles(), channels: channels, jobs: jobs)}
   end
 
   @impl true
@@ -37,5 +46,17 @@ defmodule TwitchStoryWeb.AdminLive.Dashboard do
     socket
     |> tap(fn _ -> User.assign_role(user, role) end)
     |> then(fn socket -> {:noreply, socket} end)
+  end
+
+  @impl true
+  def handle_event("cancel-jobs", _, socket) do
+    TwitchStory.Oban.cancel()
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("delete-jobs", _, socket) do
+    TwitchStory.Oban.delete()
+    {:noreply, socket}
   end
 end

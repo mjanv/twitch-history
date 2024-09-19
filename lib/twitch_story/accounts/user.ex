@@ -104,6 +104,13 @@ defmodule TwitchStory.Accounts.User do
     |> EventBus.ok(fn user -> %UserCreated{id: user.id} end)
   end
 
+  @doc "Deletes a user."
+  def delete_user(user) do
+    user
+    |> Repo.delete()
+    |> EventBus.ok(fn user -> %UserDeleted{id: user.id} end)
+  end
+
   @doc "Returns an `%Ecto.Changeset{}` for tracking user changes."
   def change_user_registration(%__MODULE__{} = user, attrs \\ %{}) do
     registration_changeset(user, attrs, hash_password: false, validate_email: false)

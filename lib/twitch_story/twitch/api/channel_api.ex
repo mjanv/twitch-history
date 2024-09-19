@@ -5,6 +5,23 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
 
   alias TwitchStory.Twitch.Api.AuthApi
 
+  @type clip() :: %{
+          required(:id) => String.t(),
+          required(:video_id) => String.t(),
+          required(:title) => String.t(),
+          required(:created_at) => DateTime.t(),
+          # Stats
+          required(:duration) => float(),
+          required(:view_count) => non_neg_integer(),
+          # URLs
+          required(:url) => String.t(),
+          required(:embed_url) => String.t(),
+          required(:thumbnail_url) => String.t(),
+          # Broadcaster
+          required(:broadcaster_id) => String.t(),
+          required(:broadcaster_name) => String.t()
+        }
+
   @spec reverse_search(String.t()) :: result(non_neg_integer(), :not_found | :invalid_request)
   def reverse_search(login) do
     AuthApi.get(url: "/helix/users?login=#{login}")
@@ -112,6 +129,56 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
 
       _ ->
         {:error, :not_found}
+    end
+  end
+
+  @fields [
+    "id",
+    "video_id",
+    "title",
+    "created_at",
+    "duration",
+    "view_count",
+    "url",
+    "embed_url",
+    "thumbnail_url",
+    "broadcaster_id",
+    "broadcaster_name"
+  ]
+
+  @doc "Get channel clips"
+  @spec clips(String.t(), Keyword.t()) :: result([clip()], :not_found | :invalid_request)
+  def clips(broadcaster_id, shift_opts \\ [day: -7]) do
+    stop = DateTime.truncate(DateTime.utc_now(), :second)
+    start = DateTime.shift(stop, shift_opts)
+
+    [
+      url:
+        "/helix/clips?broadcaster_id=#{broadcaster_id}&started_at=#{DateTime.to_iso8601(start)}&ended_at=#{DateTime.to_iso8601(stop)}"
+    ]
+    |> AuthApi.get()
+    |> case do
+      {:ok, %Req.Response{status: 200, body: %{"data" => data}}} ->
+        data
+        |> unwrap(@fields)
+        |> as_date([:created_at])
+        |> Enum.map(fn d ->
+          d
+          |> Enum.map(fn
+            {:id, id} -> {:twitch_id, id}
+            pair -> pair
+          end)
+          |> Enum.into(%{})
+          |> nest_keys([:url, :thumbnail_url, :embed_url], :urls)
+          |> nest_keys([:duration, :view_count], :stats)
+        end)
+        |> ok()
+
+      {:ok, _} ->
+        error(:not_found)
+
+      {:error, _} ->
+        error(:invalid_request)
     end
   end
 end

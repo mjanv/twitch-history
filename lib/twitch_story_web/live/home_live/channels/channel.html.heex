@@ -1,0 +1,58 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.heading title={@channel.broadcaster_name}>
+    <img class="inline-block h-14 w-14 rounded-full" src={@channel.thumbnail_url} alt="" />
+  </.heading>
+
+  <.section title="Schedule" />
+
+  <.table id="schedule" rows={@schedule}>
+    <:col :let={entry} label="Title"><%= entry.title %></:col>
+    <:col :let={entry} label="Category"><%= entry.category %></:col>
+    <:col :let={entry} label="Times"><%= entry.start_time %> - <%= entry.end_time %></:col>
+    <:col :let={entry} label="Recurring">
+      <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
+        <%= entry.is_recurring %>
+      </span>
+    </:col>
+    <:col :let={entry} label="Cancelled">
+      <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
+        <%= entry.is_canceled %>
+      </span>
+    </:col>
+    <:empty><.empty title="No channels" description="" icon="hero-film" /></:empty>
+  </.table>
+
+  <.section title="Clips" />
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+    <%= for clip <- @clips do %>
+      <div class="relative w-full group transform transition-transform duration-300 hover:-translate-y-2 hover:-translate-x-2">
+        <div class="relative rounded-lg overflow-hidden bg-purple-600">
+          <a href={clip.urls.url} class="focus:outline-none block">
+            <div class="relative">
+              <img
+                src={
+                  clip.urls.thumbnail_url
+                  |> String.replace("{height}", "360")
+                  |> String.replace("{width}", "640")
+                }
+                class="w-full h-auto transform transition-transform duration-300 group-hover:-translate-y-2 group-hover:-translate-x-2"
+              />
+              <div class="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-white p-2">
+                <div class="relative rounded-md p-1">
+                  <p class="text-base font-medium text-white truncate">
+                    <%= clip.title %>
+                  </p>
+                </div>
+                <p class="text-sm text-gray-200 truncate">
+                  <%= clip.stats.duration %>s (<%= clip.stats.view_count %> views)
+                  <span aria-hidden="true"> &rarr;</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

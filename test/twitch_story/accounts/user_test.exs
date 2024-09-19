@@ -137,6 +137,18 @@ defmodule TwitchStory.Accounts.UserTest do
     end
   end
 
+  describe "delete_user/1" do
+    test "deletes the user" do
+      user = user_fixture()
+
+      {:ok, %User{}} = User.delete_user(user)
+      {:ok, events} = TwitchStory.EventStore.all(user.id)
+
+      assert_raise Ecto.NoResultsError, fn -> User.get_user!(user.id) end
+      assert events == [%UserCreated{id: user.id}, %UserDeleted{id: user.id}]
+    end
+  end
+
   describe "assign_role/1" do
     test "assigns a role to an existing user" do
       before_user = user_fixture()

@@ -94,6 +94,7 @@ defmodule TwitchStoryWeb do
       alias Phoenix.LiveView.JS
 
       unquote(verified_routes())
+      unquote(responses())
     end
   end
 
@@ -103,6 +104,13 @@ defmodule TwitchStoryWeb do
         endpoint: TwitchStoryWeb.Endpoint,
         router: TwitchStoryWeb.Router,
         statics: TwitchStoryWeb.static_paths()
+    end
+  end
+
+  def responses do
+    quote do
+      defp noreply(socket), do: {:noreply, socket}
+      defp ok(socket), do: {:ok, socket}
     end
   end
 

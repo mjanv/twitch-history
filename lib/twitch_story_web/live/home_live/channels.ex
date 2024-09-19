@@ -6,7 +6,7 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
   alias TwitchStory.Accounts.FollowedChannel
   alias TwitchStory.Twitch.Api
   alias TwitchStory.Twitch.Auth
-  alias TwitchStory.Twitch.Workers
+  alias TwitchStory.Twitch.Workers.Channels.FollowedChannelsWorker
 
   @impl true
   def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
@@ -24,7 +24,7 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
 
     case live_action do
       :sync ->
-        Workers.ChannelWorker.start(current_user.id)
+        FollowedChannelsWorker.start(current_user.id)
 
         socket
         |> put_flash(:info, "Sync started...")

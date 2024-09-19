@@ -127,7 +127,12 @@
   </.modal>
 
   <.section title="Channels" />
-  <.stats rows={[{"Channels", @channels}]} />
+  <.stats rows={@channels} />
+
+  <.section title="Jobs" />
+  <.stats rows={@jobs} />
+  <.button phx-click="cancel-jobs" class="ml-2">Cancel all jobs</.button>
+  <.button phx-click="delete-jobs" class="ml-2">Delete all jobs</.button>
 
   <.section title="Events" />
   <.live_component module={TwitchStoryWeb.AdminLive.Components.Events} id="events" />

@@ -1,10 +1,19 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
-  <.heading title="Channels"></.heading>
+  <.heading title="Channels">
+    <.link
+      type="button"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      navigate={~p"/admin/channels/clips"}
+    >
+      <.icon name="hero-arrow-path" class="mr-2" /> Clips
+    </.link>
+  </.heading>
 
   <.stats rows={@channels} />
 
   <.table id="channels" rows={@streams.channels}>
     <:col :let={{_, channel}} label="Name"><%= channel.broadcaster_name %></:col>
+    <:col :let={{_, channel}} label="ID"><%= channel.broadcaster_id %></:col>
     <:col :let={{_, channel}} label="Description"><%= channel.description %></:col>
     <:col :let={{_, channel}} label="Tags">
       <%= for tag <- channel.tags || [] do %>

@@ -16,6 +16,9 @@ defmodule TwitchStory.Twitch.Api.Client do
               }
             }
 
+      defp ok(data), do: {:ok, data}
+      defp error(data), do: {:error, data}
+
       defp unwrap(data, keys) when is_list(data) do
         Enum.map(data, fn d -> unwrap(d, keys) end)
       end
@@ -42,12 +45,9 @@ defmodule TwitchStory.Twitch.Api.Client do
         end)
       end
 
-      defp ok(data) do
-        {:ok, data}
-      end
-
-      defp error(data) do
-        {:error, data}
+      def nest_keys(map, keys_to_nest, key) do
+        {head, tail} = Map.split(map, keys_to_nest)
+        Map.put(tail, key, head)
       end
     end
   end

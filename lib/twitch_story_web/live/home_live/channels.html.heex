@@ -58,7 +58,9 @@
 
     <.table id="channels" rows={@channels}>
       <:col :let={channel} label="Name">
-        <%= channel.channel.broadcaster_name %>
+        <.link navigate={~p"/channels/#{channel.channel.broadcaster_id}"}>
+          <%= channel.channel.broadcaster_name %>
+        </.link>
       </:col>
 
       <:col :let={channel} label="Description">

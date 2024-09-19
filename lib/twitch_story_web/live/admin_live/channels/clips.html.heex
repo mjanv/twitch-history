@@ -1,0 +1,22 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.heading title="Clips">
+    <.link
+      type="button"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      navigate={~p"/admin/channels"}
+    >
+      <.icon name="hero-arrow-path" class="mr-2" /> Channels
+    </.link>
+  </.heading>
+
+  <.stats rows={@clips} />
+
+  <.table id="clips" rows={@streams.clips}>
+    <:col :let={{_, clip}} label="Name"><%= clip.title %></:col>
+    <:col :let={{_, clip}} label="Created at"><%= clip.created_at %></:col>
+    <:col :let={{_, clip}} label="Stats"><%= inspect(clip.stats) %></:col>
+    <:empty><.empty title="No clips" description="" icon="hero-film" /></:empty>
+  </.table>
+
+  <.infinite_scroll page={@page} />
+</div>

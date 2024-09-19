@@ -9,6 +9,17 @@ defmodule UserCreated do
   end
 end
 
+defmodule UserDeleted do
+  @moduledoc false
+
+  use TwitchStory.Event
+
+  defimpl EventImpl, for: __MODULE__ do
+    def humanize(_, :name), do: "User deleted"
+    def humanize(event, key), do: Event.humanize(event, key)
+  end
+end
+
 defmodule RoleAssigned do
   @moduledoc false
 
