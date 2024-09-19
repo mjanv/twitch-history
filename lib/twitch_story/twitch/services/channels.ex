@@ -53,6 +53,24 @@ defmodule TwitchStory.Twitch.Services.Channels do
   end
 
   @doc """
+  Sync schedule
+
+  For a given broadcaster, retrieve its current schedule and sync it
+  """
+  @spec sync_schedule(String.t()) :: :ok
+  def sync_schedule(broadcaster_id) do
+    with {:ok, schedule} <- Api.schedule(broadcaster_id) do
+      Logger.info("Found #{length(schedule)} schedule entries for #{broadcaster_id}")
+
+      broadcaster_id
+      |> Channels.Channel.get!()
+      |> Channels.Schedule.save(schedule)
+
+      :ok
+    end
+  end
+
+  @doc """
   Find followed channels
 
   For a given user, find all their followed channels

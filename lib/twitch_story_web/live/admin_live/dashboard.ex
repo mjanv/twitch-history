@@ -6,12 +6,14 @@ defmodule TwitchStoryWeb.AdminLive.Dashboard do
   alias TwitchStory.Accounts.User
   alias TwitchStory.Twitch.Channels.Channel
   alias TwitchStory.Twitch.Channels.Clip
+  alias TwitchStory.Twitch.Channels.Schedule
 
   @impl true
   def mount(_params, _session, socket) do
     channels = [
       {"Channels", Channel.count()},
-      {"Clips", Clip.count()}
+      {"Clips", Clip.count()},
+      {"Schedules", Schedule.count()}
     ]
 
     jobs = Enum.map(TwitchStory.Oban.jobs(), fn {k, v} -> {"#{String.capitalize(k)} jobs", v} end)

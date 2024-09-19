@@ -66,6 +66,7 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
     |> Enum.map(fn entry ->
       entry
       |> Enum.map(fn
+        {"id", id} -> {"entry_id", id}
         {"start_time", nil} -> {"start_time", nil}
         {"start_time", t} -> {"start_time", t |> DateTime.from_iso8601() |> elem(1)}
         {"end_time", nil} -> {"end_time", nil}
@@ -78,7 +79,7 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
       end)
       |> Enum.into(%{})
       |> Map.take([
-        "id",
+        "entry_id",
         "title",
         "start_time",
         "end_time",

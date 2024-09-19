@@ -61,7 +61,9 @@ config :twitch_story, Oban,
        {"*/15 * * * *", TwitchStory.Twitch.Workers.OauthWorker, args: %{n: 30 * 60}},
        # Clips retrieval for all channels every 30 minutes for clips created in the last hour
        {"*/30 * * * *", TwitchStory.Twitch.Workers.Channels.ClipsWorker,
-        args: %{job: "start", hour: -1}}
+        args: %{job: "start", hour: -1}},
+       # Schedule retrieval for all channels every hour
+       {"* */1 * * *", TwitchStory.Twitch.Workers.Channels.ScheduleWorker, args: %{job: "start"}}
      ]}
   ],
   queues: [twitch: 10]

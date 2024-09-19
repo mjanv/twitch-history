@@ -5,7 +5,7 @@
 
   <.section title="Schedule" />
 
-  <.table id="schedule" rows={@schedule}>
+  <.table id="schedule" rows={@schedule.entries}>
     <:col :let={entry} label="Title"><%= entry.title %></:col>
     <:col :let={entry} label="Category"><%= entry.category %></:col>
     <:col :let={entry} label="Times"><%= entry.start_time %> - <%= entry.end_time %></:col>
