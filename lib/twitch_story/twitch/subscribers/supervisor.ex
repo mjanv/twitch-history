@@ -1,4 +1,4 @@
-defmodule TwitchStory.Supervisor do
+defmodule TwitchStory.Twitch.Subscribers.Supervisor do
   @moduledoc false
 
   use Supervisor
@@ -9,9 +9,7 @@ defmodule TwitchStory.Supervisor do
 
   def init(_args) do
     children = [
-      TwitchStory.Repos.Supervisor,
-      TwitchStory.Twitch.Supervisor,
-      {Oban, Application.fetch_env!(:twitch_story, Oban)}
+      TwitchStory.Twitch.Subscribers.UserCreation
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

@@ -24,9 +24,8 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
 
     case live_action do
       :sync ->
-        FollowedChannelsWorker.start(current_user.id)
-
         socket
+        |> tap(fn _ -> FollowedChannelsWorker.start(current_user.id) end)
         |> put_flash(:info, "Sync started...")
 
       :live ->
