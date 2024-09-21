@@ -6,4 +6,8 @@ defmodule TwitchStoryWeb.PageController do
   def home(conn, _params) do
     render(conn, :home, layout: false)
   end
+
+  def about(conn, _params) do
+    render(conn, :about, layout: false)
+  end
 end

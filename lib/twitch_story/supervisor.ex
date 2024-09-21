@@ -8,6 +8,8 @@ defmodule TwitchStory.Supervisor do
   end
 
   def init(_args) do
+    Oban.Telemetry.attach_default_logger()
+
     children = [
       TwitchStory.Repos.Supervisor,
       TwitchStory.Twitch.Supervisor,

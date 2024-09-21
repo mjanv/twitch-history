@@ -83,6 +83,7 @@ defmodule TwitchStoryWeb.Router do
   scope "/", TwitchStoryWeb do
     pipe_through [:browser]
 
+    get "/about", PageController, :about
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,

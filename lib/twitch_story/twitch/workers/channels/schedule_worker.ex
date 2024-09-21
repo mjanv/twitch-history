@@ -10,10 +10,10 @@ defmodule TwitchStory.Twitch.Workers.Channels.ScheduleWorker do
   alias TwitchStory.Twitch.Channels.Channel
   alias TwitchStory.Twitch.Services.Channels
 
-  def start, do: %{job: "start"} |> __MODULE__.new() |> Oban.insert()
+  def start, do: %{step: "start"} |> __MODULE__.new() |> Oban.insert()
 
   @impl Oban.Worker
-  def perform(%Oban.Job{args: %{"job" => "start"}}) do
+  def perform(%Oban.Job{args: %{"step" => "start"}}) do
     Channel.all()
     |> Enum.map(&__MODULE__.new(%{broadcaster_id: &1.broadcaster_id}))
     |> Oban.insert_all()

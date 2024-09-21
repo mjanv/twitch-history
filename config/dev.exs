@@ -1,5 +1,10 @@
 import Config
 
+config :twitch_story, :games,
+  eurovision: [
+    apis: [flags: TwitchStory.Games.Eurovision.Country.Apis.FlagsApi]
+  ]
+
 config :twitch_story, TwitchStory.Repo,
   database: "twitch_story_dev",
   username: "postgres",

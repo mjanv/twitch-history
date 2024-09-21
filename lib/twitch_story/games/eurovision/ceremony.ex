@@ -3,10 +3,24 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
 
   use TwitchStory.Schema
 
+  alias ExTwitchStory.EventBus
   alias TwitchStory.Accounts.User
-  alias TwitchStory.Games.Eurovision.Vote
-  alias TwitchStory.Games.Eurovision.Winner
+  alias TwitchStory.Games.Eurovision.Ceremony.Result
+  alias TwitchStory.Games.Eurovision.Ceremony.Vote
+  alias TwitchStory.Games.Eurovision.Ceremony.Winner
   alias TwitchStory.Repo
+
+  @type t() :: %__MODULE__{
+          name: String.t(),
+          status: atom(),
+          countries: [String.t()],
+          votes: [Vote.t()],
+          voters: [User.t()],
+          user_id: String.t(),
+          winner: Winner.t() | nil,
+          inserted_at: NaiveDateTime.t(),
+          updated_at: NaiveDateTime.t()
+        }
 
   schema "eurovision_ceremonies" do
     field :name, :string
@@ -30,6 +44,8 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> cast_embed(:winner, required: false)
   end
 
+  def form(attrs \\ %{}), do: changeset(%__MODULE__{}, attrs)
+
   def get(id) do
     __MODULE__
     |> Repo.get(id)
@@ -44,75 +60,116 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> Repo.all()
   end
 
+  @doc "Get all active ceremonies"
+  @spec actives :: [t()]
   def actives do
     from(c in __MODULE__, where: c.status == :started)
     |> preload(:user)
     |> Repo.all()
   end
 
+  @doc "Get all past ceremonies"
+  @spec pasts :: [t()]
   def pasts do
     from(c in __MODULE__, where: c.status in [:completed, :cancelled])
     |> preload(:user)
     |> Repo.all()
   end
 
+  @doc "Create a new ceremony"
+  @spec create(map()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %__MODULE__{}
     |> changeset(Map.merge(attrs, %{status: :created}))
     |> Repo.insert()
+    |> EventBus.ok(fn ceremony -> %Eurovision.CeremonyCreated{id: ceremony.id} end)
   end
 
+  @doc "Delete a ceremony"
+  @spec delete(t()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  def delete(%__MODULE__{} = ceremony) do
+    ceremony
+    |> Repo.delete()
+    |> EventBus.ok(fn ceremony -> %Eurovision.CeremonyDeleted{id: ceremony.id} end)
+  end
+
+  # STATE MACHINE API
+  # -----------------
+
+  @doc "Start a ceremony"
   def start(%__MODULE__{status: status} = ceremony) when status in [:created, :paused] do
     ceremony
     |> changeset(%{status: :started})
     |> Repo.update()
+
+    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :started} end)
   end
 
   def start(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
 
+  @doc "Pause a ceremony"
   def pause(%__MODULE__{status: status} = ceremony) when status in [:created, :started] do
     ceremony
     |> changeset(%{status: :paused})
     |> Repo.update()
+
+    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :paused} end)
   end
 
   def pause(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
 
+  @doc "Complete a ceremony"
   def complete(%__MODULE__{id: id, status: status} = ceremony)
       when status in [:created, :started, :paused] do
     ceremony
-    |> changeset(%{status: :completed, winner: Vote.winner(id)})
+    |> changeset(%{
+      status: :completed,
+      winner:
+        case Vote.winner(id) do
+          nil -> nil
+          winner -> Map.from_struct(winner)
+        end
+    })
     |> Repo.update()
+
+    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :completed} end)
   end
 
   def complete(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
 
+  @doc "Cancel a ceremony"
   def cancel(%__MODULE__{status: status} = ceremony)
       when status in [:created, :started, :paused] do
     ceremony
     |> changeset(%{status: :cancelled})
     |> Repo.update()
+
+    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :cancelled} end)
   end
 
   def cancel(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
 
-  def delete(%__MODULE__{} = ceremony) do
-    ceremony
-    |> Repo.delete()
-  end
+  # VOTE API
+  # --------
 
+  @doc "Get all votes of a ceremony"
+  @spec votes(t()) :: [Vote.t()]
+  def votes(%__MODULE__{id: id}), do: Vote.all(id)
+
+  @doc "Get the votes of an user"
+  @spec user_votes(t(), User.t()) :: [Vote.t()]
+  def user_votes(%__MODULE__{id: id}, %{id: user_id}), do: Vote.user_votes(id, user_id)
+
+  @doc "Add a vote"
+  @spec add_vote(t(), map()) :: {:ok, Vote.t()} | {:error, Ecto.Changeset.t()}
   def add_vote(%__MODULE__{id: id}, attrs) do
     attrs
     |> Map.put(:ceremony_id, id)
     |> Vote.create()
   end
 
-  def init_votes(%__MODULE__{countries: countries} = ceremony, voter) do
-    countries
-    |> Enum.map(fn country -> %{country: country, points: 0, user_id: voter.id} end)
-    |> then(fn votes -> add_votes(ceremony, votes) end)
-  end
-
+  @doc "Add votes"
+  @spec add_votes(t(), [map()]) :: {:ok, [Vote.t()]} | {:error, Ecto.Changeset.t()}
   def add_votes(%__MODULE__{id: id}, attrs) do
     attrs
     |> Enum.map(fn vote -> Map.put(vote, :ceremony_id, id) end)
@@ -138,10 +195,12 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     end
   end
 
+  @doc "Delete a vote"
+  @spec delete_vote(t(), Vote.t()) :: {:ok, Vote.t()} | {:error, atom() | Ecto.Changeset.t()}
   def delete_vote(%__MODULE__{}, vote), do: Vote.delete(vote)
 
-  def votes(%__MODULE__{id: id}), do: Vote.all(id)
-
+  @doc "Get all voters of a ceremony"
+  @spec voters(t()) :: [User.t()]
   def voters(%__MODULE__{} = ceremony) do
     __MODULE__
     |> Repo.get!(ceremony.id)
@@ -149,17 +208,28 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     |> Map.get(:voters)
   end
 
+  # RESULTS API
+  # -----------
+
+  @spec totals(t()) :: %{votes: integer(), voters: integer(), points: integer()}
   def totals(%__MODULE__{id: id}) do
-    %{votes: Vote.total_votes(id), voters: Vote.total_voters(id), points: Vote.total_points(id)}
+    %{
+      votes: Vote.total(id, :count),
+      voters: Vote.total(id, :distinct, :user_id),
+      points: Vote.total(id, :sum, :points)
+    }
   end
 
-  def user_votes(%__MODULE__{id: id}, %{id: user_id}) do
-    Vote.user_votes(id, user_id)
+  @doc "Get the leaderboard of a ceremony"
+  @spec leaderboard(t()) :: [Result.t()]
+  def leaderboard(%__MODULE__{id: id}) do
+    Vote.leaderboard(id)
+
+    # |> Enum.map(fn result -> Map.put(result, :country, Ceremony.Country.get(result.country)) end)
   end
 
-  def leaderboard(%__MODULE__{id: id}), do: Vote.leaderboard(id)
-
-  def winner(%__MODULE__{status: :completed, winner: nil}), do: nil
-  def winner(%__MODULE__{status: :completed, winner: winner}), do: winner.country
+  @doc "Get the winner of a ceremony"
+  @spec winner(t()) :: String.t() | nil
+  def winner(%__MODULE__{status: :completed, winner: %Winner{country: country}}), do: country
   def winner(%__MODULE__{}), do: nil
 end

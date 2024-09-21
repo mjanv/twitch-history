@@ -1,4 +1,4 @@
-defmodule Subscriber do
+defmodule TwitchStory.EventSubscriber do
   @moduledoc false
 
   defmacro __using__(opts) do
@@ -9,8 +9,10 @@ defmodule Subscriber do
 
       alias TwitchStory.EventStore
 
-      def start_link do
-        GenServer.start_link(__MODULE__, [])
+      require Logger
+
+      def start_link(args) do
+        GenServer.start_link(__MODULE__, args, name: __MODULE__)
       end
 
       def init(events) do
@@ -18,16 +20,18 @@ defmodule Subscriber do
         {:ok, %{subscription: subscription}}
       end
 
-      def handle_info({:subscribed, _}, state) do
+      def handle_info({:subscribed, subscription}, state) do
+        Logger.info("[#{__MODULE__}] Subscribed to subscription #{inspect(subscription)}")
+
         {:noreply, state}
       end
 
       def handle_info({:events, events}, %{subscription: subscription} = state) do
         events
+        |> tap(fn events -> Logger.info("[#{__MODULE__}] Received #{length(events)} events") end)
         |> Enum.map(fn event -> tap(event, &handle(&1)) end)
         |> then(fn events -> EventStore.ack(subscription, events) end)
-
-        {:noreply, state}
+        |> then(fn _ -> {:noreply, state} end)
       end
 
       def handle(_event), do: :ok

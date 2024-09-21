@@ -1,10 +1,10 @@
-defmodule TwitchStory.Games.Eurovision.ResultsTest do
+defmodule TwitchStory.Games.Eurovision.CeremonyResultsTest do
   use TwitchStory.DataCase
 
   import TwitchStory.AccountsFixtures
 
-  alias TwitchStory.Games.Eurovision.{Ceremony, Result}
-  alias TwitchStory.Games.Eurovision.Repos.Countries
+  alias TwitchStory.Games.Eurovision.Ceremony
+  alias TwitchStory.Games.Eurovision.Country
 
   setup do
     user = user_fixture()
@@ -15,7 +15,7 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
       Ceremony.create(%{
         name: "ceremony",
         status: :started,
-        countries: Countries.codes(),
+        countries: Country.Repo.codes(),
         user_id: user.id
       })
 
@@ -41,6 +41,15 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
     {:ok, %{ceremony: Ceremony.get(ceremony.id)}}
   end
 
+  test "The total number of votes/voters/points of a ceremony can be calculated", %{
+    ceremony: ceremony
+  } do
+    assert Ceremony.Vote.total(ceremony.id, :distinct, :user_id) == 3
+    assert Ceremony.Vote.total(ceremony.id) == 15
+    assert Ceremony.Vote.total(ceremony.id, :count, :id) == 15
+    assert Ceremony.Vote.total(ceremony.id, :sum, :points) == 105
+  end
+
   test "The totals per ceremony can be calculated", %{ceremony: ceremony} do
     result = Ceremony.totals(ceremony)
 
@@ -48,25 +57,26 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
   end
 
   test "The leaderboard can be calculated", %{ceremony: ceremony} do
-    result = Ceremony.leaderboard(ceremony)
+    leaderboard = Ceremony.leaderboard(ceremony)
 
-    assert result == [
-             %Result{country: "FR", points: 23, votes: 3},
-             %Result{country: "IT", points: 22, votes: 3},
-             %Result{country: "SE", points: 22, votes: 3},
-             %Result{country: "DE", points: 21, votes: 3},
-             %Result{country: "ES", points: 17, votes: 3}
+    assert leaderboard == [
+             %Ceremony.Result{country: "FR", points: 23, votes: 3},
+             %Ceremony.Result{country: "IT", points: 22, votes: 3},
+             %Ceremony.Result{country: "SE", points: 22, votes: 3},
+             %Ceremony.Result{country: "DE", points: 21, votes: 3},
+             %Ceremony.Result{country: "ES", points: 17, votes: 3}
            ]
   end
 
   test "The winner of a started ceremony cannot be found", %{ceremony: ceremony} do
-    result = Ceremony.winner(ceremony)
+    winner = Ceremony.winner(ceremony)
 
-    assert result == nil
+    assert winner == nil
   end
 
   test "The winner of a completed ceremony can be found", %{ceremony: ceremony} do
     {:ok, ceremony} = Ceremony.complete(ceremony)
+
     result = Ceremony.winner(ceremony)
 
     assert result == "FR"
@@ -79,7 +89,7 @@ defmodule TwitchStory.Games.Eurovision.ResultsTest do
       Ceremony.create(%{
         name: "ceremony",
         status: :started,
-        countries: Countries.codes(),
+        countries: Country.Repo.codes(),
         user_id: user.id
       })
 

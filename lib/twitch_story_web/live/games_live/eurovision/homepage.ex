@@ -28,7 +28,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
 
       :new ->
         socket
-        |> assign(:form, to_form(Ceremony.changeset(%Ceremony{}, %{})))
+        |> assign(:form, to_form(Ceremony.form()))
     end
     |> then(fn socket -> {:noreply, socket} end)
   end

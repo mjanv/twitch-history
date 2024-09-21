@@ -4,14 +4,14 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
   import TwitchStory.AccountsFixtures
 
   alias TwitchStory.Games.Eurovision.Ceremony
-  alias TwitchStory.Games.Eurovision.Repos.Countries
+  alias TwitchStory.Games.Eurovision.Country
 
   setup do
     user = user_fixture()
 
     ceremony_attrs = %{
       name: "ceremony",
-      countries: Countries.codes(),
+      countries: Country.Repo.codes(),
       user_id: user.id
     }
 
@@ -20,6 +20,10 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
 
   test "A ceremony can be created", %{ceremony_attrs: ceremony_attrs} do
     {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
+
+    {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
+
+    assert events == [%Eurovision.CeremonyCreated{id: ceremony.id}]
 
     assert ceremony.name == "ceremony"
     assert ceremony.status == :created
@@ -138,7 +142,14 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
     {:ok, _} =
       Ceremony.add_vote(ceremony, %{country: "FR", points: 4, user_id: user_fixture().id})
 
-    {:ok, ceremony} = Ceremony.delete(ceremony)
+    {:ok, _} = Ceremony.delete(ceremony)
+
+    {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
+
+    assert events == [
+             %Eurovision.CeremonyCreated{id: ceremony.id},
+             %Eurovision.CeremonyDeleted{id: ceremony.id}
+           ]
 
     assert Ceremony.get(ceremony.id) == nil
   end

@@ -1,7 +1,12 @@
-defmodule TwitchStory.Games.Eurovision.Winner do
+defmodule TwitchStory.Games.Eurovision.Ceremony.Winner do
   @moduledoc false
 
   use TwitchStory.Schema
+
+  @type t() :: %__MODULE__{
+          country: String.t(),
+          points: integer()
+        }
 
   @primary_key false
   embedded_schema do

@@ -6,6 +6,21 @@ defmodule TwitchStory.Accounts.User do
   alias ExTwitchStory.EventBus
   alias TwitchStory.Repo
 
+  @type t() :: %__MODULE__{
+          name: String.t(),
+          email: String.t(),
+          provider: String.t(),
+          role: :admin | :streamer | :viewer,
+          password: String.t(),
+          hashed_password: String.t(),
+          confirmed_at: NaiveDateTime.t(),
+          twitch_id: String.t(),
+          twitch_avatar: String.t(),
+          confirmed_at: NaiveDateTime.t(),
+          inserted_at: NaiveDateTime.t(),
+          updated_at: NaiveDateTime.t()
+        }
+
   schema "users" do
     field :name, :string
     field :email, :string
@@ -29,8 +44,7 @@ defmodule TwitchStory.Accounts.User do
   end
 
   def count_roles do
-    from(u in __MODULE__, group_by: u.role, select: {u.role, count(u.id)})
-    |> Repo.all()
+    Repo.all(from(u in __MODULE__, group_by: u.role, select: {u.role, count(u.id)}))
   end
 
   def all, do: Repo.all(__MODULE__)

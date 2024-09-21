@@ -1,4 +1,8 @@
-# TwitchStory
+# Twitch Story
+
+## About
+
+Twitch Story is a SaaS application for Twitch viewers.
 
 ## Ressources
 

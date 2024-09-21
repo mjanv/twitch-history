@@ -1,6 +1,7 @@
 defmodule TwitchStory.Repos.Filesystem do
   @moduledoc false
 
+  @spec folder(String.t()) :: String.t()
   def folder(request) do
     :twitch_story
     |> Application.get_env(:files)

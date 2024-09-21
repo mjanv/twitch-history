@@ -1,10 +1,11 @@
-defmodule TwitchStory.Games.Eurovision.VoteTest do
+defmodule TwitchStory.Games.Eurovision.Ceremony.VoteTest do
   use TwitchStory.DataCase
 
   import TwitchStory.AccountsFixtures
 
-  alias TwitchStory.Games.Eurovision.{Ceremony, Vote}
-  alias TwitchStory.Games.Eurovision.Repos.Countries
+  alias TwitchStory.Games.Eurovision.Ceremony
+  alias TwitchStory.Games.Eurovision.Ceremony.Vote
+  alias TwitchStory.Games.Eurovision.Country
 
   setup do
     user = user_fixture()
@@ -12,13 +13,17 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     attrs = %{
       name: "ceremony",
       status: :started,
-      countries: Countries.codes(),
+      countries: Country.Repo.codes(),
       user_id: user.id
     }
 
     {:ok, ceremony} = Ceremony.create(attrs)
 
     {:ok, %{ceremony: ceremony}}
+  end
+
+  test "Available points for a ceremony can be retrieved" do
+    assert Vote.points() == [1, 2, 3, 4, 5, 6, 7, 8, 10, 12]
   end
 
   test "A vote can be added to a ceremony", %{ceremony: ceremony} do
@@ -194,21 +199,5 @@ defmodule TwitchStory.Games.Eurovision.VoteTest do
     votes = Ceremony.user_votes(ceremony, voter)
 
     assert Enum.empty?(votes)
-  end
-
-  test "User votes can be initialized with all ceremony countries and points to 0", %{
-    ceremony: ceremony
-  } do
-    voter = user_fixture()
-
-    {:ok, _} = Ceremony.init_votes(ceremony, voter)
-    votes = Ceremony.user_votes(ceremony, voter)
-
-    assert length(votes) == length(ceremony.countries)
-
-    for vote <- votes do
-      assert vote.country in ceremony.countries
-      assert vote.points == 0
-    end
   end
 end

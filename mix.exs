@@ -14,7 +14,12 @@ defmodule TwitchStory.MixProject do
       start_permanent: Mix.env() == :prod,
       compilers: [] ++ Mix.compilers(),
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -72,7 +77,9 @@ defmodule TwitchStory.MixProject do
       {:telemetry_poller, "~> 1.0"},
       # Development tools
       {:credo, "~> 1.7"},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.18", only: :test},
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
     ]
   end
 

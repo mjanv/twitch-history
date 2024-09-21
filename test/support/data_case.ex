@@ -15,6 +15,7 @@ defmodule TwitchStory.DataCase do
   """
 
   use ExUnit.CaseTemplate
+
   alias Ecto.Adapters.SQL
 
   using do

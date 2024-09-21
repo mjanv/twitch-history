@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Games.Eurovision.{Ceremony, Vote}
+  alias TwitchStory.Games.Eurovision.Ceremony
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
@@ -15,7 +15,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
 
     socket
     |> assign(:ceremony, ceremony)
-    |> assign(:form, to_form(Vote.changeset(%Vote{}, %{})))
+    |> assign(:form, to_form(Ceremony.Vote.form()))
     |> stream(:votes, Ceremony.votes(ceremony))
     |> assign(:totals, Ceremony.totals(ceremony))
     |> assign(:leaderboard, Ceremony.leaderboard(ceremony))

@@ -1,6 +1,12 @@
-defmodule TwitchStory.Games.Eurovision.Repos.Countries do
+defmodule TwitchStory.Games.Eurovision.Country.Repo do
   @moduledoc false
 
+  @type country() :: %{
+          required(:name) => String.t(),
+          required(:code) => String.t()
+        }
+
+  @spec all :: [country()]
   def all do
     [
       %{name: "Albania", code: "AL"},
@@ -56,5 +62,9 @@ defmodule TwitchStory.Games.Eurovision.Repos.Countries do
     ]
   end
 
-  def codes, do: all() |> Enum.map(& &1.code)
+  @spec codes :: [String.t()]
+  def codes, do: Enum.map(all(), & &1.code)
+
+  @spec names :: [String.t()]
+  def names, do: Enum.map(all(), & &1.name)
 end

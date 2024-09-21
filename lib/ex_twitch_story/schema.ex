@@ -1,5 +1,9 @@
 defmodule TwitchStory.Schema do
-  @moduledoc false
+  @moduledoc """
+  Ecto schema
+
+  This module is used to define Ecto schemas. It provides the default configuration for Ecto schemas.
+  """
 
   defmacro __using__(_) do
     quote do

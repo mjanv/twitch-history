@@ -23,6 +23,7 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
       |> work()
 
     socket
+    |> stream_configure(:schedule, dom_id: &"schedule-#{&1.entry_id}")
     |> stream(:schedule, [])
     |> assign(:task, pid)
     |> then(fn socket -> {:ok, socket} end)

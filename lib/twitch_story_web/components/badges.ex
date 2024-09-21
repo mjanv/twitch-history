@@ -3,7 +3,7 @@ defmodule TwitchStoryWeb.Components.Badges do
 
   use Phoenix.Component
 
-  alias TwitchStory.Games.Eurovision.Country
+  alias TwitchStory.Games.Eurovision
 
   attr :code, :string, required: true
   attr :height, :integer, default: 6
@@ -15,18 +15,18 @@ defmodule TwitchStoryWeb.Components.Badges do
   end
 
   def flag(%{text: true} = assigns) do
-    assigns = assign(assigns, :country, Country.get(assigns.code))
+    assigns = assign(assigns, :country, Eurovision.get_country(assigns.code))
 
     ~H"""
-    <img class={"h-#{@height} w-auto inline-flex"} src={@country.image} /> <%= @country.name %>
+    <img class={"h-#{@height} w-auto inline-flex"} src={@country.binary} /> <%= @country.name %>
     """
   end
 
   def flag(%{text: false} = assigns) do
-    assigns = assign(assigns, :country, Country.get(assigns.code))
+    assigns = assign(assigns, :country, Eurovision.get_country(assigns.code))
 
     ~H"""
-    <img class={"h-#{@height} w-auto inline-flex"} src={@country.image} />
+    <img class={"h-#{@height} w-auto inline-flex"} src={@country.binary} />
     """
   end
 

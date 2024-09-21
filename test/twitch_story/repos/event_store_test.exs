@@ -3,11 +3,6 @@ defmodule TwitchStory.Repos.EventStoreTest do
 
   alias TwitchStory.EventStore
 
-  defmodule ExampleEvent do
-    use TwitchStory.Event,
-      keys: [:key]
-  end
-
   test "Event can be dispatched to a stream to the event store" do
     id = UUID.uuid4()
     event = %ExampleEvent{id: id, key: "a"}

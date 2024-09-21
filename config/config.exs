@@ -60,13 +60,14 @@ config :twitch_story, Oban,
        # Oauth token renewal at boot and every 15 minutes for token expiring in 30 minutes
        {"*/15 * * * *", TwitchStory.Twitch.Workers.OauthWorker, args: %{n: 30 * 60}},
        # Clips retrieval for all channels every 30 minutes for clips created in the last hour
-       {"*/30 * * * *", TwitchStory.Twitch.Workers.Channels.ClipsWorker,
-        args: %{job: "start", hour: -1}},
+       # {"*/30 * * * *", TwitchStory.Twitch.Workers.Channels.ClipsWorker, args: %{step: "start", hour: -1}},
        # Schedule retrieval for all channels every hour
-       {"* */1 * * *", TwitchStory.Twitch.Workers.Channels.ScheduleWorker, args: %{job: "start"}}
+       # {"* */1 * * *", TwitchStory.Twitch.Workers.Channels.ScheduleWorker, args: %{step: "start"}}
+       # Etl extraction of countries
+       {"@reboot", TwitchStory.Games.Eurovision.Country.Workers.Etl, args: %{}}
      ]}
   ],
-  queues: [twitch: 10]
+  queues: [twitch: 10, api: 10]
 
 config :esbuild,
   version: "0.17.11",

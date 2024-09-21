@@ -20,12 +20,12 @@
     <.simple_form for={@form} phx-change="validate" phx-submit="save">
       <.input field={@form[:name]} label="Name" />
       <div class="flex flex-wrap space-x-4">
-        <%= for country <- TwitchStory.Games.Eurovision.Repos.Countries.codes() do %>
+        <%= for code <- TwitchStory.Games.Eurovision.Country.Repo.codes() do %>
           <div class="flex items-center space-x-2">
             <.input
-              field={@form[String.to_atom("country:" <> String.downcase(country))]}
+              field={@form[String.to_atom("country:" <> String.downcase(code))]}
               type="checkbox"
-              label={TwitchStory.Games.Eurovision.Country.get(country).name}
+              label={TwitchStory.Games.Eurovision.get_country(code).name}
             />
           </div>
         <% end %>

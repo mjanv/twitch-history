@@ -25,7 +25,7 @@
     <.live_component
       id="vote"
       module={TwitchStoryWeb.GamesLive.Eurovision.Components.Vote}
-      countries={Enum.map(@ceremony.countries, &TwitchStory.Games.Eurovision.Country.get/1)}
+      countries={TwitchStory.Games.Eurovision.Country.all(@ceremony.countries)}
       group="grocery_list"
     />
   <% end %>
