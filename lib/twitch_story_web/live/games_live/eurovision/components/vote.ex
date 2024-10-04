@@ -3,6 +3,8 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Components.Vote do
 
   use TwitchStoryWeb, :live_component
 
+  alias TwitchStory.Games.Eurovision
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -22,7 +24,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Components.Vote do
                 <%= country.name %>
               </div>
               <div class="flex-auto text-2xl font-bold leading-6 text-gray-900">
-                <%= Enum.at([12, 10, 9, 8, 7, 6, 4, 3, 2, 1], i, 0) %>
+                <%= Enum.at(Eurovision.points(:desc), i, 0) %>
               </div>
             </div>
           </div>

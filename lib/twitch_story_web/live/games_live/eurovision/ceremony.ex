@@ -29,7 +29,6 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> case do
       {:ok, ceremony} ->
         socket
-        |> broadcast(:ceremony_started)
         |> put_flash(:info, "Ceremony started")
         |> assign(:ceremony, ceremony)
 
@@ -47,7 +46,6 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> case do
       {:ok, ceremony} ->
         socket
-        |> broadcast(:ceremony_paused)
         |> put_flash(:info, "Ceremony paused")
         |> assign(:ceremony, ceremony)
 
@@ -65,7 +63,6 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> case do
       {:ok, ceremony} ->
         socket
-        |> broadcast(:ceremony_completed)
         |> put_flash(:info, "Ceremony completed")
         |> assign(:ceremony, ceremony)
 
@@ -83,7 +80,6 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
     |> case do
       {:ok, ceremony} ->
         socket
-        |> broadcast(:ceremony_cancelled)
         |> put_flash(:info, "Ceremony cancelled")
         |> assign(:ceremony, ceremony)
 
@@ -95,8 +91,19 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
   end
 
   @impl true
-  def handle_info(event, %{assigns: assigns} = socket)
-      when event in [:vote_registered, :ceremony_completed] do
+  def handle_info(%EurovisionCeremonyCompleted{}, %{assigns: assigns} = socket) do
+    ceremony = Ceremony.get(assigns.ceremony.id)
+
+    socket
+    |> assign(:ceremony, ceremony)
+    |> stream(:votes, Ceremony.votes(ceremony))
+    |> assign(:totals, Ceremony.totals(ceremony))
+    |> assign(:leaderboard, Ceremony.leaderboard(ceremony))
+    |> then(fn socket -> {:noreply, socket} end)
+  end
+
+  @impl true
+  def handle_info(:vote_registered, %{assigns: assigns} = socket) do
     ceremony = Ceremony.get(assigns.ceremony.id)
 
     socket
@@ -110,10 +117,5 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Ceremony do
   @impl true
   def handle_info(_, socket) do
     {:noreply, socket}
-  end
-
-  defp broadcast(%{assigns: %{ceremony: ceremony}} = socket, event) do
-    Phoenix.PubSub.broadcast(TwitchStory.PubSub, "eurovision:#{ceremony.id}", event)
-    socket
   end
 end

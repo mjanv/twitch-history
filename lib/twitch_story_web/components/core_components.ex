@@ -492,7 +492,7 @@ defmodule TwitchStoryWeb.Components.CoreComponents do
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
           class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
         >
-          <tr id={@id} class="last:block hidden">
+          <tr id={@id} class="only:block hidden">
             <%= render_slot(@empty) %>
           </tr>
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-purple-50">

@@ -7,10 +7,6 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
 
   @impl true
   def mount(_params, _session, %{assigns: assigns} = socket) do
-    if connected?(socket) do
-      TwitchStory.PubSub.subscribe("eurovision")
-    end
-
     socket
     |> stream(:ceremonies, Ceremony.all(user_id: assigns.current_user.id))
     |> stream(:active_ceremonies, Ceremony.actives())
@@ -55,12 +51,11 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
     |> case do
       {:ok, ceremony} ->
         socket
-        |> broadcast(:ceremony_created)
         |> put_flash(:info, "Ceremony #{ceremony.name} created")
         |> stream_insert(:ceremonies, Ceremony.get(ceremony.id))
         |> push_navigate(to: ~p"/games/eurovision/ceremony/#{ceremony}")
 
-      {:error, _changeset} ->
+      {:error, _} ->
         socket
         |> put_flash(:error, "Cannot create ceremony")
         |> push_patch(to: ~p"/games/eurovision")
@@ -76,7 +71,6 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
     |> case do
       {:ok, ceremony} ->
         socket
-        |> broadcast(:ceremony_deleted)
         |> stream_delete(:ceremonies, ceremony)
         |> put_flash(:info, "Ceremony #{ceremony.name} deleted")
 
@@ -92,12 +86,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
     {:noreply, socket}
   end
 
-  defp string_to_atom_keys(m) do
+  defp string_to_atom_keys(m) when is_map(m) do
     for {k, v} <- m, into: %{}, do: {String.to_atom(k), v}
-  end
-
-  defp broadcast(socket, event) do
-    Phoenix.PubSub.broadcast(TwitchStory.PubSub, "eurovision", event)
-    socket
   end
 end

@@ -62,3 +62,7 @@ config :phoenix_live_view, :debug_heex_annotations, true
 config :live_view_native_stylesheet,
   annotations: true,
   pretty: true
+
+config :mdns_lite,
+  hosts: [:hostname, "twitch"],
+  services: [%{id: :web_service, protocol: "http", transport: "tcp", port: 4000}]

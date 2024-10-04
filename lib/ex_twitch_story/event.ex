@@ -1,5 +1,14 @@
 defmodule TwitchStory.Event do
-  @moduledoc false
+  @moduledoc """
+  Event base struct
+
+  This behaviour defines the base struct for all defined events in the application. It ensures that:
+
+  - The event can be de/serialized to JSON
+  - The event has a unique identifier (:id)
+  - The event has a timestamp (:at)
+  - The event name and timestamp can be humanized (:name)
+  """
 
   alias Timex.Format.Duration.Formatters
 
@@ -14,6 +23,8 @@ defmodule TwitchStory.Event do
     end
   end
 
+  @doc "Returns the humanized representation of an event name/timestamp"
+  @spec humanize(map(), :name | :at) :: String.t()
   def humanize(%{__struct__: struct}, :name) do
     struct
     |> Module.split()

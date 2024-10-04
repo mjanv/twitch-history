@@ -82,7 +82,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     %__MODULE__{}
     |> changeset(Map.merge(attrs, %{status: :created}))
     |> Repo.insert()
-    |> EventBus.ok(fn ceremony -> %Eurovision.CeremonyCreated{id: ceremony.id} end)
+    |> EventBus.ok(fn ceremony -> %EurovisionCeremonyCreated{id: ceremony.id} end)
   end
 
   @doc "Delete a ceremony"
@@ -90,7 +90,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
   def delete(%__MODULE__{} = ceremony) do
     ceremony
     |> Repo.delete()
-    |> EventBus.ok(fn ceremony -> %Eurovision.CeremonyDeleted{id: ceremony.id} end)
+    |> EventBus.ok(fn ceremony -> %EurovisionCeremonyDeleted{id: ceremony.id} end)
   end
 
   # STATE MACHINE API
@@ -101,8 +101,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     ceremony
     |> changeset(%{status: :started})
     |> Repo.update()
-
-    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :started} end)
+    |> EventBus.ok(fn ceremony -> %EurovisionCeremonyStarted{id: ceremony.id} end)
   end
 
   def start(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
@@ -112,8 +111,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     ceremony
     |> changeset(%{status: :paused})
     |> Repo.update()
-
-    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :paused} end)
+    |> EventBus.ok(fn ceremony -> %EurovisionCeremonyPaused{id: ceremony.id} end)
   end
 
   def pause(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
@@ -131,8 +129,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
         end
     })
     |> Repo.update()
-
-    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :completed} end)
+    |> EventBus.ok(fn ceremony -> %EurovisionCeremonyCompleted{id: ceremony.id} end)
   end
 
   def complete(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
@@ -143,8 +140,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
     ceremony
     |> changeset(%{status: :cancelled})
     |> Repo.update()
-
-    # |> EventBus.ok(fn ceremony -> %EurovisionGameStatusChanged{status: :cancelled} end)
+    |> EventBus.ok(fn ceremony -> %EurovisionCeremonyCancelled{id: ceremony.id} end)
   end
 
   def cancel(%__MODULE__{status: status}), do: {:error, :"already_#{status}"}
@@ -222,11 +218,7 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
 
   @doc "Get the leaderboard of a ceremony"
   @spec leaderboard(t()) :: [Result.t()]
-  def leaderboard(%__MODULE__{id: id}) do
-    Vote.leaderboard(id)
-
-    # |> Enum.map(fn result -> Map.put(result, :country, Ceremony.Country.get(result.country)) end)
-  end
+  def leaderboard(%__MODULE__{id: id}), do: Vote.leaderboard(id)
 
   @doc "Get the winner of a ceremony"
   @spec winner(t()) :: String.t() | nil

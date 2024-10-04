@@ -20,12 +20,12 @@
     <.simple_form for={@form} phx-change="validate" phx-submit="save">
       <.input field={@form[:name]} label="Name" />
       <div class="flex flex-wrap space-x-4">
-        <%= for code <- TwitchStory.Games.Eurovision.Country.Repo.codes() do %>
+        <%= for %{name: name, code: code} <- TwitchStory.Games.Eurovision.Country.Repo.all() do %>
           <div class="flex items-center space-x-2">
             <.input
               field={@form[String.to_atom("country:" <> String.downcase(code))]}
               type="checkbox"
-              label={TwitchStory.Games.Eurovision.get_country(code).name}
+              label={name}
             />
           </div>
         <% end %>
@@ -70,7 +70,7 @@
 
   <.section title="My ceremonies" />
 
-  <.table id="my-ceremonies" rows={@streams.ceremonies}>
+  <.table id="my-ceremonies" rows={@streams.ceremonies} row_id={fn {id, _} -> id end}>
     <:col :let={{_, ceremony}} label="Name">
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
         <%= ceremony.name %>

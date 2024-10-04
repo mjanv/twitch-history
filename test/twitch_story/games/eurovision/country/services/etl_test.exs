@@ -15,9 +15,7 @@ defmodule TwitchStory.Games.Eurovision.Country.Services.EtlTest do
       assert country.name == "France"
       assert country.code == "FR"
 
-      assert country.binary == "https://flagsapi.com/FR/shiny/64.png"
-
-      assert country.binary !=
+      assert country.binary ==
                <<137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 64, 0, 0,
                  0, 64, 8, 6, 0, 0, 0, 170, 105, 113, 222, 0, 0, 5, 226, 73, 68, 65, 84, 120, 218,
                  237, 90, 187, 146, 27, 85, 16, 61, 221, 119, 100, 185, 120, 184, 40, 227, 128,

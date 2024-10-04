@@ -2,6 +2,7 @@ defmodule TwitchStory.Twitch.Services.Channels do
   @moduledoc false
 
   alias TwitchStory.Accounts
+  alias TwitchStory.Twitch
   alias TwitchStory.Twitch.Api
   alias TwitchStory.Twitch.Auth
   alias TwitchStory.Twitch.Channels
@@ -35,7 +36,7 @@ defmodule TwitchStory.Twitch.Services.Channels do
     with user <- Accounts.User.get(user_id),
          {:ok, token} <- Auth.OauthToken.get(user),
          {:ok, channels} <- Api.UserApi.followed_channels(token) do
-      Accounts.FollowedChannel.follow_channels(user, channels)
+      Twitch.FollowedChannel.follow_channels(user, channels)
     end
   end
 

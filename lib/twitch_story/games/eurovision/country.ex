@@ -29,26 +29,20 @@ defmodule TwitchStory.Games.Eurovision.Country do
   def all do
     Repo.all(
       from c in __MODULE__,
-        select: c
+        select: [:code, :name]
     )
-    |> Enum.map(&Map.put(&1, :binary, "https://flagsapi.com/#{&1.code}/shiny/64.png"))
   end
 
   def all(codes) do
     Repo.all(
       from c in __MODULE__,
         where: c.code in ^codes,
-        select: c
+        select: [:code, :name]
     )
-    |> Enum.map(&Map.put(&1, :binary, "https://flagsapi.com/#{&1.code}/shiny/64.png"))
   end
 
   def get(code) do
     Repo.get_by(__MODULE__, code: code)
-    |> case do
-      nil -> nil
-      country -> Map.put(country, :binary, "https://flagsapi.com/#{country.code}/shiny/64.png")
-    end
   end
 
   def create(attrs) do

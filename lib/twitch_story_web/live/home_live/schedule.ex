@@ -3,8 +3,9 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Accounts.FollowedChannel
-  alias TwitchStory.Twitch.Api
+  alias TwitchStory.Twitch.Channels.Channel
+  alias TwitchStory.Twitch.Channels.Schedule
+  alias TwitchStory.Twitch.FollowedChannel
 
   @impl true
   def mount(
@@ -12,44 +13,19 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
         _session,
         %{assigns: %{current_user: current_user, live_action: live_action}} = socket
       ) do
-    pid =
+    schedules =
       case live_action do
         :broadcaster ->
-          [%{broadcaster_id: params["broadcaster_id"]}]
+          params["broadcaster_id"] |> Channel.get!() |> Map.get(:id) |> Schedule.get()
 
         _ ->
           FollowedChannel.all(user_id: current_user.id)
+          |> Enum.map(& &1.channel_id)
+          |> Schedule.all()
       end
-      |> work()
 
     socket
-    |> stream_configure(:schedule, dom_id: &"schedule-#{&1.entry_id}")
-    |> stream(:schedule, [])
-    |> assign(:task, pid)
+    |> stream(:schedules, schedules)
     |> then(fn socket -> {:ok, socket} end)
-  end
-
-  @impl true
-  def handle_info({:schedule, schedule}, socket) do
-    schedule
-    |> Enum.reduce(socket, fn segment, socket -> stream_insert(socket, :schedule, segment) end)
-    |> then(fn socket -> {:noreply, socket} end)
-  end
-
-  defp work(channels) do
-    parent = self()
-
-    {:ok, pid} =
-      Task.start_link(fn ->
-        channels
-        |> Enum.each(fn channel ->
-          {:ok, schedule} =
-            Api.ChannelApi.schedule(String.to_integer(channel.channel.broadcaster_id))
-
-          send(parent, {:schedule, schedule})
-        end)
-      end)
-
-    pid
   end
 end

@@ -27,8 +27,21 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Leaderboard do
   end
 
   @impl true
-  def handle_info(event, %{assigns: assigns} = socket)
-      when event in [:vote_registered, :ceremony_completed] do
+  def handle_info(:vote_registered, %{assigns: assigns} = socket) do
+    ceremony = Ceremony.get(assigns.ceremony.id)
+
+    leaderboard =
+      ceremony
+      |> Ceremony.leaderboard()
+      |> Enum.map(fn result -> Map.put(result, :country, Country.get(result.country)) end)
+
+    socket
+    |> stream(:leaderboard, leaderboard)
+    |> then(fn socket -> {:noreply, socket} end)
+  end
+
+  @impl true
+  def handle_info(%EurovisionCeremonyCompleted{}, %{assigns: assigns} = socket) do
     ceremony = Ceremony.get(assigns.ceremony.id)
 
     leaderboard =

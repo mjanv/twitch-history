@@ -3,7 +3,25 @@ defmodule TwitchStory.Notifications.PubSub do
 
   @behaviour ExTwitchStory.EventBus.Dispatcher
 
-  def dispatch(event) do
-    Phoenix.PubSub.broadcast(TwitchStory.PubSub, "notifications:events", event)
-  end
+  alias TwitchStory.PubSub
+
+  def dispatch(%EurovisionCeremonyCreated{id: id} = event),
+    do: PubSub.broadcast("eurovision:#{id}", event)
+
+  def dispatch(%EurovisionCeremonyStarted{id: id} = event),
+    do: PubSub.broadcast("eurovision:#{id}", event)
+
+  def dispatch(%EurovisionCeremonyPaused{id: id} = event),
+    do: PubSub.broadcast("eurovision:#{id}", event)
+
+  def dispatch(%EurovisionCeremonyCompleted{id: id} = event),
+    do: PubSub.broadcast("eurovision:#{id}", event)
+
+  def dispatch(%EurovisionCeremonyCancelled{id: id} = event),
+    do: PubSub.broadcast("eurovision:#{id}", event)
+
+  def dispatch(%EurovisionCeremonyDeleted{id: id} = event),
+    do: PubSub.broadcast("eurovision:#{id}", event)
+
+  def dispatch(_), do: :ok
 end

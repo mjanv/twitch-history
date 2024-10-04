@@ -1,10 +1,10 @@
-defmodule TwitchStory.Accounts.FollowedChannelTest do
+defmodule TwitchStory.Twitch.FollowedChannelTest do
   use TwitchStory.DataCase
 
   import TwitchStory.AccountsFixtures
   import TwitchStory.TwitchFixtures
 
-  alias TwitchStory.Accounts.FollowedChannel
+  alias TwitchStory.Twitch.FollowedChannel
 
   describe "follow_channels/1" do
     test "attach channels to an existing user" do

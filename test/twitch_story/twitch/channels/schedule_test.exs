@@ -36,7 +36,7 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
 
       assert schedule.channel_id == channel.id
 
-      assert Enum.map(schedule.entries, fn e -> Map.put(e, :id, nil) end) == [
+      assert schedule.entries == [
                %Schedule.Entry{
                  entry_id: "1",
                  title: "title",
@@ -118,7 +118,7 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
       assert schedule1.id == schedule2.id
       assert schedule2.channel_id == channel.id
 
-      assert Enum.map(schedule2.entries, fn e -> Map.put(e, :id, nil) end) == [
+      assert schedule2.entries == [
                %Schedule.Entry{
                  entry_id: "1",
                  title: "title",
@@ -205,7 +205,7 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
     end
   end
 
-  describe "get!/1" do
+  describe "get/1" do
     test "returns the schedule for a given channel" do
       channel = channel_fixture()
 
@@ -231,11 +231,11 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
       ]
 
       {:ok, _} = Schedule.save(channel, entries)
-      %Schedule{channel_id: channel_id, entries: entries} = Schedule.get!(channel.id)
+      %Schedule{channel_id: channel_id, entries: entries} = Schedule.get(channel.id)
 
       assert channel_id == channel.id
 
-      assert Enum.map(entries, fn e -> Map.put(e, :id, nil) end) == [
+      assert entries == [
                %Schedule.Entry{
                  entry_id: "1",
                  title: "title",
@@ -255,6 +255,77 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
                  is_recurring: true
                }
              ]
+    end
+  end
+
+  describe "all/2" do
+    test "returns all schedules for a given list of channels" do
+      channel1 = channel_fixture()
+      channel2 = channel_fixture()
+
+      now = ~U[2000-01-07 12:00:00Z]
+
+      entries = [
+        %{
+          entry_id: "1",
+          title: "title",
+          category: "category",
+          start_time: ~U[2000-01-08 12:00:00Z],
+          end_time: ~U[2000-01-08 14:00:00Z],
+          is_canceled: true,
+          is_recurring: false
+        },
+        %{
+          entry_id: "2",
+          title: "title",
+          category: "category2",
+          start_time: ~U[2000-01-18 12:00:00Z],
+          end_time: ~U[2000-01-18 14:00:00Z],
+          is_canceled: false,
+          is_recurring: true
+        }
+      ]
+
+      {:ok, schedule1} = Schedule.save(channel1, entries)
+      {:ok, schedule2} = Schedule.save(channel2, entries)
+
+      [%Schedule{} = s1, %Schedule{} = s2] = Schedule.all([channel1.id, channel2.id], now)
+
+      assert s1.id == schedule1.id
+      assert s2.id == schedule2.id
+
+      assert s1.channel_id == channel1.id
+      assert s2.channel_id == channel2.id
+
+      assert s1.entries == [
+               %{
+                 entry_id: "1",
+                 title: "title",
+                 category: "category",
+                 start_time: ~U[2000-01-08 12:00:00Z],
+                 end_time: ~U[2000-01-08 14:00:00Z],
+                 is_canceled: true,
+                 is_recurring: false
+               }
+             ]
+
+      assert s2.entries == [
+               %{
+                 entry_id: "1",
+                 title: "title",
+                 category: "category",
+                 start_time: ~U[2000-01-08 12:00:00Z],
+                 end_time: ~U[2000-01-08 14:00:00Z],
+                 is_canceled: true,
+                 is_recurring: false
+               }
+             ]
+
+      assert s1.inserted_at == schedule1.inserted_at
+      assert s2.inserted_at == schedule2.inserted_at
+
+      assert s1.updated_at == schedule1.updated_at
+      assert s2.updated_at == schedule2.updated_at
     end
   end
 end

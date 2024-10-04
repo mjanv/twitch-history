@@ -3,9 +3,9 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Accounts.FollowedChannel
   alias TwitchStory.Twitch.Api
   alias TwitchStory.Twitch.Auth
+  alias TwitchStory.Twitch.FollowedChannel
   alias TwitchStory.Twitch.Workers.Channels.FollowedChannelsWorker
 
   @impl true
@@ -39,14 +39,14 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
   end
 
   @impl true
-  def handle_info({:sync_planned, n}, socket) do
+  def handle_info(%SynchronizationPlanned{name: "followed_channels", n: n}, socket) do
     socket
     |> put_flash(:info, "Planned #{n} channels...")
     |> then(fn socket -> {:noreply, socket} end)
   end
 
   @impl true
-  def handle_info(:sync_finished, socket) do
+  def handle_info(%SynchronizationFinished{name: "followed_channels"}, socket) do
     socket
     |> put_flash(:info, "Finished sync !")
     |> push_navigate(to: "/channels")

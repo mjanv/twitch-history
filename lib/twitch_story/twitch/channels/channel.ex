@@ -16,7 +16,7 @@ defmodule TwitchStory.Twitch.Channels.Channel do
     field :thumbnail, :binary
 
     many_to_many :users, TwitchStory.Accounts.User,
-      join_through: TwitchStory.Accounts.FollowedChannel
+      join_through: TwitchStory.Twitch.FollowedChannel
 
     timestamps(type: :utc_datetime)
   end

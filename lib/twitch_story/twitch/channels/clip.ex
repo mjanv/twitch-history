@@ -5,6 +5,16 @@ defmodule TwitchStory.Twitch.Channels.Clip do
 
   alias TwitchStory.Repo
 
+  @type t() :: %__MODULE__{
+          twitch_id: String.t(),
+          video_id: String.t(),
+          title: String.t(),
+          created_at: NaiveDateTime.t(),
+          broadcaster_id: String.t(),
+          stats: map(),
+          urls: map()
+        }
+
   schema "clips" do
     field :twitch_id, :string
     field :video_id, :string
@@ -13,12 +23,12 @@ defmodule TwitchStory.Twitch.Channels.Clip do
 
     field :broadcaster_id, :string
 
-    embeds_one :stats, Stats do
+    embeds_one :stats, Stats, primary_key: false do
       field :duration, :float
       field :view_count, :integer
     end
 
-    embeds_one :urls, Urls do
+    embeds_one :urls, Urls, primary_key: false do
       field :url, :string
       field :embed_url, :string
       field :thumbnail_url, :string
@@ -49,23 +59,37 @@ defmodule TwitchStory.Twitch.Channels.Clip do
 
   def all, do: Repo.all(__MODULE__)
 
-  def broadcaster(broadcaster_id, page \\ 1, page_size \\ 10) do
+  @doc "Get a clip by its Twitch ID"
+  @spec get(String.t()) :: t() | nil
+  def get(twitch_id) do
+    Repo.get_by(__MODULE__, twitch_id: twitch_id)
+  end
+
+  @doc "Get the list of clips of a broadcaster"
+  @spec broadcaster(String.t(), integer(), integer(), Keyword.t()) :: [t()]
+  def broadcaster(broadcaster_id, page \\ 1, page_size \\ 10, order_by \\ [desc: :created_at]) do
     __MODULE__
     |> where(broadcaster_id: ^broadcaster_id)
-    |> order_by(desc: :created_at)
+    |> order_by(^order_by)
     |> Repo.paginate(page: page, page_size: page_size)
     |> Map.get(:entries)
   end
 
-  def page(page, page_size \\ 10, order_by \\ [asc: :created_at]) do
+  @doc "Get the list of clips of all broadcasters"
+  @spec page(integer(), integer(), Keyword.t()) :: [t()]
+  def page(page, page_size \\ 10, order_by \\ [desc: :created_at]) do
     __MODULE__
     |> order_by(^order_by)
     |> Repo.paginate(page: page, page_size: page_size)
     |> Map.get(:entries)
   end
 
+  @doc "Count the number of clips"
+  @spec count :: integer()
   def count, do: Repo.count(__MODULE__)
 
+  @doc "Create a new clip or update an existing one"
+  @spec create(map()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}
   def create(attrs) do
     %__MODULE__{}
     |> changeset(attrs)

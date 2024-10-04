@@ -23,7 +23,7 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
 
     {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
 
-    assert events == [%Eurovision.CeremonyCreated{id: ceremony.id}]
+    assert events == [%EurovisionCeremonyCreated{id: ceremony.id}]
 
     assert ceremony.name == "ceremony"
     assert ceremony.status == :created
@@ -87,6 +87,13 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
 
     {:ok, ceremony} = Ceremony.start(ceremony)
 
+    {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
+
+    assert events == [
+             %EurovisionCeremonyCreated{id: ceremony.id},
+             %EurovisionCeremonyStarted{id: ceremony.id}
+           ]
+
     assert ceremony.status == :started
   end
 
@@ -97,6 +104,15 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
     {:ok, b} = Ceremony.pause(a)
     {:ok, c} = Ceremony.start(b)
 
+    {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
+
+    assert events == [
+             %EurovisionCeremonyCreated{id: ceremony.id},
+             %EurovisionCeremonyStarted{id: ceremony.id},
+             %EurovisionCeremonyPaused{id: ceremony.id},
+             %EurovisionCeremonyStarted{id: ceremony.id}
+           ]
+
     assert {a.status, b.status, c.status} == {:started, :paused, :started}
   end
 
@@ -104,6 +120,13 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
     {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
 
     {:ok, ceremony} = Ceremony.complete(ceremony)
+
+    {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
+
+    assert events == [
+             %EurovisionCeremonyCreated{id: ceremony.id},
+             %EurovisionCeremonyCompleted{id: ceremony.id}
+           ]
 
     assert ceremony.status == :completed
   end
@@ -122,6 +145,13 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
     {:ok, %Ceremony{} = ceremony} = Ceremony.create(ceremony_attrs)
 
     {:ok, ceremony} = Ceremony.cancel(ceremony)
+
+    {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
+
+    assert events == [
+             %EurovisionCeremonyCreated{id: ceremony.id},
+             %EurovisionCeremonyCancelled{id: ceremony.id}
+           ]
 
     assert ceremony.status == :cancelled
   end
@@ -147,8 +177,8 @@ defmodule TwitchStory.Games.Eurovision.CeremonyTest do
     {:ok, events} = TwitchStory.EventStore.all(ceremony.id)
 
     assert events == [
-             %Eurovision.CeremonyCreated{id: ceremony.id},
-             %Eurovision.CeremonyDeleted{id: ceremony.id}
+             %EurovisionCeremonyCreated{id: ceremony.id},
+             %EurovisionCeremonyDeleted{id: ceremony.id}
            ]
 
     assert Ceremony.get(ceremony.id) == nil

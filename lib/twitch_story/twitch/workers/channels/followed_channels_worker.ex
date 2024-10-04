@@ -23,7 +23,11 @@ defmodule TwitchStory.Twitch.Workers.Channels.FollowedChannelsWorker do
       |> __MODULE__.new()
       |> Oban.insert()
 
-      TwitchStory.PubSub.broadcast("channels:user:#{user_id}", {:sync_planned, length(jobs)})
+      TwitchStory.PubSub.broadcast("channels:user:#{user_id}", %SynchronizationPlanned{
+        id: user_id,
+        name: "followed_channels",
+        n: length(jobs)
+      })
 
       :ok
     end
@@ -39,7 +43,10 @@ defmodule TwitchStory.Twitch.Workers.Channels.FollowedChannelsWorker do
   def perform(%Oban.Job{args: %{"job" => "end", "user_id" => user_id}}) do
     Services.Channels.sync_followed_channels(user_id)
 
-    TwitchStory.PubSub.broadcast("channels:user:#{user_id}", :sync_finished)
+    TwitchStory.PubSub.broadcast("channels:user:#{user_id}", %SynchronizationFinished{
+      id: user_id,
+      name: "followed_channels"
+    })
 
     :ok
   end

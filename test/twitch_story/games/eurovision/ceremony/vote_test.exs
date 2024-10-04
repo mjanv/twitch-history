@@ -22,10 +22,6 @@ defmodule TwitchStory.Games.Eurovision.Ceremony.VoteTest do
     {:ok, %{ceremony: ceremony}}
   end
 
-  test "Available points for a ceremony can be retrieved" do
-    assert Vote.points() == [1, 2, 3, 4, 5, 6, 7, 8, 10, 12]
-  end
-
   test "A vote can be added to a ceremony", %{ceremony: ceremony} do
     voter = user_fixture()
 

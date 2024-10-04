@@ -37,8 +37,19 @@ defmodule TwitchStory.Twitch.Channels.ClipTest do
     assert clip.urls.thumbnail_url == "https://twitch.tv/thumbnail/testclip"
   end
 
-  test "create/1 with existing data does not creates a clip" do
+  test "create/1 with existing data does not creates a new clip" do
     {:ok, %Clip{}} = Clip.create(@valid_attrs)
-    {:ok, %Clip{}} = Clip.create(@valid_attrs)
+    clip1 = Clip.get("12345")
+
+    {:ok, %Clip{}} = Clip.create(Map.put(@valid_attrs, :stats, %{duration: 55.5, view_count: 200}))
+    clip2 = Clip.get("12345")
+
+    assert Clip.count() == 1
+
+    assert clip1.id == clip2.id
+    assert clip1.title == clip2.title
+    assert clip1.urls == clip2.urls
+    assert clip1.stats == %Clip.Stats{duration: 30.5, view_count: 100}
+    assert clip2.stats == %Clip.Stats{duration: 55.5, view_count: 200}
   end
 end

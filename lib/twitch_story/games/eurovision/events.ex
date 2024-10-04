@@ -1,4 +1,4 @@
-defmodule Eurovision.CeremonyCreated do
+defmodule EurovisionCeremonyCreated do
   @moduledoc false
 
   use TwitchStory.Event,
@@ -10,19 +10,55 @@ defmodule Eurovision.CeremonyCreated do
   end
 end
 
-defmodule Eurovision.CeremonyStatusChanged do
+defmodule EurovisionCeremonyStarted do
   @moduledoc false
 
   use TwitchStory.Event,
-    keys: [:status]
+    keys: []
 
   defimpl EventImpl, for: __MODULE__ do
-    def humanize(event, :name), do: "Eurovision game #{event.status}"
+    def humanize(_, :name), do: "Eurovision game started"
     def humanize(event, key), do: Event.humanize(event, key)
   end
 end
 
-defmodule Eurovision.CeremonyDeleted do
+defmodule EurovisionCeremonyPaused do
+  @moduledoc false
+
+  use TwitchStory.Event,
+    keys: []
+
+  defimpl EventImpl, for: __MODULE__ do
+    def humanize(_, :name), do: "Eurovision game paused"
+    def humanize(event, key), do: Event.humanize(event, key)
+  end
+end
+
+defmodule EurovisionCeremonyCompleted do
+  @moduledoc false
+
+  use TwitchStory.Event,
+    keys: []
+
+  defimpl EventImpl, for: __MODULE__ do
+    def humanize(_, :name), do: "Eurovision game completed"
+    def humanize(event, key), do: Event.humanize(event, key)
+  end
+end
+
+defmodule EurovisionCeremonyCancelled do
+  @moduledoc false
+
+  use TwitchStory.Event,
+    keys: []
+
+  defimpl EventImpl, for: __MODULE__ do
+    def humanize(_, :name), do: "Eurovision game cancelled"
+    def humanize(event, key), do: Event.humanize(event, key)
+  end
+end
+
+defmodule EurovisionCeremonyDeleted do
   @moduledoc false
 
   use TwitchStory.Event,

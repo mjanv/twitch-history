@@ -59,10 +59,6 @@ defmodule TwitchStory.Games.Eurovision.Ceremony.Vote do
     end
   end
 
-  @doc "Returns the list of valid points"
-  @spec points :: [integer()]
-  def points, do: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12]
-
   @doc "Get a vote"
   @spec get_by(Keyword.t()) :: t()
   def get_by(clauses) do

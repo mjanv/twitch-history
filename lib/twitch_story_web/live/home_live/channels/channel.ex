@@ -13,7 +13,7 @@ defmodule TwitchStoryWeb.HomeLive.Channels.Channel do
 
     socket
     |> assign(channel: channel)
-    |> assign(schedule: Schedule.get!(channel.id))
+    |> assign(schedule: Schedule.get(channel.id))
     |> assign(clips: Clip.broadcaster(broadcaster_id))
     |> then(fn socket -> {:ok, socket} end)
   end

@@ -3,6 +3,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Vote do
 
   use TwitchStoryWeb, :live_view
 
+  alias TwitchStory.Games.Eurovision
   alias TwitchStory.Games.Eurovision.Ceremony
 
   @impl true
@@ -28,7 +29,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Vote do
       |> Enum.map(fn {%{code: code}, i} ->
         %{
           country: code,
-          points: Enum.at([12, 10, 9, 8, 7, 6, 4, 3, 2, 1], i, 0),
+          points: Enum.at(Eurovision.points(:desc), i, 0),
           user_id: assigns.current_user.id
         }
       end)
@@ -49,14 +50,18 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Vote do
 
   @impl true
   def handle_info(event, %{assigns: assigns} = socket)
-      when event in [:ceremony_paused, :ceremony_completed, :ceremony_cancelled] do
+      when event.__struct__ in [
+             EurovisionCeremonyPaused,
+             EurovisionCeremonyCompleted,
+             EurovisionCeremonyCancelled
+           ] do
     socket
     |> assign(:ceremony, Ceremony.get(assigns.ceremony.id))
     |> then(fn socket -> {:ok, socket} end)
   end
 
   @impl true
-  def handle_info(:ceremony_started, %{assigns: assigns} = socket) do
+  def handle_info(%EurovisionCeremonyStarted{}, %{assigns: assigns} = socket) do
     ceremony = Ceremony.get(assigns.ceremony.id)
 
     socket
@@ -71,7 +76,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Vote do
   end
 
   defp broadcast(%{assigns: %{ceremony: ceremony}} = socket, event) do
-    Phoenix.PubSub.broadcast(TwitchStory.PubSub, "eurovision:#{ceremony.id}", event)
+    TwitchStory.PubSub.broadcast("eurovision:#{ceremony.id}", event)
     socket
   end
 end

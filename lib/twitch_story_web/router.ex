@@ -49,6 +49,7 @@ defmodule TwitchStoryWeb.Router do
       live "/channels/:broadcaster_id", HomeLive.Channels.Channel, :index
       live "/schedule", HomeLive.Schedule, :index
       live "/schedule/:broadcaster_id", HomeLive.Schedule, :broadcaster
+      live "/clips", HomeLive.Clips, :index
 
       live "/users/settings", UserLive.SettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email
@@ -84,6 +85,7 @@ defmodule TwitchStoryWeb.Router do
     pipe_through [:browser]
 
     get "/about", PageController, :about
+    get "/images/eurovision/:code", ImageController, :eurovision
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,

@@ -47,8 +47,7 @@ defmodule TwitchStory.Games.Eurovision.CountryTest do
 
       assert country.name == "France"
       assert country.code == "FR"
-      assert country.binary == "https://flagsapi.com/FR/shiny/64.png"
-      assert country.binary != "a"
+      assert country.binary == "a"
     end
 
     test "returns nil if the country does not exist" do
