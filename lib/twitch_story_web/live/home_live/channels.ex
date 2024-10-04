@@ -33,7 +33,10 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
         assign(socket, channels: [], live_streams: streams)
 
       :index ->
-        assign(socket, channels: FollowedChannel.all(user_id: current_user.id), live_streams: [])
+        socket
+        |> assign(channels: FollowedChannel.all(user_id: current_user.id))
+        |> assign(channel_stats: FollowedChannel.count_by_year(current_user.id))
+        |> assign(live_streams: [])
     end
     |> then(fn socket -> {:noreply, socket} end)
   end
