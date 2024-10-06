@@ -3,8 +3,6 @@ defmodule TwitchStory.Twitch.Channels.Clip do
 
   use TwitchStory.Schema
 
-  alias TwitchStory.Repo
-
   @type t() :: %__MODULE__{
           twitch_id: String.t(),
           video_id: String.t(),
@@ -57,13 +55,13 @@ defmodule TwitchStory.Twitch.Channels.Clip do
     |> validate_required([:url, :embed_url, :thumbnail_url])
   end
 
+  @doc "Get all clips"
+  @spec all :: [t()]
   def all, do: Repo.all(__MODULE__)
 
   @doc "Get a clip by its Twitch ID"
-  @spec get(String.t()) :: t() | nil
-  def get(twitch_id) do
-    Repo.get_by(__MODULE__, twitch_id: twitch_id)
-  end
+  @spec get(Keyword.t()) :: t() | nil
+  def get(clauses), do: Repo.get_by(__MODULE__, clauses)
 
   @doc "Get the list of clips of a broadcaster"
   @spec broadcaster(String.t(), integer(), integer(), Keyword.t()) :: [t()]
@@ -84,9 +82,13 @@ defmodule TwitchStory.Twitch.Channels.Clip do
     |> Map.get(:entries)
   end
 
-  @doc "Count the number of clips"
+  @doc "Count the total number of clips"
   @spec count :: integer()
   def count, do: Repo.count(__MODULE__)
+
+  @doc "Count clips created in the last N intervals"
+  @spec count(integer(), :year | :month | :week | :day | :hour | :minute) :: integer()
+  def count(n, interval), do: __MODULE__ |> Repo.last(:created_at, n, interval) |> Repo.count()
 
   @doc "Create a new clip or update an existing one"
   @spec create(map()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}

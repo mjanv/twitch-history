@@ -3,10 +3,6 @@ defmodule TwitchStory.Accounts.UserToken do
 
   use TwitchStory.Schema
 
-  import Ecto.Query
-
-  alias TwitchStory.Repo
-
   @hash_algorithm :sha256
   @rand_size 32
 

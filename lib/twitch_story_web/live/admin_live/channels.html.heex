@@ -7,6 +7,13 @@
     >
       <.icon name="hero-arrow-path" class="mr-2" /> Clips
     </.link>
+    <.link
+      type="button"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      navigate={~p"/admin/channels/schedules"}
+    >
+      <.icon name="hero-arrow-path" class="mr-2" /> Schedules
+    </.link>
   </.heading>
 
   <.stats rows={@channels} />
@@ -23,8 +30,12 @@
       <% end %>
     </:col>
     <:col :let={{_, channel}} label="Language"><%= channel.broadcaster_language %></:col>
-    <:col :let={{_, channel}} label="Inserted at"><%= inspect(channel.inserted_at) %></:col>
-    <:col :let={{_, channel}} label="Updated at"><%= inspect(channel.updated_at) %></:col>
+    <:col :let={{_, channel}} label="Inserted at">
+      <%= Timex.format!(channel.inserted_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+    </:col>
+    <:col :let={{_, channel}} label="Updated at">
+      <%= Timex.format!(channel.updated_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+    </:col>
     <:empty><.empty title="No channels" description="" icon="hero-film" /></:empty>
   </.table>
 

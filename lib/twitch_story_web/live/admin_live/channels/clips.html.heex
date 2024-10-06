@@ -14,7 +14,9 @@
   <.table id="clips" rows={@streams.clips}>
     <:col :let={{_, clip}} label="Name"><%= clip.title %></:col>
     <:col :let={{_, clip}} label="Created at"><%= clip.created_at %></:col>
-    <:col :let={{_, clip}} label="Stats"><%= inspect(clip.stats) %></:col>
+    <:col :let={{_, clip}} label="Stats">
+      <%= round(clip.stats.duration) %>s - <%= clip.stats.view_count %> views
+    </:col>
     <:empty><.empty title="No clips" description="" icon="hero-film" /></:empty>
   </.table>
 

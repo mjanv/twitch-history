@@ -6,6 +6,7 @@ defmodule TwitchStoryWeb.Controllers.ImageControllerTest do
 
   test "GET /images/eurovision/:code.png", %{conn: conn} do
     {:ok, country} = Country.create(%{name: "France", code: "FR"})
+
     Etl.extract_countries()
 
     conn = get(conn, ~p"/images/eurovision/#{country.code}")

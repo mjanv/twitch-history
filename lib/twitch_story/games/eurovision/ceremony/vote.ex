@@ -9,7 +9,6 @@ defmodule TwitchStory.Games.Eurovision.Ceremony.Vote do
 
   alias TwitchStory.Accounts.User
   alias TwitchStory.Games.Eurovision.Ceremony
-  alias TwitchStory.Repo
 
   @type vote() :: %{
           required(:ceremony_id) => String.t(),

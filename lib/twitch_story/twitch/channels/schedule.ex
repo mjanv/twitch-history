@@ -3,8 +3,6 @@ defmodule TwitchStory.Twitch.Channels.Schedule do
 
   use TwitchStory.Schema
 
-  alias TwitchStory.Repo
-
   schema "schedules" do
     embeds_many :entries, Entry, on_replace: :delete, primary_key: false do
       field :entry_id, :string
@@ -41,7 +39,8 @@ defmodule TwitchStory.Twitch.Channels.Schedule do
     |> validate_required([:entry_id, :title, :start_time, :end_time])
   end
 
-  def count, do: Repo.aggregate(__MODULE__, :count, :id)
+  def count, do: Repo.count(__MODULE__)
+  def count(n, interval), do: __MODULE__ |> Repo.last(:inserted_at, n, interval) |> Repo.count()
 
   def save(channel, entries) do
     case Repo.get_by(__MODULE__, channel_id: channel.id) do
@@ -52,16 +51,21 @@ defmodule TwitchStory.Twitch.Channels.Schedule do
     |> Repo.insert_or_update()
   end
 
-  def get(channel_id) do
+  def get(clauses) do
     __MODULE__
-    |> where(channel_id: ^channel_id)
+    |> where(^clauses)
     |> Repo.one()
     |> Repo.preload(:channel)
   end
 
-  def all(channel_ids, now \\ DateTime.utc_now()) do
-    seven_days_later = DateTime.add(now, 7 * 24 * 60 * 60, :second)
+  def page(page, page_size \\ 10, order_by \\ [asc: :inserted_at]) do
+    __MODULE__
+    |> order_by(^order_by)
+    |> Repo.paginate(page: page, page_size: page_size)
+    |> Map.get(:entries)
+  end
 
+  def all(channel_ids, days \\ 7, now \\ DateTime.utc_now()) do
     __MODULE__
     |> where([s], s.channel_id in ^channel_ids)
     |> select([s], %__MODULE__{
@@ -76,13 +80,15 @@ defmodule TwitchStory.Twitch.Channels.Schedule do
             WHERE (entry->>'start_time')::timestamptz <= ?
           )
           """,
-          ^seven_days_later
+          ^DateTime.add(now, days * 24 * 60 * 60, :second)
         ),
       inserted_at: s.inserted_at,
       updated_at: s.updated_at
     })
     |> order_by(asc: :inserted_at)
     |> Repo.all()
+    |> Repo.preload(:channel)
+    |> Enum.filter(fn schedule -> schedule.entries != nil end)
     |> Enum.map(fn schedule ->
       schedule
       |> Map.put(:inserted_at, DateTime.from_naive!(schedule.inserted_at, "Etc/UTC"))

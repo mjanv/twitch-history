@@ -3,7 +3,7 @@ defmodule TwitchStory.Repo.Migrations.CreateFollowedChannel do
 
   def change do
     create table(:followed_channels, primary_key: false) do
-      add :user_id, references(:users), primary_key: false
+      add :user_id, references(:users, on_delete: :delete_all), primary_key: false
       add :channel_id, references(:channels), primary_key: false
 
       add :followed_at, :utc_datetime

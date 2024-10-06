@@ -92,6 +92,7 @@ defmodule TwitchStoryWeb do
       import TwitchStoryWeb.Gettext
 
       alias Phoenix.LiveView.JS
+      alias TwitchStory.FeatureFlag
 
       unquote(verified_routes())
       unquote(responses())

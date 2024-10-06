@@ -132,6 +132,9 @@ defmodule TwitchStory.Twitch.Api.UserApi do
       _ -> []
     end
     |> Enum.map(&string_to_atom_keys/1)
+    |> Enum.map(fn %{started_at: s} = ls ->
+      Map.put(ls, :started_at, s |> DateTime.from_iso8601() |> elem(1))
+    end)
     |> then(fn streams -> {:ok, streams} end)
   end
 end

@@ -23,6 +23,8 @@ defmodule TwitchStory.EventStore do
 
   use EventStore, otp_app: :twitch_story
 
+  @behaviour ExTwitchStory.EventBus.Dispatcher
+
   alias EventStore.EventData
 
   def init(config) do

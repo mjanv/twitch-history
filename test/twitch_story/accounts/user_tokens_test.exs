@@ -1,8 +1,6 @@
 defmodule TwitchStory.Accounts.UserTokenTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Accounts.UserToken
 
   describe "generate_user_session_token/1" do

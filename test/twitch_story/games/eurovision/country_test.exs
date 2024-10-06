@@ -43,7 +43,7 @@ defmodule TwitchStory.Games.Eurovision.CountryTest do
     test "returns the country for a given code" do
       Country.create(%{name: "France", code: "FR", binary: "a"})
 
-      country = Country.get("FR")
+      country = Country.get(code: "FR")
 
       assert country.name == "France"
       assert country.code == "FR"
@@ -51,7 +51,7 @@ defmodule TwitchStory.Games.Eurovision.CountryTest do
     end
 
     test "returns nil if the country does not exist" do
-      assert Country.get("XX") == nil
+      assert Country.get(code: "XX") == nil
     end
   end
 end

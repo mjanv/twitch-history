@@ -1,9 +1,6 @@
 defmodule TwitchStory.Twitch.FollowedChannelTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-  import TwitchStory.TwitchFixtures
-
   alias TwitchStory.Twitch.FollowedChannel
 
   describe "follow_channels/1" do

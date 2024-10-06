@@ -40,18 +40,31 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
   def emotes(broadcaster_id) do
     AuthApi.get(url: "/helix/chat/emotes?broadcaster_id=#{broadcaster_id}")
     |> case do
-      {:ok, %Req.Response{status: 200, body: %{"data" => data}}} -> data
-      _ -> []
+      {:ok, %Req.Response{status: 200, body: %{"data" => data, "template" => template}}} ->
+        Enum.map(data, fn emote -> Map.put(emote, "template", template) end)
+
+      _ ->
+        []
     end
     |> Enum.map(fn emote ->
       emote
-      |> Map.put("channel_id", Integer.to_string(broadcaster_id))
-      |> Map.take(["id", "name", "emote_set_id", "channel_id", "format", "scale", "theme_mode"])
+      |> Map.take([
+        "id",
+        "name",
+        "tier",
+        "emote_type",
+        "emote_set_id",
+        "format",
+        "scale",
+        "theme_mode",
+        "template"
+      ])
+      |> Map.put("channel_id", broadcaster_id)
       |> Enum.map(fn
         {"id", code} -> {"emote_id", code}
         pair -> pair
       end)
-      |> Enum.into(%{})
+      |> string_to_atom_keys()
     end)
     |> then(fn data -> {:ok, data} end)
   end

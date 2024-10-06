@@ -1,8 +1,6 @@
 defmodule TwitchStory.SettingsTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Accounts
   alias TwitchStory.Accounts.Identity.Settings
   alias TwitchStory.Accounts.{User, UserToken}

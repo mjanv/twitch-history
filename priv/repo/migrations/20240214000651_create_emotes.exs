@@ -5,15 +5,14 @@ defmodule TwitchStory.Repo.Migrations.CreateEmotes do
     create table(:emotes) do
       add :emote_id, :string
       add :name, :string
-      add :channel_id, :string
       add :emote_set_id, :string
       add :formats, {:array, :string}
       add :scales, {:array, :string}
       add :themes, {:array, :string}
+      add :tier, :integer
       add :thumbnail_url, :string
-      add :thumbnail, :binary
 
-      # add :channel_id, references(:channels, on_delete: :nothing)
+      add :channel_id, references(:channels, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end

@@ -1,0 +1,58 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.heading title="Schedules">
+    <.link
+      type="button"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      navigate={~p"/admin/channels"}
+    >
+      <.icon name="hero-arrow-path" class="mr-2" /> Channels
+    </.link>
+  </.heading>
+
+  <.stats rows={@schedules} />
+
+  <%= @page %>
+
+  <.table id="streams-schedules" rows={@streams.schedules}>
+    <:col :let={{_, schedule}} label="Id">
+      <.link
+        phx-click={show_modal("show-schedule-modal")}
+        patch={~p"/admin/channels/schedules/#{schedule.id}"}
+      >
+        <%= schedule.id %>
+      </.link>
+    </:col>
+    <:col :let={{_, schedule}} label="Entries"><%= length(schedule.entries) %></:col>
+    <:col :let={{_, schedule}} label="Inserted at">
+      <%= Timex.format!(schedule.inserted_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+    </:col>
+    <:col :let={{_, schedule}} label="Updated at">
+      <%= Timex.format!(schedule.updated_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+    </:col>
+    <:empty><.empty title="No schedules" description="" icon="hero-film" /></:empty>
+  </.table>
+
+  <.infinite_scroll page={@page} />
+
+  <.modal
+    :if={@live_action in [:show]}
+    id="show-schedule-modal"
+    show
+    on_cancel={JS.patch(~p"/admin/channels/schedules")}
+  >
+    <.heading title={@schedule.channel.broadcaster_name}></.heading>
+    <!-- Display entries -->
+    <.table id="schedule-entries" rows={@schedule.entries}>
+      <:col :let={entry} label="Title"><%= entry.title %></:col>
+      <:col :let={entry} label="Category"><%= entry.category %></:col>
+      <:col :let={entry} label="Start time">
+        <%= Timex.format!(entry.start_time, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+      </:col>
+      <:col :let={entry} label="End time">
+        <%= Timex.format!(entry.end_time, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+      </:col>
+      <:col :let={entry} label="Is recurring"><%= entry.is_recurring %></:col>
+      <:col :let={entry} label="Is cancelled"><%= entry.is_canceled %></:col>
+    </.table>
+  </.modal>
+</div>

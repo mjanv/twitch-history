@@ -231,7 +231,7 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
       ]
 
       {:ok, _} = Schedule.save(channel, entries)
-      %Schedule{channel_id: channel_id, entries: entries} = Schedule.get(channel.id)
+      %Schedule{channel_id: channel_id, entries: entries} = Schedule.get(channel_id: channel.id)
 
       assert channel_id == channel.id
 
@@ -289,7 +289,7 @@ defmodule TwitchStory.Twitch.Channels.ScheduleTest do
       {:ok, schedule1} = Schedule.save(channel1, entries)
       {:ok, schedule2} = Schedule.save(channel2, entries)
 
-      [%Schedule{} = s1, %Schedule{} = s2] = Schedule.all([channel1.id, channel2.id], now)
+      [%Schedule{} = s1, %Schedule{} = s2] = Schedule.all([channel1.id, channel2.id], 7, now)
 
       assert s1.id == schedule1.id
       assert s2.id == schedule2.id

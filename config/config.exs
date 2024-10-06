@@ -1,5 +1,10 @@
 import Config
 
+config :twitch_story, :feature_flags,
+  games: [
+    eurovision: true
+  ]
+
 config :twitch_story, :twitch_api,
   id_api_url: "https://id.twitch.tv",
   api_url: "https://api.twitch.tv",
@@ -55,7 +60,7 @@ config :twitch_story, Oban,
   repo: TwitchStory.Repo,
   plugins: [
     {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
-    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24},
+    {Oban.Plugins.Pruner, max_age: 60},
     {Oban.Plugins.Cron,
      crontab: [
        # Oauth token renewal at boot and every 15 minutes for token expiring in 30 minutes

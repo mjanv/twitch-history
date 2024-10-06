@@ -3,8 +3,6 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Twitch.Api
-  alias TwitchStory.Twitch.Auth
   alias TwitchStory.Twitch.FollowedChannel
   alias TwitchStory.Twitch.Workers.Channels.FollowedChannelsWorker
 
@@ -20,23 +18,16 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
         _uri,
         %{assigns: %{current_user: current_user, live_action: live_action}} = socket
       ) do
-    {:ok, token} = Auth.OauthToken.get(current_user)
-
     case live_action do
       :sync ->
         socket
         |> tap(fn _ -> FollowedChannelsWorker.start(current_user.id) end)
         |> put_flash(:info, "Sync started...")
 
-      :live ->
-        {:ok, streams} = Api.UserApi.live_streams(token)
-        assign(socket, channels: [], live_streams: streams)
-
       :index ->
         socket
         |> assign(channels: FollowedChannel.all(user_id: current_user.id))
         |> assign(channel_stats: FollowedChannel.count_by_year(current_user.id))
-        |> assign(live_streams: [])
     end
     |> then(fn socket -> {:noreply, socket} end)
   end
@@ -53,17 +44,6 @@ defmodule TwitchStoryWeb.HomeLive.Channels do
     socket
     |> put_flash(:info, "Finished sync !")
     |> push_navigate(to: "/channels")
-    |> then(fn socket -> {:noreply, socket} end)
-  end
-
-  @impl true
-  def handle_event("live-sync", _params, %{assigns: %{current_user: current_user}} = socket) do
-    {:ok, token} = Auth.OauthToken.get(current_user)
-    {:ok, streams} = Api.UserApi.live_streams(token)
-
-    socket
-    |> assign(channels: [], live_streams: streams)
-    |> put_flash(:info, "Thumbnails updated...")
     |> then(fn socket -> {:noreply, socket} end)
   end
 end

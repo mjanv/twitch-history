@@ -17,7 +17,7 @@ defmodule TwitchStory.Twitch.Services.Channels do
   @spec sync_channel(String.t()) :: :ok
   def sync_channel(broadcaster_id) do
     with {:ok, attrs} <- Api.ChannelApi.channel(broadcaster_id) do
-      case Channels.Channel.get!(broadcaster_id) do
+      case Channels.Channel.get(broadcaster_id: broadcaster_id) do
         nil -> Channels.Channel.create(attrs)
         channel -> Channels.Channel.update(channel, attrs)
       end
@@ -54,6 +54,19 @@ defmodule TwitchStory.Twitch.Services.Channels do
   end
 
   @doc """
+  Sync emotes
+
+  For a given broadcaster, retrieve all emotes and sync them
+  """
+  @spec sync_emotes(String.t()) :: :ok
+  def sync_emotes(broadcaster_id) do
+    with {:ok, emotes} <- Api.ChannelApi.emotes(broadcaster_id) do
+      Logger.info("Found #{length(emotes)} emotes for #{broadcaster_id}")
+      Enum.each(emotes, &Channels.Emote.create/1)
+    end
+  end
+
+  @doc """
   Sync schedule
 
   For a given broadcaster, retrieve its current schedule and sync it
@@ -63,8 +76,8 @@ defmodule TwitchStory.Twitch.Services.Channels do
     with {:ok, schedule} <- Api.schedule(broadcaster_id) do
       Logger.info("Found #{length(schedule)} schedule entries for #{broadcaster_id}")
 
-      broadcaster_id
-      |> Channels.Channel.get!()
+      [broadcaster_id: broadcaster_id]
+      |> Channels.Channel.get()
       |> Channels.Schedule.save(schedule)
 
       :ok
@@ -76,7 +89,7 @@ defmodule TwitchStory.Twitch.Services.Channels do
 
   For a given user, find all their followed channels
   """
-  @spec sync_followed_channels(String.t()) :: {:ok, [map()]}
+  @spec find_followed_channels(String.t()) :: {:ok, [map()]}
   def find_followed_channels(user_id) do
     with user <- Accounts.User.get(user_id),
          {:ok, token} <- Auth.OauthToken.get(user) do

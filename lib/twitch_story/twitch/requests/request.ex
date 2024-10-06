@@ -48,9 +48,9 @@ defmodule TwitchStory.Twitch.Requests.Request do
     end
   end
 
-  def get(opts) do
+  def get(clauses) do
     __MODULE__
-    |> Repo.get_by(opts)
+    |> Repo.get_by(clauses)
     |> case do
       nil -> {:error, :not_found}
       request -> {:ok, request}

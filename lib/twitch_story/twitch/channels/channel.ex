@@ -3,8 +3,7 @@ defmodule TwitchStory.Twitch.Channels.Channel do
 
   use TwitchStory.Schema
 
-  alias TwitchStory.Repo
-
+  @derive {Jason.Encoder, only: [:broadcaster_id, :broadcaster_login, :broadcaster_name]}
   schema "channels" do
     field :broadcaster_id, :string
     field :broadcaster_login, :string
@@ -57,8 +56,9 @@ defmodule TwitchStory.Twitch.Channels.Channel do
   end
 
   def count, do: Repo.count(__MODULE__)
+  def count(n, interval), do: __MODULE__ |> Repo.last(:inserted_at, n, interval) |> Repo.count()
 
-  def get!(id), do: Repo.get_by(__MODULE__, broadcaster_id: id)
+  def get(clauses), do: Repo.get_by(__MODULE__, clauses)
   def create(attrs \\ %{}), do: Repo.insert(__MODULE__.changeset(%__MODULE__{}, attrs))
 
   def update(%__MODULE__{} = channel, attrs),

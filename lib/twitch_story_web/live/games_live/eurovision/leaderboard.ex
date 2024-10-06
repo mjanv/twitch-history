@@ -17,7 +17,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Leaderboard do
     leaderboard =
       ceremony
       |> Ceremony.leaderboard()
-      |> Enum.map(fn result -> Map.put(result, :country, Country.get(result.country)) end)
+      |> Enum.map(fn result -> Map.put(result, :country, Country.get(code: result.country)) end)
 
     socket
     |> assign(:ceremony, ceremony)
@@ -33,7 +33,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Leaderboard do
     leaderboard =
       ceremony
       |> Ceremony.leaderboard()
-      |> Enum.map(fn result -> Map.put(result, :country, Country.get(result.country)) end)
+      |> Enum.map(fn result -> Map.put(result, :country, Country.get(code: result.country)) end)
 
     socket
     |> stream(:leaderboard, leaderboard)
@@ -47,7 +47,7 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Leaderboard do
     leaderboard =
       ceremony
       |> Ceremony.leaderboard()
-      |> Enum.map(fn result -> Map.put(result, :country, Country.get(result.country)) end)
+      |> Enum.map(fn result -> Map.put(result, :country, Country.get(code: result.country)) end)
 
     socket
     |> stream(:leaderboard, leaderboard)

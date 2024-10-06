@@ -1,5 +1,5 @@
 defmodule ExTwitchStory.EventBusTest do
-  use ExUnit.Case, async: true
+  use TwitchStory.DataCase
 
   alias ExTwitchStory.EventBus
 
@@ -15,10 +15,8 @@ defmodule ExTwitchStory.EventBusTest do
     } do
       result = EventBus.ok({:ok, %{id: id}}, handler)
 
-      {:ok, events} = TwitchStory.EventStore.all(id)
-
       assert result == {:ok, %{id: id}}
-      assert events == [%ExampleEvent{id: id}]
+      event?(%ExampleEvent{id: id})
     end
 
     test "does not dispatch {:error, _} pattern to the handler and the event bus", %{
@@ -27,10 +25,8 @@ defmodule ExTwitchStory.EventBusTest do
     } do
       result = EventBus.ok({:error, :reason}, handler)
 
-      {:ok, events} = TwitchStory.EventStore.all(id)
-
       assert result == {:error, :reason}
-      assert events == []
+      empty_stream?(%{id: id})
     end
   end
 
@@ -47,10 +43,8 @@ defmodule ExTwitchStory.EventBusTest do
     } do
       result = EventBus.error({:error, :reason}, handler)
 
-      {:ok, events} = TwitchStory.EventStore.all(id)
-
       assert result == {:error, :reason}
-      assert events == [%ExampleEvent{id: id}]
+      event?(%ExampleEvent{id: id})
     end
 
     test "does not dispatch {:ok, data} pattern to the handler and the event bus", %{
@@ -59,10 +53,8 @@ defmodule ExTwitchStory.EventBusTest do
     } do
       result = EventBus.error({:ok, %{id: id}}, handler)
 
-      {:ok, events} = TwitchStory.EventStore.all(id)
-
       assert result == {:ok, %{id: id}}
-      assert events == []
+      empty_stream?(%{id: id})
     end
   end
 end

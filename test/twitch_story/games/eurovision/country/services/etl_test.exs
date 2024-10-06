@@ -8,7 +8,7 @@ defmodule TwitchStory.Games.Eurovision.Country.Services.EtlTest do
     test "loads all countries" do
       Services.Etl.extract_countries()
 
-      country = Country.get("FR")
+      country = Country.get(code: "FR")
 
       assert Country.count() == 50
 

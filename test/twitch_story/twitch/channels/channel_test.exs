@@ -43,7 +43,7 @@ defmodule TwitchStory.Twitch.Channels.ChannelTest do
 
   test "get!/1 returns the channel with given id" do
     channel = channel_fixture()
-    assert Channel.get!(channel.broadcaster_id) == channel
+    assert Channel.get(broadcaster_id: channel.broadcaster_id) == channel
   end
 
   test "create/1 with valid data creates a channel" do
@@ -101,13 +101,13 @@ defmodule TwitchStory.Twitch.Channels.ChannelTest do
   test "update/2 with invalid data returns error changeset" do
     channel = channel_fixture()
     assert {:error, %Ecto.Changeset{}} = Channel.update(channel, @invalid_attrs)
-    assert channel == Channel.get!(channel.broadcaster_id)
+    assert channel == Channel.get(broadcaster_id: channel.broadcaster_id)
   end
 
   test "delete/1 deletes the channel" do
     channel = channel_fixture()
     assert {:ok, %Channel{}} = Channel.delete(channel)
-    assert Channel.get!(channel.broadcaster_id) == nil
+    assert Channel.get(broadcaster_id: channel.broadcaster_id) == nil
   end
 
   test "change/1 returns a channel changeset" do

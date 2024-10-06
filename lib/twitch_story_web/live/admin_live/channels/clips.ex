@@ -9,7 +9,7 @@ defmodule TwitchStoryWeb.AdminLive.Channels.Clips do
   def mount(_params, _session, socket) do
     socket
     |> load_page(1)
-    |> assign(:clips, [{"Clips", Clip.count()}])
+    |> assign(:clips, stats())
     |> then(fn socket -> {:ok, socket} end)
   end
 
@@ -22,5 +22,14 @@ defmodule TwitchStoryWeb.AdminLive.Channels.Clips do
     socket
     |> assign(:page, page)
     |> stream(:clips, Clip.page(page))
+  end
+
+  defp stats do
+    [
+      {"Clips", Clip.count()},
+      {"Last day", Clip.count(1, :day)},
+      {"Last week", Clip.count(1, :week)},
+      {"Last month", Clip.count(1, :month)}
+    ]
   end
 end

@@ -39,10 +39,12 @@ defmodule TwitchStory.Twitch.Channels.ClipTest do
 
   test "create/1 with existing data does not creates a new clip" do
     {:ok, %Clip{}} = Clip.create(@valid_attrs)
-    clip1 = Clip.get("12345")
+    clip1 = Clip.get(twitch_id: "12345")
 
-    {:ok, %Clip{}} = Clip.create(Map.put(@valid_attrs, :stats, %{duration: 55.5, view_count: 200}))
-    clip2 = Clip.get("12345")
+    {:ok, %Clip{}} =
+      Clip.create(Map.put(@valid_attrs, :stats, %{duration: 55.5, view_count: 200}))
+
+    clip2 = Clip.get(twitch_id: "12345")
 
     assert Clip.count() == 1
 

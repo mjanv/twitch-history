@@ -1,8 +1,6 @@
 defmodule TwitchStory.Accounts.UserTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Accounts.User
 
   describe "get_or_register_user/1" do
@@ -131,9 +129,7 @@ defmodule TwitchStory.Accounts.UserTest do
     test "dispatch a CreatedUser event in case of success" do
       {:ok, user} = User.register_user(valid_user_attributes(email: unique_user_email()))
 
-      {:ok, events} = TwitchStory.EventStore.all(user.id)
-
-      assert events == [%UserCreated{id: user.id}]
+      event?(%UserCreated{id: user.id})
     end
   end
 
@@ -142,10 +138,10 @@ defmodule TwitchStory.Accounts.UserTest do
       user = user_fixture()
 
       {:ok, %User{}} = User.delete_user(user)
-      {:ok, events} = TwitchStory.EventStore.all(user.id)
 
       assert_raise Ecto.NoResultsError, fn -> User.get_user!(user.id) end
-      assert events == [%UserCreated{id: user.id}, %UserDeleted{id: user.id}]
+
+      event?(%UserDeleted{id: user.id})
     end
   end
 
@@ -162,9 +158,7 @@ defmodule TwitchStory.Accounts.UserTest do
     test "dispatch a RoleAssigned event in case of success" do
       {:ok, user} = User.assign_role(user_fixture(), :admin)
 
-      {:ok, events} = TwitchStory.EventStore.all(user.id)
-
-      assert %RoleAssigned{id: user.id, role: "admin"} in events
+      event?(%RoleAssigned{id: user.id, role: "admin"})
     end
   end
 

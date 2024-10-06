@@ -33,13 +33,13 @@ defmodule TwitchStory.TwitchFixtures do
     |> Enum.into(%{
       id: "some id",
       name: "some name",
-      channel_id: "some channel_id",
       emote_set_id: "some emote_set_id",
       formats: ["option1", "option2"],
       scales: ["option1", "option2"],
       themes: ["option1", "option2"],
-      thumbnail: "some thumbnail",
-      thumbnail_url: "some thumbnail_url"
+      tier: 1,
+      thumbnail_url: "some thumbnail_url",
+      channel_id: UUID.uuid4()
     })
     |> Channels.Emote.create()
     |> then(fn {:ok, emote} -> emote end)

@@ -27,6 +27,13 @@ defmodule TwitchStory.DataCase do
       import Ecto.Query
 
       import TwitchStory.DataCase
+
+      # Assertions
+      import ExTwitchStory.DataAssertions
+
+      # Fixtures
+      import TwitchStory.AccountsFixtures
+      import TwitchStory.TwitchFixtures
     end
   end
 

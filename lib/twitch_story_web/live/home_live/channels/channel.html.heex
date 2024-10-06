@@ -3,24 +3,54 @@
     <img class="inline-block h-14 w-14 rounded-full" src={@channel.thumbnail_url} alt="" />
   </.heading>
 
+  <.section title="Emotes" />
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-8">
+    <%= for emote <- @emotes do %>
+      <div class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-1 py-1 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div class="flex-shrink-0">
+          <img
+            class="h-10 w-10"
+            src={
+              emote.template
+              |> String.replace("{{id}}", emote.emote_id)
+              |> String.replace("{{format}}", "static")
+              |> String.replace("{{theme_mode}}", hd(emote.theme_mode))
+              |> String.replace("{{scale}}", "3.0")
+            }
+            alt=""
+          />
+        </div>
+        <div class="min-w-0 flex-1">
+          <a href="#" class="focus:outline-none">
+            <span class="absolute inset-0" aria-hidden="true"></span>
+            <p class="text-sm font-medium text-gray-900"><%= emote.name %></p>
+          </a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <.section title="Schedule" />
 
-  <.table id="schedule" rows={@schedule.entries}>
-    <:col :let={entry} label="Title"><%= entry.title %></:col>
-    <:col :let={entry} label="Category"><%= entry.category %></:col>
-    <:col :let={entry} label="Times"><%= entry.start_time %> - <%= entry.end_time %></:col>
-    <:col :let={entry} label="Recurring">
-      <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
-        <%= entry.is_recurring %>
-      </span>
-    </:col>
-    <:col :let={entry} label="Cancelled">
-      <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
-        <%= entry.is_canceled %>
-      </span>
-    </:col>
-    <:empty><.empty title="No channels" description="" icon="hero-film" /></:empty>
-  </.table>
+  <%= if not(is_nil(@schedule)) do %>
+    <.table id="schedule" rows={@schedule.entries}>
+      <:col :let={entry} label="Title"><%= entry.title %></:col>
+      <:col :let={entry} label="Category"><%= entry.category %></:col>
+      <:col :let={entry} label="Times"><%= entry.start_time %> - <%= entry.end_time %></:col>
+      <:col :let={entry} label="Recurring">
+        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
+          <%= entry.is_recurring %>
+        </span>
+      </:col>
+      <:col :let={entry} label="Cancelled">
+        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
+          <%= entry.is_canceled %>
+        </span>
+      </:col>
+      <:empty><.empty title="No entries" description="" icon="hero-film" /></:empty>
+    </.table>
+  <% end %>
 
   <.section title="Clips" />
 

@@ -4,7 +4,6 @@ defmodule TwitchStory.Accounts.User do
   use TwitchStory.Schema
 
   alias ExTwitchStory.EventBus
-  alias TwitchStory.Repo
 
   @type t() :: %__MODULE__{
           name: String.t(),
@@ -21,6 +20,7 @@ defmodule TwitchStory.Accounts.User do
           updated_at: NaiveDateTime.t()
         }
 
+  @derive {Jason.Encoder, only: [:name, :email, :role, :twitch_id, :twitch_avatar]}
   schema "users" do
     field :name, :string
     field :email, :string
@@ -43,12 +43,15 @@ defmodule TwitchStory.Accounts.User do
     timestamps(type: :utc_datetime)
   end
 
+  @doc "Count the number of users by role"
   def count_roles do
     Repo.all(from(u in __MODULE__, group_by: u.role, select: {u.role, count(u.id)}))
   end
 
+  @doc "Get all users"
   def all, do: Repo.all(__MODULE__)
 
+  @doc "Get a user"
   def get(id), do: Repo.get(__MODULE__, id)
 
   @doc "Get or register a user by email"

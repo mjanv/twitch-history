@@ -1,67 +1,32 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
-  <%= if @live_action == :live do %>
-    <.heading title="Live streams"></.heading>
+  <.heading title="Followed channels">
+    <.link
+      type="button"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+      patch={~p"/channels/sync"}
+    >
+      <.icon name="hero-arrow-path" class="mr-2" /> Sync my channels
+    </.link>
+  </.heading>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-      <%= for stream <- @live_streams do %>
-        <div class="relative w-full group transform transition-transform duration-300 hover:-translate-y-2 hover:-translate-x-2">
-          <div class="relative rounded-lg overflow-hidden bg-purple-600">
-            <a href={"http://www.twitch.tv/#{stream.user_login}"} class="focus:outline-none block">
-              <div class="relative">
-                <img
-                  src={
-                    stream.thumbnail_url
-                    |> String.replace("{height}", "360")
-                    |> String.replace("{width}", "640")
-                  }
-                  class="w-full h-auto transform transition-transform duration-300 group-hover:-translate-y-2 group-hover:-translate-x-2"
-                />
-                <div class="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-white p-2">
-                  <div class="relative rounded-md p-1">
-                    <p class="text-base font-medium text-white truncate">
-                      <%= stream.title %>
-                    </p>
-                  </div>
-                  <p class="text-sm text-gray-200 truncate">
-                    <%= stream.user_name %> (<%= stream.viewer_count %> viewers)
-                    <span aria-hidden="true"> &rarr;</span>
-                  </p>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
+  <.stats rows={
+    [{"Total", length(@channels)}] ++
+      Enum.map(@channel_stats, fn {year, count} -> {"Followed in #{year}", count} end)
+  } />
 
-  <%= if @live_action == :index do %>
-    <.heading title="Followed channels">
-      <.link
-        type="button"
-        class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
-        patch={~p"/channels/sync"}
-      >
-        <.icon name="hero-arrow-path" class="mr-2" /> Sync my channels
+  <.table id="channels" rows={@channels}>
+    <:col :let={channel} label="Name">
+      <.link navigate={~p"/channels/#{channel.channel.broadcaster_id}"}>
+        <%= channel.channel.broadcaster_name %>
       </.link>
-    </.heading>
+    </:col>
 
-    <.stats rows={[{"Total", length(@channels)}] ++ Enum.map(@channel_stats, fn {year, count} -> {"Followed in #{year}", count} end)} />
+    <:col :let={channel} label="Description">
+      <%= channel.channel.description %>
+    </:col>
 
-    <.table id="channels" rows={@channels}>
-      <:col :let={channel} label="Name">
-        <.link navigate={~p"/channels/#{channel.channel.broadcaster_id}"}>
-          <%= channel.channel.broadcaster_name %>
-        </.link>
-      </:col>
-
-      <:col :let={channel} label="Description">
-        <%= channel.channel.description %>
-      </:col>
-
-      <:col :let={channel} label="Followed in">
-        <%= Timex.format!(channel.followed_at, "{Mfull} {YYYY}") %>
-      </:col>
-    </.table>
-  <% end %>
+    <:col :let={channel} label="Followed in">
+      <%= Timex.format!(channel.followed_at, "{Mfull} {YYYY}") %>
+    </:col>
+  </.table>
 </div>

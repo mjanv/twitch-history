@@ -25,6 +25,7 @@ import InfiniteScroll from "./infinite_scroll"
 
 
 let hooks = {VegaLite, InfiniteScroll}
+
 hooks.Sortable = {
   mounted() {
     let group = this.el.dataset.group
@@ -41,6 +42,19 @@ hooks.Sortable = {
       }
     })
   }
+}
+
+hooks.Copy = {
+  mounted() {
+    let { to } = this.el.dataset;
+    this.el.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      let text = document.querySelector(to).value
+      navigator.clipboard.writeText(text).then(() => {
+        console.log("All done again!")
+      })
+    });
+  },
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

@@ -8,7 +8,6 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
   alias TwitchStory.Games.Eurovision.Ceremony.Result
   alias TwitchStory.Games.Eurovision.Ceremony.Vote
   alias TwitchStory.Games.Eurovision.Ceremony.Winner
-  alias TwitchStory.Repo
 
   @type t() :: %__MODULE__{
           name: String.t(),

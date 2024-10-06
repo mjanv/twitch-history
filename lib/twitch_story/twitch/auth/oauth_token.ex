@@ -3,8 +3,6 @@ defmodule TwitchStory.Twitch.Auth.OauthToken do
 
   use TwitchStory.Schema
 
-  alias TwitchStory.Repo
-
   schema "twitch_oauth_tokens" do
     field :access_token, :binary
     field :refresh_token, :binary

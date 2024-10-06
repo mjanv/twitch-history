@@ -1,8 +1,6 @@
 defmodule TwitchStory.Games.Eurovision.CeremonyResultsTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Games.Eurovision.Ceremony
   alias TwitchStory.Games.Eurovision.Country
 

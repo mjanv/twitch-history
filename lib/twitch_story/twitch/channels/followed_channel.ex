@@ -15,6 +15,7 @@ defmodule TwitchStory.Twitch.FollowedChannel do
         }
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:channel, :followed_at]}
   schema "followed_channels" do
     belongs_to :user, User
     belongs_to :channel, Channel

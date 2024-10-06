@@ -15,6 +15,8 @@ defmodule TwitchStory.Schema do
 
       import Ecto.Changeset
       import Ecto.Query, warn: false
+
+      alias TwitchStory.Repo
     end
   end
 end

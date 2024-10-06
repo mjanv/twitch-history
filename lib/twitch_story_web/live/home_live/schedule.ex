@@ -16,7 +16,10 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
     schedules =
       case live_action do
         :broadcaster ->
-          params["broadcaster_id"] |> Channel.get!() |> Map.get(:id) |> Schedule.get()
+          [broadcaster_id: params["broadcaster_id"]]
+          |> Channel.get()
+          |> Map.get(:id)
+          |> Schedule.get()
 
         _ ->
           FollowedChannel.all(user_id: current_user.id)

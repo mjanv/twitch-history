@@ -1,8 +1,6 @@
 defmodule TwitchStory.Accounts.Identity.ResetPasswordTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Accounts
   alias TwitchStory.Accounts.Identity.ResetPassword
   alias TwitchStory.Accounts.{User, UserToken}

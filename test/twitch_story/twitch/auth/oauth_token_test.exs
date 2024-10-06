@@ -1,9 +1,5 @@
 defmodule TwitchStory.Twitch.Auth.OauthTokenTest do
-  @moduledoc false
-
   use TwitchStory.DataCase
-
-  import TwitchStory.AccountsFixtures
 
   alias TwitchStory.Twitch.Auth.OauthToken
 

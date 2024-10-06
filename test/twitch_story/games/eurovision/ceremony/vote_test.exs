@@ -1,8 +1,6 @@
 defmodule TwitchStory.Games.Eurovision.Ceremony.VoteTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Games.Eurovision.Ceremony
   alias TwitchStory.Games.Eurovision.Ceremony.Vote
   alias TwitchStory.Games.Eurovision.Country

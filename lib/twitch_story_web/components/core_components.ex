@@ -478,6 +478,7 @@ defmodule TwitchStoryWeb.Components.CoreComponents do
 
     ~H"""
     <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
+      <div></div>
       <table class="w-[40rem] mt-4 sm:w-full">
         <thead class="text-sm text-left leading-6 text-gray-900">
           <tr>
@@ -492,7 +493,7 @@ defmodule TwitchStoryWeb.Components.CoreComponents do
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
           class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
         >
-          <tr id={@id} class="only:block hidden">
+          <tr id={@id <> "-empty"} class="only:block hidden">
             <%= render_slot(@empty) %>
           </tr>
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-purple-50">

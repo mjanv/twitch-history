@@ -1,8 +1,6 @@
 defmodule TwitchStory.Accounts.Identity.ConfirmationTest do
   use TwitchStory.DataCase
 
-  import TwitchStory.AccountsFixtures
-
   alias TwitchStory.Accounts.Identity.Confirmation
   alias TwitchStory.Accounts.{User, UserToken}
 

@@ -26,33 +26,32 @@ defmodule TwitchStory.Games.Eurovision.Country do
     |> unique_constraint(:code)
   end
 
-  def all do
-    Repo.all(
-      from c in __MODULE__,
-        select: [:code, :name]
-    )
-  end
+  @doc "Count the total number of countries"
+  @spec count :: integer()
+  def count, do: Repo.count(__MODULE__)
 
+  @doc "Get all countries"
+  @spec all :: [t()]
+  def all, do: Repo.all(from c in __MODULE__, select: [:code, :name])
+
+  @doc "Get all countries with a given code"
+  @spec all(String.t()) :: [t()]
   def all(codes) do
-    Repo.all(
-      from c in __MODULE__,
-        where: c.code in ^codes,
-        select: [:code, :name]
-    )
+    Repo.all(from c in __MODULE__, where: c.code in ^codes, select: [:code, :name])
   end
 
-  def get(code) do
-    Repo.get_by(__MODULE__, code: code)
-  end
+  @doc "Get a country"
+  @spec get(Keyword.t()) :: t() | nil
+  def get(clauses), do: Repo.get_by(__MODULE__, clauses)
 
+  @doc "Create a new country"
+  @spec create(map()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}
   def create(attrs) do
-    case Repo.get_by(__MODULE__, code: attrs.code) do
+    case get(code: attrs.code) do
       nil -> %__MODULE__{}
       country -> country
     end
     |> changeset(Map.merge(%{binary: <<>>}, attrs))
     |> Repo.insert_or_update()
   end
-
-  def count, do: Repo.count(__MODULE__)
 end

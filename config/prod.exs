@@ -1,5 +1,10 @@
 import Config
 
+config :twitch_story, :feature_flags,
+  games: [
+    eurovision: false
+  ]
+
 config :twitch_story,
   event_bus: [TwitchStory.EventStore]
 
