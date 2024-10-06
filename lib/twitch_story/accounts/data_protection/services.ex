@@ -7,7 +7,8 @@ defmodule TwitchStory.Accounts.DataProtection.Services do
 
   @spec extract_user_data(User.t()) :: map() | nil
   def extract_user_data(user) do
-    with user when not is_nil(user) <- User.get(user.id),
+    with {:ok, _} <- EventStore.dispatch(%DataExportRequested{id: user.id}),
+         user when not is_nil(user) <- User.get(user.id),
          followed_channels <- FollowedChannel.all(user_id: user.id),
          {:ok, events} <- EventStore.all(user.id, true) do
       %{
@@ -18,6 +19,7 @@ defmodule TwitchStory.Accounts.DataProtection.Services do
     end
     |> Jason.encode!()
     |> Jason.decode!()
+    |> tap(fn _ -> EventStore.dispatch(%DataExportGenerated{id: user.id}) end)
   end
 
   defp format_event(event) do

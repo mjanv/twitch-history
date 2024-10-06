@@ -24,6 +24,9 @@ defmodule TwitchStory.Accounts.DataProtection.ServicesTest do
   test "extract_user_data/1", %{user: user, channel: channel} do
     user_data = Services.extract_user_data(user)
 
+    event?(%DataExportRequested{id: user.id})
+    event?(%DataExportGenerated{id: user.id})
+
     assert Map.keys(user_data) == ["events", "followed_channels", "user"]
 
     assert user_data["user"] == %{
@@ -34,11 +37,16 @@ defmodule TwitchStory.Accounts.DataProtection.ServicesTest do
              "twitch_avatar" => user.twitch_avatar
            }
 
-    [%{"event" => event, "id" => id, "at" => at}] = user_data["events"]
+    [
+      %{"event" => "UserCreated", "id" => id1, "at" => at1},
+      %{"event" => "DataExportRequested", "id" => id2, "at" => at2}
+    ] = user_data["events"]
 
-    assert event == "UserCreated"
-    assert id == user.id
-    assert {:ok, _, _} = DateTime.from_iso8601(at)
+    assert id1 == user.id
+    assert {:ok, _, _} = DateTime.from_iso8601(at1)
+
+    assert id2 == user.id
+    assert {:ok, _, _} = DateTime.from_iso8601(at2)
 
     assert user_data["followed_channels"] == [
              %{
