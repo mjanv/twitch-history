@@ -3,10 +3,22 @@ defmodule TwitchStory.Accounts.DataProtection.ServicesTest do
 
   alias TwitchStory.Accounts.DataProtection.Services
   alias TwitchStory.Accounts.User
+  alias TwitchStory.Twitch.Auth.OauthToken
   alias TwitchStory.Twitch.FollowedChannel
 
   setup do
     user = user_fixture()
+
+    OauthToken.create(
+      %{
+        access_token: "abc",
+        refresh_token: "def",
+        scopes: ["chat:read"],
+        expires_at: DateTime.utc_now()
+      },
+      user
+    )
+
     channel = channel_fixture()
 
     channel = %{
@@ -38,15 +50,14 @@ defmodule TwitchStory.Accounts.DataProtection.ServicesTest do
            }
 
     [
-      %{"event" => "UserCreated", "id" => id1, "at" => at1},
-      %{"event" => "DataExportRequested", "id" => id2, "at" => at2}
+      %{"event" => "UserCreated"},
+      %{"event" => "DataExportRequested"}
     ] = user_data["events"]
 
-    assert id1 == user.id
-    assert {:ok, _, _} = DateTime.from_iso8601(at1)
-
-    assert id2 == user.id
-    assert {:ok, _, _} = DateTime.from_iso8601(at2)
+    for event <- user_data["events"] do
+      assert event["id"] == user.id
+      assert {:ok, _, _} = DateTime.from_iso8601(event["at"])
+    end
 
     assert user_data["followed_channels"] == [
              %{
@@ -61,11 +72,14 @@ defmodule TwitchStory.Accounts.DataProtection.ServicesTest do
   end
 
   test "delete_user_data/1", %{user: user} do
+    {:ok, _} = OauthToken.get(user)
+
     :ok = Services.delete_user_data(user)
 
     stream?([%UserCreated{id: user.id}, %UserDeleted{id: user.id}])
 
     assert User.get(user.id) == nil
     assert FollowedChannel.all(user_id: user.id) == []
+    assert OauthToken.get(user) == {:error, nil}
   end
 end

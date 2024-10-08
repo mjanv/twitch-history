@@ -21,5 +21,5 @@ defmodule TwitchStoryWeb.Gettext do
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
 
-  use Gettext, otp_app: :twitch_story
+  use Gettext.Backend, otp_app: :twitch_story
 end

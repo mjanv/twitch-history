@@ -14,12 +14,12 @@ defmodule TwitchStoryWeb.Components.CoreComponents do
 
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
+
   use Phoenix.Component
+  use Gettext, backend: TwitchStoryWeb.Gettext
 
   alias Phoenix.HTML
   alias Phoenix.LiveView.JS
-
-  import TwitchStoryWeb.Gettext
 
   @doc """
   Renders a modal.
