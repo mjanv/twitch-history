@@ -1,11 +1,20 @@
 import Config
 
+config :twitch_story, :twitch_api,
+  client_id: System.get_env("TWITCH_CLIENT_ID"),
+  client_secret: System.get_env("TWITCH_CLIENT_SECRET")
+
+config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
+  client_id: System.get_env("TWITCH_CLIENT_ID"),
+  client_secret: System.get_env("TWITCH_CLIENT_SECRET"),
+  redirect_uri: System.get_env("TWITCH_REDIRECT_URI")
+
 config :twitch_story, :games,
   eurovision: [
     apis: [flags: TwitchStory.Games.Eurovision.Country.Apis.FlagsApi]
   ]
 
-config :twitch_story, TwitchStory.Repo,
+postgres = [
   database: "twitch_story_dev",
   username: "postgres",
   password: "postgres",
@@ -14,14 +23,10 @@ config :twitch_story, TwitchStory.Repo,
   pool_size: 5,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true
+]
 
-config :twitch_story, TwitchStory.EventStore,
-  database: "twitch_story_dev",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  port: 5432,
-  pool_size: 5
+config :twitch_story, TwitchStory.Repo, postgres
+config :twitch_story, TwitchStory.EventStore, postgres
 
 config :twitch_story, TwitchStoryWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4000],
@@ -52,6 +57,9 @@ config :twitch_story, dev_routes: true
 
 config :logger, :console, format: "[$level] $message\n"
 
+config :sentry,
+  dsn: System.fetch_env!("SENTRY_DSN")
+
 config :phoenix, :stacktrace_depth, 20
 
 config :phoenix, :plug_init_mode, :runtime
@@ -66,3 +74,14 @@ config :live_view_native_stylesheet,
 config :mdns_lite,
   hosts: [:hostname, "twitch"],
   services: [%{id: :web_service, protocol: "http", transport: "tcp", port: 4000}]
+
+config :ex_aws,
+  debug_requests: true,
+  json_codec: Jason,
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
+config :ex_aws, :s3,
+  scheme: "https://",
+  host: "fly.storage.tigris.dev",
+  region: "auto"

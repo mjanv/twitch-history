@@ -3,6 +3,8 @@ defmodule TwitchStory.Twitch.Requests.Community.FollowsTest do
 
   use ExUnit.Case
 
+  @moduletag :data
+
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Requests.Community.Follows
 

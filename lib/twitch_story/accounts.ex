@@ -1,7 +1,5 @@
 defmodule TwitchStory.Accounts do
-  @moduledoc """
-  The Accounts context.
-  """
+  @moduledoc false
 
   alias TwitchStory.Accounts.{Identity, User}
 

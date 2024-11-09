@@ -3,6 +3,8 @@ defmodule TwitchStory.Twitch.Requests.ZipfileTest do
 
   use ExUnit.Case
 
+  @moduletag :data
+
   alias TwitchStory.Twitch.Requests.Zipfile
 
   @path ~c"priv/static/request-1.zip"

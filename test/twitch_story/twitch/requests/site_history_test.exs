@@ -3,6 +3,8 @@ defmodule TwitchStory.Twitch.Requests.SiteHistoryTest do
 
   use ExUnit.Case
 
+  @moduletag :data
+
   alias TwitchStory.Twitch.Requests.SiteHistory
 
   @zip ~c"priv/static/request-1.zip"

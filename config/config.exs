@@ -7,9 +7,7 @@ config :twitch_story, :feature_flags,
 
 config :twitch_story, :twitch_api,
   id_api_url: "https://id.twitch.tv",
-  api_url: "https://api.twitch.tv",
-  client_id: System.fetch_env!("TWITCH_CLIENT_ID"),
-  client_secret: System.fetch_env!("TWITCH_CLIENT_SECRET")
+  api_url: "https://api.twitch.tv"
 
 config :ueberauth, Ueberauth,
   providers: [
@@ -21,11 +19,6 @@ config :ueberauth, Ueberauth,
       ]
     }
   ]
-
-config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
-  client_id: System.fetch_env!("TWITCH_CLIENT_ID"),
-  client_secret: System.fetch_env!("TWITCH_CLIENT_SECRET"),
-  redirect_uri: System.fetch_env!("TWITCH_REDIRECT_URI")
 
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
@@ -55,25 +48,25 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
 
 config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Local
 
+crontab = [
+  # Oauth token renewal at boot and every 15 minutes for token expiring in 30 minutes
+  {"*/15 * * * *", TwitchStory.Twitch.Workers.OauthWorker, args: %{n: 30 * 60}},
+  # Clips retrieval for all channels every 30 minutes for clips created in the last hour
+  {"*/30 * * * *", TwitchStory.Twitch.Workers.Channels.ClipsWorker,
+   args: %{step: "start", hour: -1}},
+  # Schedule retrieval for all channels every hour
+  {"0 */1 * * *", TwitchStory.Twitch.Workers.Channels.ScheduleWorker, args: %{step: "start"}},
+  # Etl extraction of countries
+  {"@reboot", TwitchStory.Games.Eurovision.Country.Workers.Etl, args: %{}}
+]
+
 config :twitch_story, Oban,
   engine: Oban.Engines.Basic,
   repo: TwitchStory.Repo,
   plugins: [
     {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
     {Oban.Plugins.Pruner, max_age: 60},
-    {Oban.Plugins.Cron,
-     crontab: [
-       # Oauth token renewal at boot and every 15 minutes for token expiring in 30 minutes
-       {"*/15 * * * *", TwitchStory.Twitch.Workers.OauthWorker, args: %{n: 30 * 60}},
-       # Clips retrieval for all channels every 30 minutes for clips created in the last hour
-       {"*/30 * * * *", TwitchStory.Twitch.Workers.Channels.ClipsWorker,
-        args: %{step: "start", hour: -1}},
-       # Schedule retrieval for all channels every hour
-       {"0 */1 * * *", TwitchStory.Twitch.Workers.Channels.ScheduleWorker,
-        args: %{step: "start"}},
-       # Etl extraction of countries
-       {"@reboot", TwitchStory.Games.Eurovision.Country.Workers.Etl, args: %{}}
-     ]}
+    {Oban.Plugins.Cron, crontab: crontab}
   ],
   queues: [twitch: 10, api: 10]
 
@@ -100,6 +93,11 @@ config :tailwind,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :sentry,
+  environment_name: config_env(),
+  enable_source_code_context: true,
+  root_source_code_paths: [File.cwd!()]
 
 config :phoenix, :json_library, Jason
 

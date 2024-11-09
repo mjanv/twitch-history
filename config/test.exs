@@ -10,7 +10,7 @@ config :twitch_story, :games,
     apis: [flags: TwitchStory.Games.Eurovision.Country.Apis.FlagPrivApi]
   ]
 
-config :twitch_story, TwitchStory.Repo,
+postgres = [
   database: "twitch_story_test",
   username: "postgres",
   password: "postgres",
@@ -18,15 +18,10 @@ config :twitch_story, TwitchStory.Repo,
   port: 5432,
   pool_size: 5,
   pool: Ecto.Adapters.SQL.Sandbox
+]
 
-config :twitch_story, TwitchStory.EventStore,
-  database: "twitch_story_test",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  port: 5432,
-  pool_size: 5,
-  pool: Ecto.Adapters.SQL.Sandbox
+config :twitch_story, TwitchStory.Repo, postgres
+config :twitch_story, TwitchStory.EventStore, postgres
 
 config :twitch_story, TwitchStoryWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],

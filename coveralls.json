@@ -1,0 +1,11 @@
+{
+  "coverage_options": {
+    "output_dir": "cover/",
+    "minimum_coverage": 0
+  },
+  "print_summary": true,
+  "print_files": false,
+  "skip_files": [
+    "test/fixtures/test_missing.ex"
+  ]
+}

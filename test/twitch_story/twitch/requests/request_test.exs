@@ -1,6 +1,8 @@
 defmodule TwitchStory.Twitch.Requests.RequestTest do
   use TwitchStory.DataCase
 
+  @moduletag :data
+
   alias TwitchStory.Twitch.Requests.{Metadata, Request}
 
   @zip ~c"priv/static/request-1.zip"

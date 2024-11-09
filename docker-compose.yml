@@ -1,4 +1,13 @@
 services:
+  app:
+    build: .
+    command: mix phx.server
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    environment:
+      SECRET_KEY_BASE: MAi7StRhSnahdbbbfK3634M50g+Fk0EEISUgLzw9K7CQanvx6B97QNFrCk63sDhB
   db:
     image: postgres:16.4
     container_name: postgres

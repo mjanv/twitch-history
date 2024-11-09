@@ -3,6 +3,8 @@ defmodule TwitchStory.Twitch.Requests.MetadataTest do
 
   use ExUnit.Case
 
+  @moduletag :data
+
   alias TwitchStory.Twitch.Requests.Metadata
 
   @zip ~c"priv/static/request-1.zip"

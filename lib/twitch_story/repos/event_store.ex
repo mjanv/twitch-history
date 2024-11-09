@@ -14,10 +14,12 @@ defmodule TwitchStory.EventStore do
     end
 
     iex> TwitchStory.EventStore.dispatch(%UserCreated{id: UUID.uuid4()})
-    {:ok, "e1a1e3f0-e0a0-4e0e-a4e4-0e4e40e4e40e"}
 
-    iex> TwitchStory.EventStore.all("e1a1e3f0-e0a0-4e0e-a4e4-0e4e40e4e40e")
-    {:ok, [%UserCreated{id: "e1a1e3f0-e0a0-4e0e-a4e4-0e4e40e4e40e"}]}
+      {:ok, 'e1a1e3f0-e0a0-4e0e-a4e4-0e4e40e4e40e'}
+
+    iex> TwitchStory.EventStore.all('e1a1e3f0-e0a0-4e0e-a4e4-0e4e40e4e40e')
+
+      {:ok, [%UserCreated{id: 'e1a1e3f0-e0a0-4e0e-a4e4-0e4e40e4e40e'}]}
 
   """
 
