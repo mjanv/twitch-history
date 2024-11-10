@@ -8,10 +8,6 @@ if config_env() == :prod do
   config :twitch_story,
     files: System.fetch_env!("FILES_PATH") || raise("FILES_PATH missing.")
 
-  config :twitch_story, :twitch_api,
-    client_id: System.fetch_env!("TWITCH_CLIENT_ID"),
-    client_secret: System.fetch_env!("TWITCH_CLIENT_SECRET")
-
   config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
     client_id: System.fetch_env!("TWITCH_CLIENT_ID"),
     client_secret: System.fetch_env!("TWITCH_CLIENT_SECRET"),

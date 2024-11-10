@@ -33,30 +33,39 @@ export $(cat .env)
 
 ## Local development
 
-Application can be runned locally using:
+Application can be runned in development locally using:
 
 ```bash
-docker compose up -d
-mix
+docker compose up -d # Start only the database
+mix # Start the application with MIX_ENV=dev
 ```
 
 To run code quality assurance:
 
 ```bash
-mix quality
+mix quality # Run format check, credo, sobelow and dialyzer
 ```
 
 To run unit tests:
 
 ```bash
 docker compose up -d
-mix test # or mix test.unit
-mix test.integration
+mix test # Run unit tests
+mix test.unit # Run unit tests (with a coverage report)
+mix test.integration # Run integration tests
 ```
 
-All tests implying real Twitch API calls are, by default, excluded from unit test and only avaible in integration tests.
+All tests implying real Twitch API calls, filesystem read/writes or S3 API calls are, by default, excluded from unit test and only available in integration tests.
 
-## Deployment
+## Local deployment
+
+To deploy a functionnal application with production setup, one can run it using only Docker (without Erlang/Elixir installation) by running:
+
+```bash
+docker compose --profile prod up --build # Start the application with the database
+```
+
+## Cloud deployment
 
 The application is deployed ont [Fly.io](https://fly.io/) with . All 
 

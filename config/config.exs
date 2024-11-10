@@ -5,10 +5,6 @@ config :twitch_story, :feature_flags,
     eurovision: true
   ]
 
-config :twitch_story, :twitch_api,
-  id_api_url: "https://id.twitch.tv",
-  api_url: "https://api.twitch.tv"
-
 config :ueberauth, Ueberauth,
   providers: [
     twitch: {

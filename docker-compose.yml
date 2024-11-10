@@ -1,13 +1,22 @@
 services:
   app:
     build: .
-    command: mix phx.server
-    ports:
-      - "4000:4000"
+    profiles: ["prod"]
     depends_on:
       - db
     environment:
-      SECRET_KEY_BASE: MAi7StRhSnahdbbbfK3634M50g+Fk0EEISUgLzw9K7CQanvx6B97QNFrCk63sDhB
+      PHX_HOST: localhost
+      SECRET_KEY_BASE: Srk3YVCamsBE/cehdG4NJxXzZ/D2ffOk0anXYdUHftCs+K/rG6aD6MOQw7OJ+9GU
+      FILES_PATH: /mnt/twitch_story/data
+      POSTGRES_DATABASE: twitch_story_dev
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOSTNAME: db
+      POSTGRES_PORT: 5432
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
   db:
     image: postgres:16.4
     container_name: postgres
@@ -17,8 +26,6 @@ services:
       POSTGRES_DB: twitch_story_dev
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:

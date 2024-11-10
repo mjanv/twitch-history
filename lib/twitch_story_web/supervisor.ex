@@ -10,7 +10,7 @@ defmodule TwitchStoryWeb.Supervisor do
   def init(_args) do
     children = [
       TwitchStoryWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:twitch_story, :dns_cluster_query) || :ignore},
+      # {DNSCluster, query: Application.get_env(:twitch_story, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: TwitchStory.PubSub},
       TwitchStoryWeb.Endpoint
     ]

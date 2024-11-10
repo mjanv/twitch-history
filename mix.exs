@@ -118,7 +118,7 @@ defmodule TwitchStory.MixProject do
       quality: ["format", "credo --strict", "sobelow --config", "dialyzer"],
       test: ["ecto.setup", "test"],
       "test.unit": ["ecto.setup", "coveralls.html"],
-      "test.integration": ["test --only api, data"],
+      "test.integration": ["test --only api, data, s3"],
       start: ["ecto.setup", "phx.server"],
       # Deployment
       "deploy.build": [fn _ -> Mix.shell().cmd("docker build . -t twitch-story") end],
