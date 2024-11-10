@@ -15,7 +15,8 @@ defmodule TwitchStoryWeb.Router do
       swiftui: {TwitchStoryWeb.Layouts.SwiftUI, :root}
 
     plug :protect_from_forgery
-    plug :put_secure_browser_headers, %{"content-security-policy" => "default-src 'self'"}
+    # , %{"content-security-policy" => "default-src 'self'"}
+    plug :put_secure_browser_headers
     plug :fetch_current_user
     plug :fetch_oauth_token
 

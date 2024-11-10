@@ -5,14 +5,8 @@
       rows={[
         {"hero-sparkles", "Live", ~p"/channels/live"},
         {"hero-clipboard", "Clips", ~p"/clips"},
-        {"hero-calendar-days", "Schedule", ~p"/schedule"}
-      ]}
-    />
-    <TwitchStoryWeb.Components.Navbar.section
-      title="You"
-      rows={[
-        {"hero-film", "Channels", ~p"/channels"},
-        {"hero-user-circle", "Account", ~p"/account"}
+        {"hero-calendar-days", "Schedule", ~p"/schedule"},
+        {"hero-film", "Channels", ~p"/channels"}
       ]}
     />
     <TwitchStoryWeb.Components.Navbar.section
@@ -21,6 +15,7 @@
         {"hero-flag", "Eurovision", ~p"/games/eurovision"}
       ]}
     />
+
     <%= if @current_user.role == :admin do %>
       <TwitchStoryWeb.Components.Navbar.section
         title="Administration"
@@ -30,7 +25,15 @@
           {"hero-lock-closed", "Oauth", ~p"/admin/oauth"}
         ]}
       />
+    <% else %>
+      <TwitchStoryWeb.Components.Navbar.section
+        title="Administration"
+        rows={[
+          {"hero-user-circle", "Account", ~p"/account"}
+        ]}
+      />
     <% end %>
+
     <TwitchStoryWeb.Components.Navbar.footer avatar={@current_user.twitch_avatar} />
   <% end %>
 </TwitchStoryWeb.Components.Navbar.sidebar>

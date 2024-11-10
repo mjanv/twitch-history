@@ -1,9 +1,10 @@
 defmodule ExTwitchStory.FileStorageTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias ExTwitchStory.FileStorage
 
   @moduletag :s3
+  @moduletag :wip
 
   test "buckets/0" do
     {:ok, buckets} = FileStorage.buckets()

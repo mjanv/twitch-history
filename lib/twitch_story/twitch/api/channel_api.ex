@@ -162,10 +162,11 @@ defmodule TwitchStory.Twitch.Api.ChannelApi do
 
   @doc "Get channel clips"
   @spec clips(String.t(), Keyword.t()) :: result([clip()], :not_found | :invalid_request)
-  def clips(broadcaster_id, shift_opts \\ [day: -7]) do
+  def clips(broadcaster_id, _shift_opts \\ [day: -7]) do
     stop = DateTime.truncate(DateTime.utc_now(), :second)
     # WARNING: shift or shift_zone?
-    start = DateTime.shift(stop, shift_opts)
+    # DateTime.shift(stop, shift_opts)
+    start = stop
 
     [
       url:

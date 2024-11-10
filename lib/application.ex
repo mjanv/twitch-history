@@ -5,6 +5,10 @@ defmodule TwitchStory.Application do
 
   @impl true
   def start(_type, _args) do
+    OpentelemetryPhoenix.setup()
+    OpentelemetryLiveView.setup()
+    OpentelemetryEcto.setup([:twitch_story, :repo])
+    OpentelemetryOban.setup(trace: [:jobs])
     :logger.add_handler(:sentry_handler, Sentry.LoggerHandler, %{})
 
     children = [

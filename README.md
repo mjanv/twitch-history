@@ -2,12 +2,15 @@
 
 ## About
 
-> Twitch Story is a web application targeting Twitch viewers. It enables them to ...
+> Twitch Story is a web application targeting Twitch viewers. It enables them to get a 
 
 Current beta version of the application is available at [https://twitch-story.fly.dev/](https://twitch-story.fly.dev/). Data and account integrity are not guarranted. Known beta-testers: damienscaletta, babiilabilux.
 
-- Error tracking: https://maxime-janvier.sentry.io/projects
-- Data storage: https://console.tigris.dev/flyio_6x3wkn12kqwmqvop/buckets
+Current developed features are:
+
+- [x] Connect using your Twitch account
+- [x] Sync and get the list of your followed channels
+- [x] Get a summary of your
 
 ## Installation
 
@@ -36,8 +39,7 @@ export $(cat .env)
 Application can be runned in development locally using:
 
 ```bash
-docker compose up -d # Start only the database
-mix # Start the application with MIX_ENV=dev
+mix start # Start the database in Docker and the application with MIX_ENV=dev
 ```
 
 To run code quality assurance:
@@ -62,14 +64,12 @@ All tests implying real Twitch API calls, filesystem read/writes or S3 API calls
 To deploy a functionnal application with production setup, one can run it using only Docker (without Erlang/Elixir installation) by running:
 
 ```bash
-docker compose --profile prod up --build # Start the application with the database
+mix deploy.local # Start the application with the database
 ```
 
 ## Cloud deployment
 
 The application is deployed ont [Fly.io](https://fly.io/) with . All 
-
-To build the docker image, run
 
 ```bash
 mix deploy.build

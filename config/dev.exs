@@ -1,15 +1,12 @@
 import Config
 
+# Twitch Story --------------------------------------------------------------------------
+
 config :twitch_story, :twitch_api,
   id_api_url: "https://id.twitch.tv",
   api_url: "https://api.twitch.tv",
   client_id: System.get_env("TWITCH_CLIENT_ID"),
   client_secret: System.get_env("TWITCH_CLIENT_SECRET")
-
-config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
-  client_id: System.get_env("TWITCH_CLIENT_ID"),
-  client_secret: System.get_env("TWITCH_CLIENT_SECRET"),
-  redirect_uri: System.get_env("TWITCH_REDIRECT_URI")
 
 config :twitch_story, :games,
   eurovision: [
@@ -29,6 +26,10 @@ postgres = [
 
 config :twitch_story, TwitchStory.Repo, postgres
 config :twitch_story, TwitchStory.EventStore, postgres
+
+config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Local
+
+# Twitch Story Web ----------------------------------------------------------------------
 
 config :twitch_story, TwitchStoryWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4000],
@@ -53,37 +54,31 @@ config :twitch_story, TwitchStoryWeb.Endpoint,
     ]
   ]
 
-config :twitch_story, TwitchStory.Notifications.Mailer, adapter: Swoosh.Adapters.Local
-
 config :twitch_story, dev_routes: true
+config :phoenix, stacktrace_depth: 20, plug_init_mode: :runtime
+config :phoenix_live_view, :debug_heex_annotations, true
+
+# Mobile --------------------------------------------------------------------------------
+
+config :live_view_native_stylesheet, annotations: true, pretty: true
+
+# Job processing ------------------------------------------------------------------------
+# Authentification ----------------------------------------------------------------------
+
+config :ueberauth, Ueberauth.Strategy.Twitch.OAuth,
+  client_id: System.get_env("TWITCH_CLIENT_ID"),
+  client_secret: System.get_env("TWITCH_CLIENT_SECRET"),
+  redirect_uri: System.get_env("TWITCH_REDIRECT_URI")
+
+# Observability -------------------------------------------------------------------------
+
+if System.get_env("DEBUG_OTEL") == "true" do
+  config :opentelemetry, :processors,
+    otel_batch_processor: %{exporter: {:otel_exporter_stdout, []}}
+else
+  config :opentelemetry, traces_exporter: :none
+end
 
 config :logger, :console, format: "[$level] $message\n"
 
-config :sentry,
-  dsn: System.fetch_env!("SENTRY_DSN")
-
-config :phoenix, :stacktrace_depth, 20
-
-config :phoenix, :plug_init_mode, :runtime
-
-config :phoenix_live_view, :debug_heex_annotations, true
-
-# Mobile
-config :live_view_native_stylesheet,
-  annotations: true,
-  pretty: true
-
-config :mdns_lite,
-  hosts: [:hostname, "twitch"],
-  services: [%{id: :web_service, protocol: "http", transport: "tcp", port: 4000}]
-
-config :ex_aws,
-  debug_requests: true,
-  json_codec: Jason,
-  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
-  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
-
-config :ex_aws, :s3,
-  scheme: "https://",
-  host: "fly.storage.tigris.dev",
-  region: "auto"
+# ---------------------------------------------------------------------------------------

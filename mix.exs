@@ -19,6 +19,15 @@ defmodule TwitchStory.MixProject do
       docs: [
         main: "readme",
         extras: ["README.md"]
+      ],
+      releases: [
+        twitch_story: [
+          applications: [
+            twitch_story: :permanent,
+            opentelemetry_exporter: :permanent,
+            opentelemetry: :temporary
+          ]
+        ]
       ]
     ]
   end
@@ -84,24 +93,32 @@ defmodule TwitchStory.MixProject do
       {:hackney, "~> 1.19"},
       {:ex_aws, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
+      {:fun_with_flags, "~> 1.12.0"},
       # Monitoring
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
+      {:opentelemetry_exporter, "~> 1.0"},
+      {:opentelemetry, "~> 1.0"},
+      {:opentelemetry_api, "~> 1.0"},
+      {:opentelemetry_ecto, "~> 1.0"},
+      {:opentelemetry_liveview, "~> 1.0.0-rc.4"},
+      {:opentelemetry_oban, "~> 0.2.0-rc.5"},
+      {:opentelemetry_phoenix, "~> 1.0"},
+      {:opentelemetry_sentry, "~> 0.1.0"},
       {:sentry, "~> 10.0"},
       # Development tools
       {:credo, "~> 1.7"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.18", only: :test},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.31", only: :dev, runtime: false},
-      {:mdns_lite, "~> 0.8.11", only: :dev}
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
     ]
   end
 
   defp aliases do
     [
       # Installation
-      env: [fn _ -> Mix.shell().cmd("export $(cat .env)") end],
+      env: [cmd("export $(cat .env)")],
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
@@ -117,12 +134,14 @@ defmodule TwitchStory.MixProject do
       # Local development
       quality: ["format", "credo --strict", "sobelow --config", "dialyzer"],
       test: ["ecto.setup", "test"],
-      "test.unit": ["ecto.setup", "coveralls.html"],
+      "test.unit": [cmd("docker compose up -d"), "ecto.setup", "coveralls.html"],
       "test.integration": ["test --only api, data, s3"],
-      start: ["ecto.setup", "phx.server"],
+      start: [cmd("docker compose up -d"), "ecto.setup", "phx.server"],
       # Deployment
-      "deploy.build": [fn _ -> Mix.shell().cmd("docker build . -t twitch-story") end],
-      deploy: [fn _ -> Mix.shell().cmd("fly deploy") end]
+      "deploy.local": [cmd("docker compose up --profile prod up --build")],
+      "deploy.prod": [cmd("fly deploy")]
     ]
   end
+
+  defp cmd(command), do: fn _ -> Mix.shell().cmd(command) end
 end

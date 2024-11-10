@@ -1,6 +1,19 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
   <.heading title="Dashboard"></.heading>
 
+  <.link
+    href={Application.get_env(:twitch_story, :sentry)}
+    class="font-semibold text-purple-600 hover:text-purple-500"
+  >
+    Error tracking
+  </.link>
+  <.link
+    href={Application.get_env(:twitch_story, :s3)}
+    class="font-semibold text-purple-600 hover:text-purple-500"
+  >
+    Data storage
+  </.link>
+
   <.section title="Users" />
   <.stats rows={[
     {"Users", Enum.sum(Keyword.values(@roles))},

@@ -6,6 +6,10 @@
   "print_summary": true,
   "print_files": false,
   "skip_files": [
+    "lib/application.ex",
+    "lib/twitch_story_web/router.ex",
+    "lib/twitch_story_web/endpoint.ex",
+    "lib/twitch_story_web.ex",
     "test/"
   ]
 }

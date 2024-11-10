@@ -1,13 +1,14 @@
 defmodule TwitchStory.FeatureFlagTest do
-  use ExUnit.Case
+  use TwitchStory.DataCase
 
   alias TwitchStory.FeatureFlag
 
-  test "active?/1 returns true if the feature is enabled" do
-    assert FeatureFlag.active?([:games, :eurovision]) == true
+  @tag :wip
+  test "enabled?/1 returns true if the feature is enabled" do
+    assert FeatureFlag.enabled?(:eurovision) == true
   end
 
-  test "active?/1 returns false if the feature is disabled" do
-    assert FeatureFlag.active?([:games, :other_game]) == false
+  test "enabled?/1 returns false if the feature is disabled" do
+    assert FeatureFlag.enabled?(:other_game) == false
   end
 end
