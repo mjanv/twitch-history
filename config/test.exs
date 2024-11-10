@@ -12,10 +12,10 @@ config :twitch_story, :games,
 
 postgres = [
   database: "twitch_story_test",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  port: 5432,
+  username: System.get_env("POSTGRES_USERNAME", "postgres"),
+  password: System.get_env("POSTGRES_PASSWORD", "postgres"),
+  hostname: System.get_env("POSTGRES_HOSTNAME", "localhost"),
+  port: String.to_integer(System.get_env("POSTGRES_PORT", "5432")),
   pool_size: 5,
   pool: Ecto.Adapters.SQL.Sandbox
 ]
