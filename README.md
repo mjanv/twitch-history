@@ -2,7 +2,7 @@
 
 ## About
 
-> Twitch Story is a web application targeting Twitch viewers. It enables them to get a 
+> Twitch Story is a web application targeting Twitch viewers. It enables them ...
 
 Current beta version of the application is available at [https://twitch-story.fly.dev/](https://twitch-story.fly.dev/). Data and account integrity are not guarranted. Known beta-testers: damienscaletta, babiilabilux.
 
