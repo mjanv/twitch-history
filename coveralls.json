@@ -6,6 +6,6 @@
   "print_summary": true,
   "print_files": false,
   "skip_files": [
-    "test/fixtures/test_missing.ex"
+    "test/"
   ]
 }
