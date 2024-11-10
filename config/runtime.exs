@@ -46,10 +46,9 @@ if config_env() == :prod do
 
   config :opentelemetry_exporter,
     otlp_protocol: :http_protobuf,
-    otlp_endpoint: "https://api.honeycomb.io:443",
+    otlp_endpoint: "https://otel.highlight.io:4318",
     otlp_headers: [
-      {"x-honeycomb-team", System.get_env("HONEYCOMB_API_KEY")},
-      {"x-honeycomb-dataset", "twitch-story"}
+      {"x-highlight-project", System.get_env("HIGHLIGHT_PROJECT_ID")}
     ]
 
   config :sentry,
