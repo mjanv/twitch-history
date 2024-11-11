@@ -176,6 +176,41 @@ defmodule TwitchStoryWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_authorized, _params, _session, socket) do
+    socket
+    |> Phoenix.LiveView.attach_hook(:auth_hook, :handle_params, fn _params, url, socket ->
+      %{assigns: %{current_user: current_user}} = socket
+
+      case authorized?(current_user, url, "GET") do
+        true ->
+          socket
+          |> Phoenix.Component.assign(:live_url, url)
+          |> then(fn socket -> {:cont, socket} end)
+
+        false ->
+          socket
+          |> Phoenix.LiveView.put_flash(:error, "Not Authorized")
+          |> Phoenix.LiveView.redirect(to: ~p"/")
+          |> then(fn socket -> {:halt, socket} end)
+      end
+    end)
+    |> Phoenix.LiveView.attach_hook(:auth_hook_event, :handle_event, fn event, _params, socket ->
+      %{assigns: %{current_user: current_user, live_url: url}} = socket
+
+      case authorized?(current_user, url, "GET", event) do
+        true ->
+          socket
+          |> then(fn socket -> {:cont, socket} end)
+
+        false ->
+          socket
+          |> Phoenix.LiveView.put_flash(:error, "Not Authorized")
+          |> then(fn socket -> {:halt, socket} end)
+      end
+    end)
+    |> then(fn socket -> {:cont, socket} end)
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)
 
@@ -266,4 +301,19 @@ defmodule TwitchStoryWeb.UserAuth do
   defp maybe_store_return_to(conn), do: conn
 
   defp signed_in_path(_conn), do: ~p"/"
+
+  def authorized?(user, path, method, _event \\ nil) do
+    uri = URI.parse(path)
+
+    TwitchStoryWeb.Router
+    |> Phoenix.Router.route_info(method, uri.path, uri.host)
+    |> case do
+      %{phoenix_live_view: plv} -> {elem(plv, 0), elem(plv, 1)}
+      %{plug_opts: action} -> action
+    end
+    |> then(fn
+      {module, action} -> module.authorized?(user, user.role, action)
+      _action -> true
+    end)
+  end
 end

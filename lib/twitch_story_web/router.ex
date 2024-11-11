@@ -42,7 +42,10 @@ defmodule TwitchStoryWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [
+        {TwitchStoryWeb.UserAuth, :ensure_authenticated},
+        {TwitchStoryWeb.UserAuth, :ensure_authorized}
+      ] do
       live "/account", HomeLive.Account, :index
       live "/channels", HomeLive.Channels, :index
       live "/channels/sync", HomeLive.Channels, :sync
