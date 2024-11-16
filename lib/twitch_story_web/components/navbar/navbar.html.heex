@@ -2,34 +2,39 @@
   <%= if @current_user do %>
     <TwitchStoryWeb.Components.Navbar.section
       title="You"
+      current_user={@current_user}
       rows={[
-        {"hero-sparkles", "Live", ~p"/channels/live"},
-        {"hero-clipboard", "Clips", ~p"/clips"},
-        {"hero-calendar-days", "Schedule", ~p"/schedule"},
-        {"hero-film", "Channels", ~p"/channels"}
+        {"Live", ~p"/channels/live", icon: "hero-sparkles", flag: :live},
+        {"Clips", ~p"/clips", icon: "hero-clipboard", flag: :clips},
+        {"Schedule", ~p"/schedule", icon: "hero-calendar-days", flag: :schedule},
+        {"Channels", ~p"/channels", icon: "hero-film", flag: :channels}
       ]}
     />
+
     <TwitchStoryWeb.Components.Navbar.section
       title="Games"
+      current_user={@current_user}
       rows={[
-        {"hero-flag", "Eurovision", ~p"/games/eurovision"}
+        {"Eurovision", ~p"/games/eurovision", icon: "hero-flag", flag: :eurovision}
       ]}
     />
 
     <%= if @current_user.role == :admin do %>
       <TwitchStoryWeb.Components.Navbar.section
+        current_user={@current_user}
         title="Administration"
         rows={[
-          {"hero-computer-desktop", "Dashboard", ~p"/admin/dashboard"},
-          {"hero-film", "Channels", ~p"/admin/channels"},
-          {"hero-lock-closed", "Oauth", ~p"/admin/oauth"}
+          {"Dashboard", ~p"/admin/dashboard", icon: "hero-computer-desktop"},
+          {"Channels", ~p"/admin/channels", icon: "hero-film"},
+          {"Oauth", ~p"/admin/oauth", icon: "hero-lock-closed"}
         ]}
       />
     <% else %>
       <TwitchStoryWeb.Components.Navbar.section
         title="Administration"
+        current_user={@current_user}
         rows={[
-          {"hero-user-circle", "Account", ~p"/account"}
+          {"Account", ~p"/account", icon: "hero-user-circle"}
         ]}
       />
     <% end %>

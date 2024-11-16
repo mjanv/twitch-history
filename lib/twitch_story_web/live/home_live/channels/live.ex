@@ -5,6 +5,8 @@ defmodule TwitchStoryWeb.HomeLive.Channels.Live do
 
   alias TwitchStory.Twitch.Api
   alias TwitchStory.Twitch.Auth
+  
+  def authorized?(user, _), do: FeatureFlag.enabled?(:live, user)
 
   @impl true
   def mount(_params, _session, socket) do

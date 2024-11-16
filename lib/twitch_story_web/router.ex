@@ -118,6 +118,7 @@ defmodule TwitchStoryWeb.Router do
 
       live_dashboard "/dashboard", metrics: TwitchStoryWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward "/flags", FunWithFlags.UI.Router
     end
   end
 end

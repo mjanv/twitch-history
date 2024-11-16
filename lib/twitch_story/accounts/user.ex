@@ -47,6 +47,11 @@ defmodule TwitchStory.Accounts.User do
     def id(%{id: id}), do: "user:#{id}"
   end
 
+  defimpl FunWithFlags.Group, for: __MODULE__ do
+    def in?(%{role: role}, role), do: true
+    def in?(_, _), do: false
+  end
+
   @doc "Count the number of users by role"
   def count_roles do
     Repo.all(from(u in __MODULE__, group_by: u.role, select: {u.role, count(u.id)}))

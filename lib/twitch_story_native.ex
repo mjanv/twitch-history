@@ -42,6 +42,10 @@ defmodule TwitchStoryNative do
         ]
 
       unquote(verified_routes())
+
+      def authorized?(_user, _action), do: true
+
+      defoverridable authorized?: 2
     end
   end
 

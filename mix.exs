@@ -69,6 +69,7 @@ defmodule TwitchStory.MixProject do
       {:ueberauth, "~> 0.10"},
       {:ueberauth_twitch, "~> 0.2"},
       {:set_locale, "~> 0.2.1"},
+      {:fun_with_flags_ui, "~> 0.8"},
       # Mobile
       {:live_view_native, "~> 0.3.1"},
       {:live_view_native_stylesheet, "~> 0.3.1"},

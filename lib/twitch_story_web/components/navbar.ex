@@ -3,6 +3,8 @@ defmodule TwitchStoryWeb.Components.Navbar do
 
   use TwitchStoryWeb, :component
 
+  alias TwitchStory.FeatureFlag
+
   embed_templates "navbar/*"
 
   attr :icon, :string, required: true
@@ -24,14 +26,19 @@ defmodule TwitchStoryWeb.Components.Navbar do
 
   attr :title, :string, required: true
   attr :rows, :list, default: []
+  attr :current_user, :any, default: nil
 
   def section(assigns) do
+    assigns = assigns[:rows]
+    |> Enum.reject(fn {_, _, opts} -> !is_nil(opts[:flag]) and FeatureFlag.disabled?(opts[:flag], assigns[:current_user]) end)
+    |> then(fn rows -> assign(assigns, :rows, rows) end)
+
     ~H"""
-    <li>
+    <li :if={!Enum.empty?(@rows)}>
       <div class="text-s font-semibold leading-6 text-gray-400"><%= @title %></div>
       <ul role="list" class="-mx-2 mt-2 space-y-1">
-        <%= for {icon, title, href} <- @rows do %>
-          <.row icon={icon} title={title} href={href} />
+        <%= for {title, href, opts} <- @rows do %>
+          <.row icon={opts[:icon]} title={title} href={href} />
         <% end %>
       </ul>
     </li>
