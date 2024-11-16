@@ -3,7 +3,7 @@ defmodule TwitchStory.Accounts.User do
 
   use TwitchStory.Schema
 
-  alias ExTwitchStory.EventBus
+  alias TwitchStory.EventBus
 
   @type t() :: %__MODULE__{
           name: String.t(),
@@ -41,6 +41,10 @@ defmodule TwitchStory.Accounts.User do
       join_through: TwitchStory.Twitch.FollowedChannel
 
     timestamps(type: :utc_datetime)
+  end
+
+  defimpl FunWithFlags.Actor, for: __MODULE__ do
+    def id(%{id: id}), do: "user:#{id}"
   end
 
   @doc "Count the number of users by role"

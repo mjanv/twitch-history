@@ -312,8 +312,12 @@ defmodule TwitchStoryWeb.UserAuth do
       %{plug_opts: action} -> action
     end
     |> then(fn
-      {module, action} -> module.authorized?(user, user.role, action)
-      _action -> true
+      {module, action} ->
+        try do
+          module.authorized?(user, action)
+        rescue
+          UndefinedFunctionError -> true
+        end
     end)
   end
 end

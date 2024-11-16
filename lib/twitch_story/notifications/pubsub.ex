@@ -1,7 +1,7 @@
 defmodule TwitchStory.Notifications.PubSub do
   @moduledoc false
 
-  @behaviour ExTwitchStory.EventBus.Dispatcher
+  @behaviour TwitchStory.EventBus.Dispatcher
 
   alias TwitchStory.PubSub
 

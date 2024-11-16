@@ -15,6 +15,7 @@ defmodule TwitchStory.MixProject do
       compilers: [] ++ Mix.compilers(),
       aliases: aliases(),
       deps: deps(),
+      dialyzer: [plt_add_apps: [:mix]],
       test_coverage: [tool: ExCoveralls],
       docs: [
         main: "readme",
@@ -34,7 +35,6 @@ defmodule TwitchStory.MixProject do
 
   def cli do
     [
-      default_task: "start",
       preferred_envs: ["test.unit": :test, "test.integration": :test]
     ]
   end
@@ -136,7 +136,7 @@ defmodule TwitchStory.MixProject do
       test: ["ecto.setup", "test"],
       "test.unit": [cmd("docker compose up -d"), "ecto.setup", "coveralls.html"],
       "test.integration": ["test --only api, data, s3"],
-      start: [cmd("docker compose up -d"), "ecto.setup", "phx.server"],
+      start: ["env", cmd("docker compose up -d"), "ecto.setup", "phx.server"],
       # Deployment
       "deploy.local": [cmd("docker compose up --profile prod up --build")],
       "deploy.prod": [cmd("fly deploy")]

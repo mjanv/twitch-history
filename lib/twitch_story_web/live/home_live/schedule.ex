@@ -7,7 +7,7 @@ defmodule TwitchStoryWeb.HomeLive.Schedule do
   alias TwitchStory.Twitch.Channels.Schedule
   alias TwitchStory.Twitch.FollowedChannel
 
-  def authorized?(_user, _, :index), do: false
+  def authorized?(_user, :index), do: false
 
   @impl true
   def mount(

@@ -29,7 +29,7 @@ defmodule TwitchStory.DataCase do
       import TwitchStory.DataCase
 
       # Assertions
-      import ExTwitchStory.DataAssertions
+      import TwitchStory.DataAssertions
 
       # Fixtures
       import TwitchStory.AccountsFixtures

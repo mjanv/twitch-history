@@ -3,8 +3,8 @@ defmodule TwitchStory.Games.Eurovision.Ceremony do
 
   use TwitchStory.Schema
 
-  alias ExTwitchStory.EventBus
   alias TwitchStory.Accounts.User
+  alias TwitchStory.EventBus
   alias TwitchStory.Games.Eurovision.Ceremony.Result
   alias TwitchStory.Games.Eurovision.Ceremony.Vote
   alias TwitchStory.Games.Eurovision.Ceremony.Winner

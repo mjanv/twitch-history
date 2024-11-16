@@ -5,6 +5,8 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Homepage do
 
   alias TwitchStory.Games.Eurovision.Ceremony
 
+  def authorized?(_user, _), do: true
+
   @impl true
   def mount(_params, _session, %{assigns: assigns} = socket) do
     socket

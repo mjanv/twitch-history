@@ -1,7 +1,7 @@
 defmodule TwitchStory.Notifications.Log do
   @moduledoc false
 
-  @behaviour ExTwitchStory.EventBus.Dispatcher
+  @behaviour TwitchStory.EventBus.Dispatcher
 
   require Logger
 
