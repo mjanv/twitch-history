@@ -1,5 +1,12 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
-  <.heading title="Feature flags"></.heading>
+  <.heading title="Feature flags">
+    <.link
+      phx-click="default"
+      class="ml-3 inline-flex items-center rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-800"
+    >
+      Create default flags
+    </.link>
+  </.heading>
 
   <.table id="feature-flags" rows={@feature_flags}>
     <:col :let={feature} label="Name">
@@ -8,11 +15,56 @@
     <:col :let={feature} label="Enabled">
       <%= feature.enabled? %>
     </:col>
+    <:col :let={feature} label="Users">
+      <%= length(feature.users) %>
+    </:col>
+    <:action :let={feature}>
+      <.link patch={~p"/admin/flags/#{feature.name}/users"}>
+        Show
+      </.link>
+    </:action>
     <:action :let={feature}>
       <.link phx-click="enable" phx-value-feature={feature.name}>Enable</.link>
     </:action>
     <:action :let={feature}>
       <.link phx-click="disable" phx-value-feature={feature.name}>Disable</.link>
     </:action>
+    <:action :let={feature}>
+      <.link phx-click="clear" phx-value-feature={feature.name}>Clear</.link>
+    </:action>
   </.table>
 </div>
+
+<.modal
+  :if={@live_action in [:users]}
+  id="show-users-modal"
+  show
+  on_cancel={JS.patch(~p"/admin/flags")}
+>
+  <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">
+    Flag <%= @feature_flag.name %> (<%= @feature_flag.enabled? %>)
+  </h2>
+
+  <.table id="users" rows={@feature_flag.users}>
+    <:col :let={user} label="Id"><%= user.id %></:col>
+    <:col :let={user} label="Enabled"><%= user.enabled? %></:col>
+    <:action :let={user}>
+      <.link
+        phx-click="enable_user"
+        phx-value-user={user.id}
+        phx-value-feature={@feature_flag.name}
+      >
+        Enable
+      </.link>
+    </:action>
+    <:action :let={user}>
+      <.link
+        phx-click="disable_user"
+        phx-value-user={user.id}
+        phx-value-feature={@feature_flag.name}
+      >
+        Disable
+      </.link>
+    </:action>
+  </.table>
+</.modal>

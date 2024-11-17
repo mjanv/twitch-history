@@ -1,13 +1,48 @@
 defmodule TwitchStory.FeatureFlag do
   @moduledoc false
 
+  require Logger
+
   @type flag() :: atom()
   @type user() :: TwitchStory.Accounts.User.t()
 
   @doc "Returns the status of given feature flags"
-  @spec status([flag()]) :: [%{name: flag(), enabled?: boolean()}]
-  def status(flags \\ []) do
-    Enum.map(flags, fn flag -> %{name: flag, enabled?: enabled?(flag)} end)
+  @spec status :: [
+          %{
+            name: flag(),
+            enabled?: boolean(),
+            users: [%{id: String.t(), enabled?: boolean()}]
+          }
+        ]
+  def status do
+    FunWithFlags.all_flags()
+    |> case do
+      {:ok, flags} ->
+        flags
+
+      {:error, reason} ->
+        Logger.error("Cannot retrieve feature flags: #{inspect(reason)}")
+        []
+    end
+    |> Enum.map(fn flag ->
+      %{
+        name: flag.name,
+        enabled?:
+          flag.gates
+          |> Enum.filter(fn gate -> gate.type == :boolean end)
+          |> List.first()
+          |> Map.get(:enabled),
+        users:
+          flag.gates
+          |> Enum.filter(fn gate -> gate.type == :actor end)
+          |> Enum.map(fn gate ->
+            %{
+              id: gate.for |> String.split(":") |> Enum.at(1),
+              enabled?: gate.enabled
+            }
+          end)
+      }
+    end)
   end
 
   @doc "Enable a feature flag globally"

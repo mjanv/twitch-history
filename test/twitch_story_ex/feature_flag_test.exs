@@ -10,13 +10,25 @@ defmodule TwitchStory.FeatureFlagTest do
     {:ok, user: user, user2: user2}
   end
 
-  test "status/1 returns all given feature flag status" do
-    FeatureFlag.enable(:feature)
-    FeatureFlag.disable(:feature2)
+  test "status/1 returns all given feature flag status", %{user: user} do
+    FeatureFlag.enable(:feature8)
+    FeatureFlag.disable(:feature8, user)
+    FeatureFlag.disable(:feature9)
 
-    flags = FeatureFlag.status([:feature, :feature2])
+    flags = FeatureFlag.status()
 
-    assert flags == [%{name: :feature, enabled?: true}, %{name: :feature2, enabled?: false}]
+    assert flags == [
+             %{
+               name: :feature8,
+               enabled?: true,
+               users: [%{id: user.id, enabled?: false}]
+             },
+             %{
+               name: :feature9,
+               enabled?: false,
+               users: []
+             }
+           ]
   end
 
   test "enable/1 enable a feature globally" do

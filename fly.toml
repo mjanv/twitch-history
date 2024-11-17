@@ -13,6 +13,7 @@ kill_signal = 'SIGTERM'
   release_command = '/app/bin/migrate'
 
 [env]
+  RELEASE_COOKIE = 'Hfu6SUi645eDBPLoZu6gwPrFoaPZo1-awGCHWoHNUsPC_jvLCSUuGw=='
   PHX_HOST = 'twitch-story.fly.dev'
   PORT = '8080'
 
