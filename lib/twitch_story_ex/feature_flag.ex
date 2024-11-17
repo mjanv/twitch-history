@@ -4,6 +4,12 @@ defmodule TwitchStory.FeatureFlag do
   @type flag() :: atom()
   @type user() :: TwitchStory.Accounts.User.t()
 
+  @doc "Returns the status of given feature flags"
+  @spec status([flag()]) :: [%{name: flag(), enabled?: boolean()}]
+  def status(flags \\ []) do
+    Enum.map(flags, fn flag -> %{name: flag, enabled?: enabled?(flag)} end)
+  end
+
   @doc "Enable a feature flag globally"
   @spec enable(flag()) :: :ok | :error
   def enable(feature) do

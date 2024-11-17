@@ -5,9 +5,9 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  # Twitch Story --------------------------------------------------------------------------
+  # Twitch Story -------------------------------------------------------------------------- 
 
-  config :twitch_story, files: System.fetch_env!("FILES_PATH")
+  config :twitch_story, files: System.get_env("FILES_PATH", "")
 
   postgres =
     if System.get_env("DATABASE_URL") do

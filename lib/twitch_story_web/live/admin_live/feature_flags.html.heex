@@ -1,0 +1,18 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.heading title="Feature flags"></.heading>
+
+  <.table id="feature-flags" rows={@feature_flags}>
+    <:col :let={feature} label="Name">
+      <%= feature.name %>
+    </:col>
+    <:col :let={feature} label="Enabled">
+      <%= feature.enabled? %>
+    </:col>
+    <:action :let={feature}>
+      <.link phx-click="enable" phx-value-feature={feature.name}>Enable</.link>
+    </:action>
+    <:action :let={feature}>
+      <.link phx-click="disable" phx-value-feature={feature.name}>Disable</.link>
+    </:action>
+  </.table>
+</div>

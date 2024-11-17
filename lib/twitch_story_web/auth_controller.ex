@@ -25,7 +25,7 @@ defmodule TwitchStoryWeb.AuthController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Successfully authenticated")
-        |> put_session(:user_return_to, ~p"/games/eurovision")
+        |> put_session(:user_return_to, ~p"/account")
         |> TwitchStoryWeb.UserAuth.log_in_user(user, %{})
 
       {:error, %Ecto.Changeset{errors: [_ | _]}} ->
@@ -45,6 +45,6 @@ defmodule TwitchStoryWeb.AuthController do
       ) do
     conn
     |> put_flash(:error, error.message)
-    |> redirect(to: "/")
+    |> redirect(to: ~p"/")
   end
 end

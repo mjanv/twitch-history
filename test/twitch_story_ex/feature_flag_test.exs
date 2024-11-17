@@ -10,6 +10,15 @@ defmodule TwitchStory.FeatureFlagTest do
     {:ok, user: user, user2: user2}
   end
 
+  test "status/1 returns all given feature flag status" do
+    FeatureFlag.enable(:feature)
+    FeatureFlag.disable(:feature2)
+
+    flags = FeatureFlag.status([:feature, :feature2])
+
+    assert flags == [%{name: :feature, enabled?: true}, %{name: :feature2, enabled?: false}]
+  end
+
   test "enable/1 enable a feature globally" do
     before_flag = FunWithFlags.enabled?(:feature)
 

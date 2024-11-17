@@ -3,12 +3,28 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
 
   @api Application.compile_env(:twitch_story, :twitch_api)
 
+  def client_id do
+    @api[:client_id]
+    |> case do
+      {:system, env_var} -> System.get_env(env_var)
+      client_id -> client_id
+    end
+  end
+
+  def client_secret do
+    @api[:client_secret]
+    |> case do
+      {:system, env_var} -> System.get_env(env_var)
+      client_secret -> client_secret
+    end
+  end
+
   def get(url: url, token: token) do
     [base_url: @api[:api_url]]
     |> Req.new()
     |> Req.Request.put_headers([
       {"Authorization", "Bearer #{token}"},
-      {"Client-Id", @api[:client_id]}
+      {"Client-Id", client_id()}
     ])
     |> Req.get(url: url)
   end
@@ -18,14 +34,14 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
     |> Req.new()
     |> Req.Request.put_headers([
       {"Authorization", "Bearer #{app_access_token()}"},
-      {"Client-Id", @api[:client_id]}
+      {"Client-Id", client_id()}
     ])
     |> Req.get(url: url)
   end
 
   def user_access_token(client_secret) do
     token(
-      client_id: @api[:client_id],
+      client_id: client_id(),
       client_secret: client_secret,
       grant_type: "client_credentials"
     )
@@ -33,8 +49,8 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
 
   def app_access_token do
     [
-      client_id: @api[:client_id],
-      client_secret: @api[:client_secret],
+      client_id: client_id(),
+      client_secret: client_secret(),
       grant_type: "client_credentials"
     ]
     |> token()
@@ -46,8 +62,8 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
 
   def refresh_access_token(refresh_token) do
     token(
-      client_id: @api[:client_id],
-      client_secret: @api[:client_secret],
+      client_id: client_id(),
+      client_secret: client_secret(),
       grant_type: "refresh_token",
       refresh_token: refresh_token
     )

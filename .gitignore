@@ -46,6 +46,7 @@ request/
 
 # Environment files
 .env
+.*.env
 
 # Elixir libraries
 boundary/

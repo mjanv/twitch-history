@@ -2,6 +2,12 @@ import Config
 
 # Twitch Story --------------------------------------------------------------------------
 
+config :twitch_story, :twitch_api,
+  id_api_url: "https://id.twitch.tv",
+  api_url: "https://api.twitch.tv",
+  client_id: {:system, "TWITCH_CLIENT_ID"},
+  client_secret: {:system, "TWITCH_CLIENT_SECRET"}
+
 config :twitch_story,
   ecto_repos: [TwitchStory.Repo],
   event_stores: [TwitchStory.EventStore],
@@ -13,11 +19,6 @@ config :twitch_story,
   ],
   sentry: "https://maxime-janvier.sentry.io/projects",
   s3: "https://console.tigris.dev/flyio_6x3wkn12kqwmqvop/buckets"
-
-config :twitch_story, :feature_flags,
-  games: [
-    eurovision: true
-  ]
 
 config :twitch_story, TwitchStory.Repo, migration_primary_key: [type: :uuid]
 

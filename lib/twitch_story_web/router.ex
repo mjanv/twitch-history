@@ -79,6 +79,7 @@ defmodule TwitchStoryWeb.Router do
       live "/admin/dashboard", AdminLive.Dashboard, :index
       live "/admin/dashboard/user/:id", AdminLive.Dashboard, :show_user
       live "/admin/dashboard/user/:id/edit", AdminLive.Dashboard, :edit_user
+      live "/admin/flags", AdminLive.FeatureFlags, :index
       live "/admin/channels", AdminLive.Channels, :index
       live "/admin/channels/clips", AdminLive.Channels.Clips, :index
       live "/admin/channels/schedules", AdminLive.Channels.Schedules, :index
