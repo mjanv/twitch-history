@@ -11,9 +11,19 @@ if config_env() == :prod do
 
   postgres =
     if System.get_env("DATABASE_URL") do
+      url =
+        System.get_env("DATABASE_URL")
+        |> String.replace("sslmode=disable", "ssl=false")
+        |> String.replace("sslmode=allow", "ssl=false")
+        |> String.replace("sslmode=prefer", "ssl=true")
+        |> String.replace("sslmode=require", "ssl=true")
+        |> String.replace("sslmode=verify-ca", "ssl=true")
+        |> String.replace("sslmode=verify-full", "ssl=true")
+
       [
-        url: System.get_env("DATABASE_URL"),
-        pool_size: String.to_integer(System.get_env("POOL_SIZE", "5"))
+        url: url,
+        pool_size: String.to_integer(System.get_env("POOL_SIZE", "5")),
+        socket_options: if(System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: [])
       ]
     else
       [
