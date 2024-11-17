@@ -29,9 +29,12 @@ defmodule TwitchStoryWeb.Components.Navbar do
   attr :current_user, :any, default: nil
 
   def section(assigns) do
-    assigns = assigns[:rows]
-    |> Enum.reject(fn {_, _, opts} -> !is_nil(opts[:flag]) and FeatureFlag.disabled?(opts[:flag], assigns[:current_user]) end)
-    |> then(fn rows -> assign(assigns, :rows, rows) end)
+    assigns =
+      assigns[:rows]
+      |> Enum.reject(fn {_, _, opts} ->
+        !is_nil(opts[:flag]) and FeatureFlag.disabled?(opts[:flag], assigns[:current_user])
+      end)
+      |> then(fn rows -> assign(assigns, :rows, rows) end)
 
     ~H"""
     <li :if={!Enum.empty?(@rows)}>

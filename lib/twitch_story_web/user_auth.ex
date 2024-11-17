@@ -261,20 +261,6 @@ defmodule TwitchStoryWeb.UserAuth do
   end
 
   @doc """
-  Used for routes that require the user to have a streamer role.
-  """
-  def require_streamer_user(conn, _opts) do
-    if conn.assigns[:current_user].role == :streamer do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must have the streamer role in to access this page.")
-      |> redirect(to: ~p"/")
-      |> halt()
-    end
-  end
-
-  @doc """
   Used for routes that require the user to have an administrator role.
   """
   def require_admin_user(conn, _opts) do

@@ -48,6 +48,17 @@ defmodule TwitchStory.FeatureFlag do
     end
   end
 
+  @doc "Clear a feature flag"
+  @spec clear(flag()) :: :ok | :error
+  def clear(feature) do
+    feature
+    |> FunWithFlags.clear()
+    |> case do
+      :ok -> :ok
+      {:error, _} -> :error
+    end
+  end
+
   @doc "Checks if a feature flag is enabled"
   @spec enabled?(flag()) :: boolean()
   def enabled?(feature), do: FunWithFlags.enabled?(feature)

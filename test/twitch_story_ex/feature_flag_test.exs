@@ -58,6 +58,18 @@ defmodule TwitchStory.FeatureFlagTest do
     assert {before_flag, after_flag} == {false, true}
   end
 
+  test "clear/1 clear a feature globally" do
+    FeatureFlag.enable(:feature7)
+
+    before_flag = FunWithFlags.enabled?(:feature7)
+
+    :ok = FeatureFlag.clear(:feature7)
+
+    after_flag = FunWithFlags.enabled?(:feature7)
+
+    assert {before_flag, after_flag} == {true, false}
+  end
+
   describe "enabled?/1" do
     test "returns true if the feature is enabled" do
       FeatureFlag.enable(:feature3)
