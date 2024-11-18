@@ -23,6 +23,8 @@ defmodule TwitchStoryWeb.Components.Titles do
     """
   end
 
+  attr :title, :string, required: true
+
   def section(assigns) do
     ~H"""
     <div class="relative mt-12 mb-2">

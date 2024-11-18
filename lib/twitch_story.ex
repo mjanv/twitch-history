@@ -7,7 +7,11 @@ defmodule TwitchStory do
   @spec feature_flags :: [atom()]
   def feature_flags do
     [
+      # Twitch
       :live,
+      :channels,
+      :history,
+      # Games
       :eurovision
     ]
   end

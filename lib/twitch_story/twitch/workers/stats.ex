@@ -5,7 +5,7 @@ defmodule TwitchStory.Twitch.Workers.Stats do
     queue: :twitch,
     max_attempts: 3
 
-  alias TwitchStory.Twitch.Requests.{Commerce, Community, Metadata, Request, SiteHistory}
+  alias TwitchStory.Twitch.Histories.{Commerce, Community, Metadata, Request, SiteHistory}
 
   def stats(file) do
     %{

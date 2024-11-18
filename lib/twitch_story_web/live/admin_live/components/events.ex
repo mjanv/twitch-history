@@ -6,6 +6,8 @@ defmodule TwitchStoryWeb.AdminLive.Components.Events do
   def render(assigns) do
     ~H"""
     <div>
+      <.stats rows={[{"Total", length(@filtered_events)}]} />
+
       <div>
         <div class="mt-2">
           <.simple_form for={%{}} phx-target={@myself} phx-change="search">

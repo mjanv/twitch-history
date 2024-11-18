@@ -29,10 +29,10 @@ defmodule TwitchStoryWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{TwitchStoryWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserLive.RegistrationLive, :new
-      live "/users/log_in", UserLive.LoginLive, :new
-      live "/users/reset_password", UserLive.ForgotPasswordLive, :new
-      live "/users/reset_password/:token", UserLive.ResetPasswordLive, :edit
+      live "/users/register", AccountsLive.RegistrationLive, :new
+      live "/users/log_in", AccountsLive.LoginLive, :new
+      live "/users/reset_password", AccountsLive.ForgotPasswordLive, :new
+      live "/users/reset_password/:token", AccountsLive.ResetPasswordLive, :edit
     end
 
     post "/users/log_in", UserSessionController, :create
@@ -46,28 +46,28 @@ defmodule TwitchStoryWeb.Router do
         {TwitchStoryWeb.UserAuth, :ensure_authenticated},
         {TwitchStoryWeb.UserAuth, :ensure_authorized}
       ] do
-      live "/account", HomeLive.Account, :index
-      live "/channels", HomeLive.Channels, :index
-      live "/channels/sync", HomeLive.Channels, :sync
-      live "/channels/live", HomeLive.Channels.Live, :index
-      live "/channels/:broadcaster_id", HomeLive.Channels.Channel, :index
-      live "/schedule", HomeLive.Schedule, :index
-      live "/schedule/:broadcaster_id", HomeLive.Schedule, :broadcaster
-      live "/clips", HomeLive.Clips, :index
+      live "/users/settings", AccountsLive.SettingsLive, :edit
+      live "/users/settings/confirm_email/:token", AccountsLive.SettingsLive, :confirm_email
 
-      live "/users/settings", UserLive.SettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserLive.SettingsLive, :confirm_email
+      live "/account", AccountsLive.Account, :index
+      live "/channels", TwitchLive.Channels, :index
+      live "/channels/sync", TwitchLive.Channels, :sync
+      live "/channels/live", TwitchLive.Channels.Live, :index
+      live "/channels/:broadcaster_id", TwitchLive.Channels.Channel, :index
+      live "/schedule", TwitchLive.Schedule, :index
+      live "/schedule/:broadcaster_id", TwitchLive.Schedule, :broadcaster
+      live "/clips", TwitchLive.Clips, :index
+
+      live "/history", TwitchLive.Histories, :new
+      live "/history/overview", TwitchLive.Histories.Request, :overview
+      live "/history/channels", TwitchLive.Histories.Request, :channels
+      live "/history/messages", TwitchLive.Histories.Messages, :index
 
       live "/games/eurovision", GamesLive.Eurovision.Homepage, :index
       live "/games/eurovision/new", GamesLive.Eurovision.Homepage, :new
       live "/games/eurovision/ceremony/:id", GamesLive.Eurovision.Ceremony, :index
       live "/games/eurovision/ceremony/:id/vote", GamesLive.Eurovision.Vote, :index
       live "/games/eurovision/ceremony/:id/leaderboard", GamesLive.Eurovision.Leaderboard, :index
-
-      live "/request/new", RequestLive.Upload, :new
-      live "/request/overview", RequestLive.Request, :overview
-      live "/request/channels", RequestLive.Request, :channels
-      live "/request/messages", RequestLive.Messages, :index
     end
   end
 
@@ -77,8 +77,10 @@ defmodule TwitchStoryWeb.Router do
     live_session :require_admin_user,
       on_mount: [{TwitchStoryWeb.UserAuth, :ensure_authenticated}] do
       live "/admin/dashboard", AdminLive.Dashboard, :index
-      live "/admin/dashboard/user/:id", AdminLive.Dashboard, :show_user
-      live "/admin/dashboard/user/:id/edit", AdminLive.Dashboard, :edit_user
+      live "/admin/users", AdminLive.Users, :index
+      live "/admin/users/:id", AdminLive.Users, :show_user
+      live "/admin/users/:id/edit", AdminLive.Users, :edit_user
+      live "/admin/events", AdminLive.Events, :index
       live "/admin/flags", AdminLive.FeatureFlags, :index
       live "/admin/flags/:name/users", AdminLive.FeatureFlags, :users
       live "/admin/channels", AdminLive.Channels, :index
@@ -98,10 +100,10 @@ defmodule TwitchStoryWeb.Router do
 
     live_session :current_user,
       on_mount: [{TwitchStoryWeb.UserAuth, :mount_current_user}] do
-      live "/", HomeLive.Homepage, :index
+      live "/", HomepageLive, :index
 
-      live "/users/confirm/:token", UserLive.ConfirmationLive, :edit
-      live "/users/confirm", UserLive.ConfirmationInstructionsLive, :new
+      live "/users/confirm/:token", AccountsLive.ConfirmationLive, :edit
+      live "/users/confirm", AccountsLive.ConfirmationInstructionsLive, :new
     end
   end
 

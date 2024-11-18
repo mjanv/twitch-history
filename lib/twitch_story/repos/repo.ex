@@ -9,8 +9,11 @@ defmodule TwitchStory.Repo do
 
   import Ecto.Query
 
+  @doc "Count the number of elements returned by a query"
+  @spec count(Ecto.Queryable.t()) :: integer()
   def count(queryable), do: aggregate(queryable, :count)
 
+  @doc "Returns elements from the last N time intervals"
   @spec last(
           Ecto.Queryable.t(),
           atom(),

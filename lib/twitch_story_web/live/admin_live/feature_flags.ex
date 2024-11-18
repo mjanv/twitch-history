@@ -108,6 +108,7 @@ defmodule TwitchStoryWeb.AdminLive.FeatureFlags do
         socket
         |> put_flash(:error, "Cannot enable user #{user} for feature #{feature}")
     end
+    |> redirect(to: ~p"/admin/flags")
     |> assign(feature_flags: FeatureFlag.status())
     |> then(fn socket -> {:noreply, socket} end)
   end
@@ -125,6 +126,7 @@ defmodule TwitchStoryWeb.AdminLive.FeatureFlags do
         socket
         |> put_flash(:error, "Cannot disable user #{user} for feature #{feature}")
     end
+    |> redirect(to: ~p"/admin/flags")
     |> assign(feature_flags: FeatureFlag.status())
     |> then(fn socket -> {:noreply, socket} end)
   end

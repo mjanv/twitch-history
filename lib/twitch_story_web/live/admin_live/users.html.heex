@@ -1,0 +1,117 @@
+<div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
+  <.heading title="Users"></.heading>
+
+  <.table id="users" rows={@users}>
+    <:col :let={user} label="Name">
+      <%= user.name %>
+    </:col>
+
+    <:col :let={user} label="Id">
+      <%= user.id %>
+    </:col>
+
+    <:col :let={user} label="Role">
+      <%= user.role %>
+    </:col>
+
+    <:action :let={user}>
+      <.link phx-click={show_modal("edit-user-modal")} patch={~p"/admin/users/#{user}/edit"}>
+        Edit
+      </.link>
+    </:action>
+
+    <:action :let={user}>
+      <.link phx-click={show_modal("user-modal")} patch={~p"/admin/users/#{user}"}>
+        Show
+      </.link>
+    </:action>
+  </.table>
+
+  <.modal
+    :if={@live_action in [:edit_user]}
+    id="edit-user-modal"
+    show
+    on_cancel={JS.patch(~p"/admin/dashboard")}
+  >
+    <h2>Edit user</h2>
+
+    <.simple_form for={@form} phx-submit="save">
+      <.input
+        field={@form[:role]}
+        type="select"
+        options={[:viewer, :streamer, :admin]}
+        label="Role"
+      />
+      <:actions>
+        <.button>Save</.button>
+      </:actions>
+    </.simple_form>
+  </.modal>
+
+  <.modal
+    :if={@live_action in [:show_user]}
+    id="user-modal"
+    show
+    on_cancel={JS.patch(~p"/admin/dashboard")}
+  >
+    <div class="overflow-hidden">
+      <div class="px-4 py-6 sm:px-6 flex items-center gap-x-6">
+        <img
+          src={@user.twitch_avatar}
+          alt=""
+          class="h-16 w-16 flex-none rounded-full ring-1 ring-gray-300/10"
+        />
+        <div>
+          <dt class="text-base font-semibold leading-7 text-gray-900">
+            <%= String.capitalize(@current_user.provider) %> account
+          </dt>
+          <dd class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            <%= @user.id %>
+          </dd>
+        </div>
+      </div>
+      <div class="border-t border-gray-100">
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Name</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= @user.name %>
+            </dd>
+          </div>
+        </dl>
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Email</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= @user.email %>
+            </dd>
+          </div>
+        </dl>
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Role</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= String.capitalize(Atom.to_string(@user.role)) %>
+            </dd>
+          </div>
+        </dl>
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Twitch ID</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= String.capitalize(@user.twitch_id) %>
+            </dd>
+          </div>
+        </dl>
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Created at</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= @user.inserted_at %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </.modal>
+</div>

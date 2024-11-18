@@ -1,13 +1,14 @@
 <TwitchStoryWeb.Components.Navbar.sidebar>
   <%= if @current_user do %>
     <TwitchStoryWeb.Components.Navbar.section
-      title="You"
+      title="Twitch"
       current_user={@current_user}
       rows={[
-        {"Live", ~p"/channels/live", icon: "hero-sparkles", flag: :live},
+        {"Live streams", ~p"/channels/live", icon: "hero-sparkles", flag: :live},
         {"Clips", ~p"/clips", icon: "hero-clipboard", flag: :clips},
         {"Schedule", ~p"/schedule", icon: "hero-calendar-days", flag: :schedule},
-        {"Channels", ~p"/channels", icon: "hero-film", flag: :channels}
+        {"My channels", ~p"/channels", icon: "hero-film", flag: :channels},
+        {"My history", ~p"/history", icon: "hero-archive-box", flag: :history}
       ]}
     />
 
@@ -25,6 +26,7 @@
         title="Administration"
         rows={[
           {"Dashboard", ~p"/admin/dashboard", icon: "hero-computer-desktop"},
+          {"Users", ~p"/admin/users", icon: "hero-user-circle"},
           {"Feature flags", ~p"/admin/flags", icon: "hero-flag"},
           {"Channels", ~p"/admin/channels", icon: "hero-film"},
           {"Oauth", ~p"/admin/oauth", icon: "hero-lock-closed"}
