@@ -1,18 +1,18 @@
-defmodule Mix.Tasks.S3.List do
+defmodule Mix.Tasks.Tigris.List do
   @moduledoc false
 
   use Mix.Task
 
-  @shortdoc "List S3 buckets"
+  @shortdoc "List Tigris buckets"
 
-  alias TwitchStory.FileStorage
+  alias TwitchStory.FileStorage.Tigris
 
   require Logger
 
   def run(_) do
     Application.ensure_all_started(:hackney)
 
-    FileStorage.buckets()
+    Tigris.buckets()
     |> case do
       {:ok, buckets} ->
         Enum.each(buckets, fn bucket -> Logger.info("#{inspect(bucket)}") end)

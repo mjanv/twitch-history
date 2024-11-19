@@ -1,11 +1,11 @@
-defmodule Mix.Tasks.S3.Bucket do
+defmodule Mix.Tasks.Tigris.Bucket do
   @moduledoc false
 
   use Mix.Task
 
-  @shortdoc "List S3 buckets"
+  @shortdoc "List content of a Tigris bucket"
 
-  alias TwitchStory.FileStorage
+  alias TwitchStory.FileStorage.Tigris
 
   require Logger
 
@@ -13,7 +13,7 @@ defmodule Mix.Tasks.S3.Bucket do
     Application.ensure_all_started(:hackney)
 
     name
-    |> FileStorage.bucket()
+    |> Tigris.bucket()
     |> case do
       {:ok, contents} ->
         for content <- contents do
