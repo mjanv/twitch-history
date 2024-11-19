@@ -65,6 +65,5 @@ defmodule TwitchStory.Twitch.Histories.Request do
 
     query
     |> Repo.all()
-    |> then(fn requests -> {:ok, requests} end)
   end
 end

@@ -3,13 +3,13 @@ defmodule TwitchStoryWeb.TwitchLive.Histories do
 
   use TwitchStoryWeb, :live_view
 
-  alias TwitchStory.Twitch
+  alias TwitchStory.Twitch.Histories
 
   @impl true
   def mount(_params, _session, socket) do
     socket
     |> allow_upload(:request, accept: ~w(.zip), max_file_size: 999_000_000, max_entries: 1)
-    |> assign(:histories, [])
+    |> assign(:histories, Histories.Request.all(socket.assigns.current_user.twitch_id))
     |> then(fn socket -> {:ok, socket} end)
   end
 
@@ -24,13 +24,24 @@ defmodule TwitchStoryWeb.TwitchLive.Histories do
   end
 
   @impl true
-  def handle_event("save", _params, socket) do
+  def handle_event("save", _params, %{assigns: %{current_user: current_user}} = socket) do
     socket
     |> consume_uploaded_entries(:request, fn %{path: path}, _entry ->
-      Twitch.create_request(path)
+      {:ok, Histories.create_history(path, current_user)}
     end)
     |> List.first()
-    |> then(fn id -> {:noreply, push_navigate(socket, to: ~p"/history/overview?id=#{id}")} end)
+    |> case do
+      {:ok, id} ->
+        socket
+        |> put_flash(:info, "Request created")
+        |> push_navigate(to: ~p"/history/#{id}/overview")
+
+      {:error, reason} ->
+        socket
+        |> put_flash(:error, reason)
+        |> push_navigate(to: ~p"/history")
+    end
+    |> then(fn socket -> {:noreply, socket} end)
   end
 
   @impl true

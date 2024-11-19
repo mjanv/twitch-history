@@ -1,30 +1,7 @@
 defmodule TwitchStory.Twitch do
   @moduledoc false
 
-  alias TwitchStory.Repos.Filesystem
-  alias TwitchStory.Twitch.{Api, Channels, Histories, Workers}
-
-  def create_request(path) do
-    with %Histories.Metadata{} = metadata <- Histories.Metadata.read(to_charlist(path)),
-         {:ok, request} <- Histories.Request.create(metadata),
-         dest <- Filesystem.folder(request.request_id),
-         :ok <- File.cp!(path, dest),
-         {:ok, _} <- Workers.Stats.start(dest) do
-      {:ok, metadata.request_id}
-    else
-      response -> {:error, response}
-    end
-  end
-
-  def delete_request(request_id) do
-    with dest <- Filesystem.folder(request_id),
-         :ok <- File.rm!(dest),
-         :ok <- Histories.Request.delete(request_id) do
-      {:ok, request_id}
-    else
-      response -> {:error, response}
-    end
-  end
+  alias TwitchStory.Twitch.{Api, Channels}
 
   defdelegate channels, to: Channels.Channel, as: :all
   def channel_changeset, do: Channels.Channel.change(%Channels.Channel{})
@@ -35,7 +12,7 @@ defmodule TwitchStory.Twitch do
          {:ok, channel} <- Channels.Channel.create(attrs) do
       {:ok, channel}
     else
-      {:error, reason} -> {:error, reason}
+      {:error, _} -> {:error, "Cannot create channel"}
     end
   end
 end

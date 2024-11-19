@@ -2,6 +2,8 @@ import Config
 
 # Twitch Story --------------------------------------------------------------------------
 
+config :twitch_story, file_storage: TwitchStory.FileStorage.Tigris
+
 config :twitch_story,
   event_bus: [TwitchStory.EventStore]
 

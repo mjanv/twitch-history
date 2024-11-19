@@ -7,7 +7,8 @@ end
 if config_env() == :prod do
   # Twitch Story -------------------------------------------------------------------------- 
 
-  config :twitch_story, files: System.get_env("FILES_PATH", "")
+  config :twitch_story,
+    bucket: "twitch-story-data"
 
   postgres =
     if System.get_env("DATABASE_URL") do

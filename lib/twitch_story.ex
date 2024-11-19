@@ -1,6 +1,8 @@
 defmodule TwitchStory do
   @moduledoc false
 
+  def file_storage, do: Application.get_env(:twitch_story, :file_storage)
+
   @doc """
   Declares the list of existing feature flags
   """

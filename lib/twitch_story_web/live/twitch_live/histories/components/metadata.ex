@@ -41,7 +41,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Components.Metadata do
             </ul>
           </nav>
           <!-- Heading -->
-          <div class="flex flex-col items-start justify-between gap-x-8 gap-y-4 bg-gray-700/10 px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
+          <div class="flex flex-col items-start justify-between gap-x-8 gap-y-4 bg-gray-800 px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
             <div>
               <div class="flex items-center gap-x-3">
                 <div class="flex-none rounded-full bg-purple-400/10 p-1 text-purple-400">

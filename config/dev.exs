@@ -2,6 +2,9 @@ import Config
 
 # Twitch Story --------------------------------------------------------------------------
 
+config :twitch_story,
+  file_storage: TwitchStory.FileStorage.Filesystem
+
 config :twitch_story, :twitch_api,
   id_api_url: "https://id.twitch.tv",
   api_url: "https://api.twitch.tv",

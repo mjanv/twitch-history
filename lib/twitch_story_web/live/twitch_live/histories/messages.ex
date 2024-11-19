@@ -5,9 +5,8 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Messages do
 
   alias Phoenix.LiveView.AsyncResult
 
-  alias TwitchStory.Repos.Filesystem
   alias TwitchStory.Twitch.Histories.SiteHistory
-  alias TwitchStoryWeb.RequestLive.Components
+  alias TwitchStoryWeb.TwitchLive.Histories.Components
 
   @impl true
   def mount(_params, _session, socket) do
@@ -21,15 +20,17 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Messages do
     |> then(fn socket -> {:noreply, socket} end)
   end
 
-  def handle_action(socket, _action, %{"id" => request_id}) do
+  def handle_action(%{assigns: %{current_user: current_user}} = socket, _action, %{
+        "id" => request_id
+      }) do
+    file = to_charlist(Path.join(current_user.id, request_id <> ".zip"))
+
     socket
     |> assign(:request_id, request_id)
-    |> assign(:file, to_charlist(Filesystem.folder(request_id)))
+    |> assign(:file, file)
     |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())
-    |> start_async(:raw, fn ->
-      SiteHistory.ChatMessages.read(to_charlist(Filesystem.folder(request_id)))
-    end)
+    |> start_async(:raw, fn -> SiteHistory.ChatMessages.read(file) end)
   end
 
   def handle_action(socket, _action, _params), do: socket

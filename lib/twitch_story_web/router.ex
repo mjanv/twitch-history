@@ -59,7 +59,7 @@ defmodule TwitchStoryWeb.Router do
       live "/clips", TwitchLive.Clips, :index
 
       live "/history", TwitchLive.Histories, :new
-      live "/history/overview", TwitchLive.Histories.Request, :overview
+      live "/history/:id/overview", TwitchLive.Histories.Request, :overview
       live "/history/channels", TwitchLive.Histories.Request, :channels
       live "/history/messages", TwitchLive.Histories.Messages, :index
 
