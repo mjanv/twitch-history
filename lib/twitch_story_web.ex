@@ -91,6 +91,7 @@ defmodule TwitchStoryWeb do
       import TwitchStoryWeb.Components.CoreComponents
       import TwitchStoryWeb.Components.Titles
       import TwitchStoryWeb.Components.Search
+      import TwitchStoryWeb.Components.Stats
       import TwitchStoryWeb.Gettext
 
       alias Phoenix.LiveView.JS

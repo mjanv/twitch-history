@@ -18,43 +18,11 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Components.Stats do
         <:loading></:loading>
         <:failed :let={_reason}></:failed>
 
-        <div id="stats" class="grid grid-cols-1 bg-gray-700/10 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8 sm:border-l">
-            <p class="text-sm font-medium leading-6 text-gray-400">Hours watched</p>
-            <p class="mt-2 flex items-baseline gap-x-2">
-              <span class="text-4xl font-semibold tracking-tight text-white">
-                <%= stats.hours_watched %>
-              </span>
-              <span class="text-sm text-gray-400">hours</span>
-            </p>
-          </div>
-          <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8">
-            <p class="text-sm font-medium leading-6 text-gray-400">Number of follows</p>
-            <p class="mt-2 flex items-baseline gap-x-2">
-              <span class="text-4xl font-semibold tracking-tight text-white">
-                <%= stats.follows %>
-              </span>
-              <span class="text-sm text-gray-400">channels</span>
-            </p>
-          </div>
-          <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8 lg:border-l">
-            <p class="text-sm font-medium leading-6 text-gray-400">Number of messages</p>
-            <p class="mt-2 flex items-baseline gap-x-2">
-              <span class="text-4xl font-semibold tracking-tight text-white">
-                <%= stats.chat_messages %>
-              </span>
-              <span class="text-sm text-gray-400">messages</span>
-            </p>
-          </div>
-          <div class="border-t border-white/5 py-6 px-4 sm:px-6 lg:px-8 sm:border-l">
-            <p class="text-sm font-medium leading-6 text-gray-400">Number of subscriptions</p>
-            <p class="mt-2 flex items-baseline gap-x-2">
-              <span class="text-4xl font-semibold tracking-tight text-white">
-                <%= stats.subscriptions %>
-              </span>
-              <span class="text-sm text-gray-400">subs</span>
-            </p>
-          </div>
+        <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <.stat title="Hours watched" value={stats.hours_watched} unit="hours" />
+          <.stat title="Channels followed" value={stats.follows} unit="channels" />
+          <.stat title="Messages sent" value={stats.chat_messages} unit="messages" />
+          <.stat title="Subscriptions bought" value={stats.subscriptions} unit="subs" />
         </div>
       </.async_result>
     </div>
