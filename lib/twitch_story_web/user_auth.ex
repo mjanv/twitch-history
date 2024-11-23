@@ -8,6 +8,7 @@ defmodule TwitchStoryWeb.UserAuth do
 
   alias TwitchStory.Accounts
   alias TwitchStory.Twitch.Auth
+  alias TwitchStory.Twitch.Services
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -117,8 +118,22 @@ defmodule TwitchStoryWeb.UserAuth do
 
   def fetch_oauth_token(%{assigns: %{current_user: current_user}} = conn, _opts) do
     case Auth.OauthToken.get(current_user) do
-      {:ok, token} -> assign(conn, :oauth_token, token)
-      {:error, _} -> conn
+      {:ok, token} ->
+        assign(conn, :oauth_token, token)
+
+        case Auth.OauthToken.expired?(token) do
+          true ->
+            case Services.Renewal.renew_access_token(current_user) do
+              {:ok, token} -> assign(conn, :oauth_token, token)
+              {:error, _} -> conn
+            end
+
+          false ->
+            conn
+        end
+
+      {:error, _} ->
+        conn
     end
   end
 
