@@ -6,10 +6,10 @@ defmodule TwitchStoryWeb.TwitchLive.Histories do
   alias TwitchStory.Twitch.Histories
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
     socket
     |> allow_upload(:request, accept: ~w(.zip), max_file_size: 999_000_000, max_entries: 1)
-    |> assign(:histories, Histories.Request.all(socket.assigns.current_user.twitch_id))
+    |> assign(:histories, Histories.History.all(current_user.twitch_id))
     |> then(fn socket -> {:ok, socket} end)
   end
 
@@ -33,7 +33,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories do
     |> case do
       {:ok, id} ->
         socket
-        |> put_flash(:info, "Request created")
+        |> put_flash(:info, "History uploaded")
         |> push_navigate(to: ~p"/history/#{id}/overview")
 
       {:error, reason} ->
@@ -59,6 +59,22 @@ defmodule TwitchStoryWeb.TwitchLive.Histories do
         |> Enum.reduce(socket, fn error, socket ->
           put_flash(socket, :error, error_to_string(error))
         end)
+    end
+    |> then(fn socket -> {:noreply, socket} end)
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, %{assigns: %{current_user: current_user}} = socket) do
+    case Histories.delete_history(id, current_user) do
+      {:ok, _} ->
+        socket
+        |> put_flash(:info, "History deleted")
+        |> push_navigate(to: ~p"/history")
+
+      {:error, reason} ->
+        socket
+        |> put_flash(:error, reason)
+        |> push_navigate(to: ~p"/history")
     end
     |> then(fn socket -> {:noreply, socket} end)
   end

@@ -3,7 +3,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched do
 
   alias Explorer.Series
   alias TwitchStory.Twitch.Histories.SiteHistory
-  alias TwitchStory.Twitch.Histories.Zipfile
+  alias TwitchStory.Zipfile
 
   require Explorer.DataFrame, as: DataFrame
 
@@ -16,7 +16,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched do
   def read(file) do
     file
     |> Zipfile.csv(
-      ~c"request/site_history/minute_watched.csv",
+      "request/site_history/minute_watched.csv",
       columns: ["time", "channel", "minutes_logged", "game"],
       dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )

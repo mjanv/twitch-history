@@ -2,12 +2,13 @@ defmodule TwitchStory.Twitch.Histories.Commerce.Subs do
   @moduledoc false
 
   alias Explorer.{DataFrame, Series}
-  alias TwitchStory.Twitch.Histories.Zipfile
+  alias TwitchStory.Twitch.Histories.SiteHistory
+  alias TwitchStory.Zipfile
 
   def read(file) do
     file
     |> Zipfile.csv(
-      ~c"request/commerce/subs/subscriptions.csv",
+      "request/commerce/subs/subscriptions.csv",
       columns: [
         "channel_login",
         "access_start",
@@ -58,5 +59,17 @@ defmodule TwitchStory.Twitch.Histories.Commerce.Subs do
     file
     |> read()
     |> DataFrame.n_rows()
+  end
+
+  def group_month_year(df) do
+    df
+    |> SiteHistory.preprocess2()
+    |> SiteHistory.group(
+      [:month, :year],
+      &[
+        subs: Series.n_distinct(&1["is_paid"])
+      ],
+      &[desc: &1["subs"]]
+    )
   end
 end

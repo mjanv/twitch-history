@@ -7,7 +7,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistoryTest do
 
   alias TwitchStory.Twitch.Histories.SiteHistory
 
-  @zip ~c"priv/static/request-1.zip"
+  @zip "priv/static/request-1.zip"
 
   test "contains/2" do
     messages =

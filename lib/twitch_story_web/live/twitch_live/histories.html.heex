@@ -10,12 +10,17 @@
   </.heading>
 
   <.table id="histories" rows={@histories}>
-    <:col :let={history} label="Id"><%= history.request_id %></:col>
+    <:col :let={history} label="Id"><%= history.history_id %></:col>
     <:col :let={history} label="Start"><%= history.start_time %></:col>
     <:col :let={history} label="End"><%= history.end_time %></:col>
     <:action :let={history}>
-      <.link href={~p"/history/#{history.request_id}/overview"}>
+      <.link href={~p"/history/#{history.history_id}/overview"}>
         Overview
+      </.link>
+    </:action>
+    <:action :let={history}>
+      <.link phx-click="delete" phx-value-id={history.history_id}>
+        Delete
       </.link>
     </:action>
   </.table>

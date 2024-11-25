@@ -3,14 +3,14 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.ChatMessages do
 
   alias Explorer.Series
   alias TwitchStory.Twitch.Histories.SiteHistory
-  alias TwitchStory.Twitch.Histories.Zipfile
+  alias TwitchStory.Zipfile
 
   @dialyzer {:nowarn_function, group_channel: 1, group_month_year: 1}
 
   def read(file) do
     file
     |> Zipfile.csv(
-      ~c"request/site_history/chat_messages.csv",
+      "request/site_history/chat_messages.csv",
       columns: [
         "time",
         "channel",

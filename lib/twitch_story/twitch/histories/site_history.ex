@@ -26,6 +26,17 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory do
     )
   end
 
+  def preprocess2(df) do
+    df
+    |> DF.mutate(
+      year: year(access_start),
+      month: month(access_start),
+      day: day_of_year(access_start),
+      weekday: day_of_week(access_start),
+      hour: hour(access_start)
+    )
+  end
+
   # Statistics
   def n_rows(df, divider \\ 1) do
     df

@@ -1,0 +1,86 @@
+<div class="mx-auto">
+  <.live_component module={Components.Metadata} id="overview" history={@history} title="Overview" />
+
+  <div class="container">
+    <div class="tab_header">
+      <div id="summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <a id="tab0" phx-click={tab("#tab0", "#content_tab_0")} class="tab active-tab">
+          <.stat title="Hours watched" value={@history.summary.hours_watched} unit="hours" />
+        </a>
+
+        <a id="tab1" phx-click={tab("#tab1", "#content_tab_1")} class="tab">
+          <.stat title="Follows" value={@history.summary.follows} unit="channels" />
+        </a>
+
+        <a id="tab2" phx-click={tab("#tab2", "#content_tab_2")} class="tab">
+          <.stat title="Messages sent" value={@history.summary.chat_messages} unit="messages" />
+        </a>
+
+        <a id="tab3" phx-click={tab("#tab3", "#content_tab_3")} class="tab">
+          <.stat title="Subscriptions bought" value={@history.summary.subscriptions} unit="subs" />
+        </a>
+      </div>
+    </div>
+    <div id="content" class="tab_body">
+      <div id="content_tab_0" class="tab-content">
+        <.async_result :let={hour_watched} assign={@hour_watched}>
+          <:loading></:loading>
+          <:failed :let={_reason}></:failed>
+          <.live_component
+            module={TwitchStoryWeb.Components.Live.Graph}
+            id="hours_watched"
+            title="Hours per month"
+            x="date"
+            y="hours"
+            data={hour_watched}
+          />
+        </.async_result>
+      </div>
+
+      <div id="content_tab_1" class="tab-content">
+        <.async_result :let={follows} assign={@follows}>
+          <:loading></:loading>
+          <:failed :let={_reason}></:failed>
+          <.live_component
+            module={TwitchStoryWeb.Components.Live.Graph}
+            id="follows"
+            title="Follows per month"
+            x="date"
+            y="follows"
+            data={follows}
+          />
+        </.async_result>
+      </div>
+
+      <div id="content_tab_2" class="tab-content">
+        <.async_result :let={chat_messages} assign={@chat_messages}>
+          <:loading></:loading>
+          <:failed :let={_reason}></:failed>
+          <.live_component
+            module={TwitchStoryWeb.Components.Live.Graph}
+            id="messages"
+            title="Messages per month"
+            x="date"
+            y="messages"
+            data={chat_messages}
+          />
+        </.async_result>
+      </div>
+
+      <div id="content_tab_3" class="tab-content">
+        <.async_result :let={subscriptions} assign={@subscriptions}>
+          <:loading></:loading>
+          <:failed :let={_reason}></:failed>
+          <.live_component
+            module={TwitchStoryWeb.Components.Live.Graph}
+            id="subs"
+            title="Subscriptions per month"
+            x="date"
+            y="subs"
+            data={subscriptions}
+          />
+        </.async_result>
+      </div>
+    </div>
+  </div>
+</div>

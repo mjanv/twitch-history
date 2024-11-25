@@ -1,14 +1,17 @@
 defmodule TwitchStory.Twitch.Histories.Community.Follows do
   @moduledoc false
 
-  alias TwitchStory.Twitch.Histories.Zipfile
-
   require Explorer.DataFrame, as: DataFrame
+
+  alias Explorer.Series
+
+  alias TwitchStory.Twitch.Histories.SiteHistory
+  alias TwitchStory.Zipfile
 
   def read(file) do
     Zipfile.csv(
       file,
-      ~c"request/community/follows/follow.csv",
+      "request/community/follows/follow.csv",
       columns: ["time", "channel"],
       dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
@@ -27,5 +30,17 @@ defmodule TwitchStory.Twitch.Histories.Community.Follows do
     |> read()
     |> DataFrame.filter(not is_nil(channel))
     |> DataFrame.n_rows()
+  end
+
+  def group_month_year(df) do
+    df
+    |> SiteHistory.preprocess()
+    |> SiteHistory.group(
+      [:month, :year],
+      &[
+        follows: Series.n_distinct(&1["channel"])
+      ],
+      &[desc: &1["follows"]]
+    )
   end
 end

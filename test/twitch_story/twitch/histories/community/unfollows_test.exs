@@ -8,7 +8,7 @@ defmodule TwitchStory.Twitch.Histories.Community.UnfollowsTest do
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.Community.Unfollows
 
-  @zip ~c"priv/static/request-1.zip"
+  @zip "priv/static/request-1.zip"
 
   test "count/2" do
     unfollows = Unfollows.count(@zip)

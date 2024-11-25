@@ -8,7 +8,7 @@ defmodule TwitchStory.Twitch.Histories.Commerce.SubsTest do
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.Commerce.Subs
 
-  @zip ~c"priv/static/request-1.zip"
+  @zip "priv/static/request-1.zip"
 
   test "read/2" do
     subs = Subs.read(@zip)

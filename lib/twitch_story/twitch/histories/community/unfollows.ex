@@ -1,14 +1,14 @@
 defmodule TwitchStory.Twitch.Histories.Community.Unfollows do
   @moduledoc false
 
-  alias TwitchStory.Twitch.Histories.Zipfile
+  alias TwitchStory.Zipfile
 
   require Explorer.DataFrame, as: DataFrame
 
   def read(file) do
     Zipfile.csv(
       file,
-      ~c"request/community/follows/unfollow.csv",
+      "request/community/follows/unfollow.csv",
       columns: ["time", "channel"],
       dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )

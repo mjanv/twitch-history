@@ -132,4 +132,8 @@
     font-display: swap;
 }
 
+.active-tab {
+  @apply bg-purple-600 text-white;
+}
+
 

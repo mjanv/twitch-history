@@ -8,7 +8,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatchedTest do
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched
 
-  @zip ~c"priv/static/request-1.zip"
+  @zip "priv/static/request-1.zip"
 
   test "read/2" do
     minute_watched = MinuteWatched.read(@zip)

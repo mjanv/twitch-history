@@ -20,13 +20,11 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Messages do
     |> then(fn socket -> {:noreply, socket} end)
   end
 
-  def handle_action(%{assigns: %{current_user: current_user}} = socket, _action, %{
-        "id" => request_id
-      }) do
-    file = to_charlist(Path.join(current_user.id, request_id <> ".zip"))
+  def handle_action(%{assigns: %{current_user: current_user}} = socket, _action, %{"id" => id}) do
+    file = Path.join(current_user.id, id <> ".zip")
 
     socket
-    |> assign(:request_id, request_id)
+    |> assign(:id, id)
     |> assign(:file, file)
     |> assign(:raw, AsyncResult.loading())
     |> assign(:messages, AsyncResult.loading())

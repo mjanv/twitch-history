@@ -8,7 +8,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.ChatMessagesTest do
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.SiteHistory.ChatMessages
 
-  @zip ~c"priv/static/request-1.zip"
+  @zip "priv/static/request-1.zip"
 
   test "read/2" do
     chat_messages = ChatMessages.read(@zip)

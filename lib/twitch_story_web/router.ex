@@ -59,9 +59,9 @@ defmodule TwitchStoryWeb.Router do
       live "/clips", TwitchLive.Clips, :index
 
       live "/history", TwitchLive.Histories, :new
-      live "/history/:id/overview", TwitchLive.Histories.Request, :overview
-      live "/history/channels", TwitchLive.Histories.Request, :channels
-      live "/history/messages", TwitchLive.Histories.Messages, :index
+      live "/history/:id/overview", TwitchLive.Histories.Overview, :index
+      live "/history/:id/channels", TwitchLive.Histories.Channels, :index
+      live "/history/:id/messages", TwitchLive.Histories.Messages, :index
 
       live "/games/eurovision", GamesLive.Eurovision.Homepage, :index
       live "/games/eurovision/new", GamesLive.Eurovision.Homepage, :new

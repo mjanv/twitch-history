@@ -8,7 +8,7 @@ defmodule TwitchStory.Twitch.Histories.Community.FollowsTest do
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.Community.Follows
 
-  @zip ~c"priv/static/request-1.zip"
+  @zip "priv/static/request-1.zip"
 
   test "n/2" do
     follows = Follows.n(@zip)

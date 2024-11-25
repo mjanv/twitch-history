@@ -6,12 +6,12 @@ defmodule TwitchStoryWeb.Components.Live.Graph do
   alias TwitchStoryWeb.Graphs.Timeseries
 
   @impl true
-  def update(%{title: title, data: result}, socket) do
-    g = Timeseries.bar(result.result, title)
+  def update(%{id: id, title: title, data: data, x: x, y: y}, socket) do
+    spec = Timeseries.bar(data, title, x, y)
 
     socket
-    |> assign(id: socket.id)
-    |> push_event("vega_lite:#{socket.id}:init", %{"spec" => VegaLite.to_spec(g)})
+    |> assign(id: id)
+    |> push_event("vega_lite:#{id}:init", %{"spec" => spec})
     |> then(fn socket -> {:ok, socket} end)
   end
 
@@ -19,7 +19,7 @@ defmodule TwitchStoryWeb.Components.Live.Graph do
   def render(assigns) do
     ~H"""
     <div
-      style="width:100%; height: 400px;"
+      class="w-full h-full min-h-[400px]"
       phx-hook="VegaLite"
       phx-update="ignore"
       id={@id}

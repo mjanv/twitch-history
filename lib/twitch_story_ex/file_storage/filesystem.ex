@@ -36,25 +36,26 @@ defmodule TwitchStory.FileStorage.Filesystem do
   @impl true
   def delete(origin) do
     origin
+    |> bucket()
     |> File.rm()
     |> case do
       :ok ->
         :ok
 
       {:error, error} ->
-        Logger.error("Cannot delete file: #{inspect(error)}")
+        Logger.error("Cannot delete file #{origin}: #{inspect(error)}")
         :error
     end
   end
 
   @spec bucket(String.t()) :: String.t()
-  def bucket(request) do
+  def bucket(history) do
     :twitch_story
     |> Application.get_env(:files)
     |> case do
       nil -> Application.app_dir(:twitch_story, "priv/static/uploads")
       path -> path
     end
-    |> Path.join(request)
+    |> Path.join(history)
   end
 end
