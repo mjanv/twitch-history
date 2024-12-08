@@ -1,7 +1,7 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8">
   <.heading title="Clips"></.heading>
 
-  <%= @page %>
+  {@page}
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
     <div
@@ -19,11 +19,11 @@
             <div class="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-white p-2">
               <div class="relative rounded-md p-1">
                 <p class="text-base font-medium text-white truncate">
-                  <%= clip.title %>
+                  {clip.title}
                 </p>
               </div>
               <p class="text-sm text-gray-200 truncate">
-                <%= clip.stats.duration %>s (<%= clip.stats.view_count %> views)
+                {clip.stats.duration}s ({clip.stats.view_count} views)
                 <span aria-hidden="true"> &rarr;</span>
               </p>
             </div>

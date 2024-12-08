@@ -24,7 +24,7 @@ defmodule TwitchStory.Twitch.Histories.Summary do
 
   def changeset(summary, attrs \\ %{}) do
     summary
-    |> cast(Map.from_struct(attrs), [:follows, :chat_messages, :hours_watched, :subscriptions])
+    |> cast(attrs, [:follows, :chat_messages, :hours_watched, :subscriptions])
     |> validate_required([:follows, :chat_messages, :hours_watched, :subscriptions])
   end
 

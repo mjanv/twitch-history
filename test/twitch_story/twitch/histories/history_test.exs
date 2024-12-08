@@ -12,7 +12,7 @@ defmodule TwitchStory.Twitch.Histories.HistoryTest do
       end_time: ~U[2024-01-06 23:00:00Z]
     }
 
-    summary = %Summary{follows: 121, chat_messages: 435, hours_watched: 120, subscriptions: 5}
+    summary = %{follows: 121, chat_messages: 435, hours_watched: 120, subscriptions: 5}
 
     {:ok, %{metadata: metadata, summary: summary}}
   end

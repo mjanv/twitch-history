@@ -18,7 +18,7 @@ defmodule TwitchStoryWeb.Components.Navbar do
         href={@href}
         class="text-gray-400 hover:text-white hover:bg-purple-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
       >
-        <.icon name={@icon} class="h-6 w-6 shrink-0" /> <%= @title %>
+        <.icon name={@icon} class="h-6 w-6 shrink-0" /> {@title}
       </a>
     </li>
     """
@@ -38,7 +38,7 @@ defmodule TwitchStoryWeb.Components.Navbar do
 
     ~H"""
     <li :if={!Enum.empty?(@rows)}>
-      <div class="text-s font-semibold leading-6 text-gray-400"><%= @title %></div>
+      <div class="text-s font-semibold leading-6 text-gray-400">{@title}</div>
       <ul role="list" class="-mx-2 mt-2 space-y-1">
         <%= for {title, href, opts} <- @rows do %>
           <.row icon={opts[:icon]} title={title} href={href} />
@@ -74,7 +74,7 @@ defmodule TwitchStoryWeb.Components.Navbar do
       <div class="flex h-16 shrink-0 items-center"></div>
       <nav class="flex flex-1 flex-col">
         <ul role="list" class="flex flex-1 flex-col gap-y-7">
-          <%= render_slot(@inner_block) %>
+          {render_slot(@inner_block)}
         </ul>
       </nav>
     </div>

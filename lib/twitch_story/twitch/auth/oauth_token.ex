@@ -32,11 +32,11 @@ defmodule TwitchStory.Twitch.Auth.OauthToken do
     end
   end
 
-  def expired?(nil), do: true
-
   def expired?(%__MODULE__{expires_at: expires_at}) do
     DateTime.compare(expires_at, DateTime.utc_now()) == :lt
   end
+
+  def expired?(_), do: true
 
   def expiring?(n) when is_integer(n) do
     from(

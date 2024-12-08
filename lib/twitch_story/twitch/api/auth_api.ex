@@ -39,6 +39,28 @@ defmodule TwitchStory.Twitch.Api.AuthApi do
     |> Req.get(url: url)
   end
 
+  def post(url: url, body: body) do
+    [base_url: @api[:api_url]]
+    |> Req.new()
+    |> Req.Request.put_headers([
+      {"Authorization", "Bearer #{app_access_token()}"},
+      {"Client-Id", client_id()},
+      {"Content-Type", "application/json"}
+    ])
+    |> Req.post(url: url, body: body)
+  end
+
+  def delete(url: url) do
+    [base_url: @api[:api_url]]
+    |> Req.new()
+    |> Req.Request.put_headers([
+      {"Authorization", "Bearer #{app_access_token()}"},
+      {"Client-Id", client_id()},
+      {"Content-Type", "application/json"}
+    ])
+    |> Req.delete(url: url)
+  end
+
   def user_access_token(client_secret) do
     token(
       client_id: client_id(),

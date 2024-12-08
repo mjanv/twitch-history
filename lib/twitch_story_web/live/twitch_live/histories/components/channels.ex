@@ -58,21 +58,21 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Components.Channels do
                         class="h-8 w-8 rounded-full bg-gray-800"
                       />
                       <.link patch={~p"/"} class="truncate text-sm font-medium leading-6 text-white">
-                        <%= row.channel %>
+                        {row.channel}
                       </.link>
                     </div>
                   </td>
                   <td class="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
                     <div class="flex gap-x-3">
                       <div class="font-mono text-sm leading-6 text-gray-400">
-                        <%= row.hours %> hours
+                        {row.hours} hours
                       </div>
                     </div>
                   </td>
                   <td class="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">
                     <div class="flex gap-x-3">
                       <div class="font-mono text-sm leading-6 text-gray-400">
-                        <%= row.messages || 0 %> messages
+                        {row.messages || 0} messages
                       </div>
                     </div>
                   </td>
@@ -83,7 +83,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Components.Channels do
                           <div class="h-1.5 w-1.5 rounded-full bg-current"></div>
                         </div>
                         <div class="hidden text-white sm:block">
-                          <%= row.follow %>
+                          {row.follow}
                         </div>
                       <% else %>
                         <div class="flex-none rounded-full p-1 text-red-400 bg-red-400/10">

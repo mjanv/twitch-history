@@ -73,12 +73,12 @@
   <.table id="my-ceremonies" rows={@streams.ceremonies} row_id={fn {id, _} -> id end}>
     <:col :let={{_, ceremony}} label="Name">
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
-        <%= ceremony.name %>
+        {ceremony.name}
       </.link>
     </:col>
 
     <:col :let={{_, ceremony}} label="Author">
-      <%= ceremony.user.name %>
+      {ceremony.user.name}
     </:col>
 
     <:col :let={{_, ceremony}} label="Status">
@@ -90,7 +90,7 @@
     </:col>
 
     <:col :let={{_, ceremony}} label="Countries">
-      <%= length(ceremony.countries) %> countries
+      {length(ceremony.countries)} countries
     </:col>
 
     <:action :let={{_, ceremony}}>
@@ -120,12 +120,12 @@
   <.table id="active-ceremonies" rows={@streams.active_ceremonies}>
     <:col :let={{_, ceremony}} label="Name">
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
-        <%= ceremony.name %>
+        {ceremony.name}
       </.link>
     </:col>
 
     <:col :let={{_, ceremony}} label="Author">
-      <%= ceremony.user.name %>
+      {ceremony.user.name}
     </:col>
 
     <:col :let={{_, ceremony}} label="Status">
@@ -137,7 +137,7 @@
     </:col>
 
     <:col :let={{_, ceremony}} label="Countries">
-      <%= length(ceremony.countries) %> countries
+      {length(ceremony.countries)} countries
     </:col>
     <:action :let={{_id, ceremony}}>
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}/vote"}>Vote</.link>
@@ -160,12 +160,12 @@
   <.table id="past-ceremonies" rows={@streams.past_ceremonies}>
     <:col :let={{_, ceremony}} label="Name">
       <.link href={~p"/games/eurovision/ceremony/#{ceremony}"}>
-        <%= ceremony.name %>
+        {ceremony.name}
       </.link>
     </:col>
 
     <:col :let={{_, ceremony}} label="Author">
-      <%= ceremony.user.name %>
+      {ceremony.user.name}
     </:col>
 
     <:col :let={{_, ceremony}} label="Status">
@@ -177,7 +177,7 @@
     </:col>
 
     <:col :let={{_, ceremony}} label="Countries">
-      <%= length(ceremony.countries) %> countries
+      {length(ceremony.countries)} countries
     </:col>
 
     <:empty>

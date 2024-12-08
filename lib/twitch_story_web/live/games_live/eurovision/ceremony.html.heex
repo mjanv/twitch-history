@@ -3,7 +3,7 @@
   <div class="md:flex md:items-center md:justify-between">
     <div class="min-w-0 flex-1">
       <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-        Ceremony - <%= @ceremony.name %>
+        Ceremony - {@ceremony.name}
       </h1>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
@@ -66,7 +66,7 @@
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Status</dt>
         <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= @ceremony.status %>
+          {@ceremony.status}
         </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
@@ -85,25 +85,25 @@
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Countries</dt>
         <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= length(@ceremony.countries) %>
+          {length(@ceremony.countries)}
         </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Voters</dt>
         <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= @totals.voters %>
+          {@totals.voters}
         </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Votes</dt>
         <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= @totals.votes %>
+          {@totals.votes}
         </dd>
       </div>
       <div class="overflow-hidden rounded-lg bg-white px-4 py-5 border border-gray-700/20 sm:p-6">
         <dt class="truncate text-l font-semibold text-gray-800">Points</dt>
         <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          <%= @totals.points %>
+          {@totals.points}
         </dd>
       </div>
     </dl>
@@ -134,8 +134,8 @@
       <:col :let={result} label="Country">
         <TwitchStoryWeb.Components.Badges.flag code={result.country} />
       </:col>
-      <:col :let={result} label="Points"><%= result.points %></:col>
-      <:col :let={result} label="Votes"><%= result.votes %></:col>
+      <:col :let={result} label="Points">{result.points}</:col>
+      <:col :let={result} label="Votes">{result.votes}</:col>
     </.table>
   <% else %>
     <.empty
@@ -165,10 +165,10 @@
 
   <%= if length(@leaderboard) > 0 do %>
     <.table id="votes" rows={@streams.votes}>
-      <:col :let={{_, vote}} label="User"><%= vote.user.name %></:col>
-      <:col :let={{_, vote}} label="Country"><%= vote.country %></:col>
-      <:col :let={{_, vote}} label="Points"><%= vote.points %></:col>
-      <:col :let={{_, vote}} label="Voted at"><%= vote.inserted_at %></:col>
+      <:col :let={{_, vote}} label="User">{vote.user.name}</:col>
+      <:col :let={{_, vote}} label="Country">{vote.country}</:col>
+      <:col :let={{_, vote}} label="Points">{vote.points}</:col>
+      <:col :let={{_, vote}} label="Voted at">{vote.inserted_at}</:col>
     </.table>
   <% else %>
     <.empty

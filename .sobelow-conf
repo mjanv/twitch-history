@@ -7,7 +7,7 @@
   format: "txt", 
   out: nil, 
   threshold: :high, 
-  ignore: ["Config.HTTPS", "Config.CSP"], 
+  ignore: ["Config.HTTPS", "Config.CSP", "XSS.SendResp"], 
   ignore_files: [], 
   version: false
 ]

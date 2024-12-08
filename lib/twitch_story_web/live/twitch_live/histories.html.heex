@@ -10,9 +10,9 @@
   </.heading>
 
   <.table id="histories" rows={@histories}>
-    <:col :let={history} label="Id"><%= history.history_id %></:col>
-    <:col :let={history} label="Start"><%= history.start_time %></:col>
-    <:col :let={history} label="End"><%= history.end_time %></:col>
+    <:col :let={history} label="Id">{history.history_id}</:col>
+    <:col :let={history} label="Start">{history.start_time}</:col>
+    <:col :let={history} label="End">{history.end_time}</:col>
     <:action :let={history}>
       <.link href={~p"/history/#{history.history_id}/overview"}>
         Overview
@@ -35,9 +35,9 @@
       <div class="mt-6 flex w-full items-center justify-end gap-x-6">
         <%= for entry <- @uploads.request.entries do %>
           <progress value={entry.progress} max="100" class="w-full h-6 bg-gray-200 rounded-full">
-            <%= entry.progress %>%
+            {entry.progress}%
           </progress>
-          <p><%= entry.progress %>%</p>
+          <p>{entry.progress}%</p>
         <% end %>
 
         <.button

@@ -23,23 +23,23 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Components.Metadata do
               <h1 class="flex gap-x-3 text-2xl leading-7">
                 <span class="font-semibold text-white">History</span>
                 <span class="text-gray-200">/</span>
-                <span class="font-semibold text-white"><%= @title %></span>
+                <span class="font-semibold text-white">{@title}</span>
                 <span class="text-gray-200">/</span>
                 <span class="text-gray-100">
-                  <%= Timex.format!(@history.start_time, "{Mfull} {YYYY}") %>
+                  {Timex.format!(@history.start_time, "{Mfull} {YYYY}")}
                 </span>
                 <span class="text-gray-100">-</span>
                 <span class="text-gray-100">
-                  <%= Timex.format!(@history.end_time, "{Mfull} {YYYY}") %>
+                  {Timex.format!(@history.end_time, "{Mfull} {YYYY}")}
                 </span>
               </h1>
             </div>
           </div>
           <div class="flex items-center gap-x-3">
             <span class="ml-3 text-sm font-normal text-gray-500">
-              <span><%= @history.history_id %></span>
+              <span>{@history.history_id}</span>
               <span>-</span>
-              <span><%= @history.username %></span>
+              <span>{@history.username}</span>
             </span>
           </div>
         </div>

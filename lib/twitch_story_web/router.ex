@@ -114,6 +114,10 @@ defmodule TwitchStoryWeb.Router do
     get "/:provider/callback", AuthController, :callback
   end
 
+  scope "/events", TwitchStoryWeb do
+    post "/webhooks", WebhookController, :event
+  end
+
   if Application.compile_env(:twitch_story, :dev_routes) do
     import Phoenix.LiveDashboard.Router
 

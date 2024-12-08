@@ -14,12 +14,12 @@
               />
               <div>
                 <dt class="text-sm font-semibold leading-6 text-gray-800">
-                  <%= String.capitalize(@current_user.provider) %> account (<%= String.capitalize(
+                  {String.capitalize(@current_user.provider)} account ({String.capitalize(
                     Atom.to_string(@current_user.role)
-                  ) %>)
+                  )})
                 </dt>
                 <dd class="mt-1 text-base font-semibold leading-6 text-gray-800">
-                  <%= @current_user.email %>
+                  {@current_user.email}
                 </dd>
               </div>
             </div>
@@ -30,7 +30,7 @@
               <TwitchStoryWeb.Components.Heroicons.account />
             </dt>
             <dd class="text-sm font-medium leading-6 text-gray-800">
-              Twitch ID: <%= @current_user.twitch_id %>
+              Twitch ID: {@current_user.twitch_id}
             </dd>
           </div>
           <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -39,7 +39,7 @@
               <TwitchStoryWeb.Components.Heroicons.account />
             </dt>
             <dd class="text-sm font-medium leading-6 text-gray-800">
-              Color: <%= @color %>
+              Color: {@color}
             </dd>
           </div>
           <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -48,7 +48,7 @@
               <TwitchStoryWeb.Components.Heroicons.calendar />
             </dt>
             <dd class="text-sm leading-6 text-gray-800">
-              <time datetime="2023-01-31">Created at <%= @current_user.inserted_at %></time>
+              <time datetime="2023-01-31">Created at {@current_user.inserted_at}</time>
             </dd>
           </div>
         </dl>
@@ -112,14 +112,14 @@
             </div>
             <p class="flex-auto py-0.5 text-xs leading-5 text-gray-500">
               <span class="font-medium text-gray-900">
-                <%= EventImpl.humanize(event, :name) %>
+                {EventImpl.humanize(event, :name)}
               </span>
             </p>
             <time
               datetime="2023-01-23T10:32"
               class="flex-none py-0.5 text-xs leading-5 text-gray-500"
             >
-              <%= EventImpl.humanize(event, :at) %> ago
+              {EventImpl.humanize(event, :at)} ago
             </time>
           </li>
         <% end %>

@@ -20,21 +20,21 @@
         <div class="flex min-w-0 gap-x-4">
           <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="" alt="" />
           <div class="min-w-0 flex-auto">
-            <p class="text-sm font-semibold leading-6 text-gray-900"><%= segment.title %></p>
+            <p class="text-sm font-semibold leading-6 text-gray-900">{segment.title}</p>
             <p class="mt-1 truncate text-xs leading-5 text-gray-500">
-              <%= Timex.format!(segment.start_time, "{WDfull} {D} {Mfull} {h24}:{m}:{s}") %> - <%= Timex.format!(
+              {Timex.format!(segment.start_time, "{WDfull} {D} {Mfull} {h24}:{m}:{s}")} - {Timex.format!(
                 segment.end_time,
                 "{h24}:{m}:{s}"
-              ) %>
+              )}
             </p>
           </div>
         </div>
         <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
           <div class="flex space-x-2">
-            <p class="text-sm leading-6 text-gray-900"><%= segment.category %></p>
+            <p class="text-sm leading-6 text-gray-900">{segment.category}</p>
             <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10">
-              <%= Timex.diff(segment.end_time, segment.start_time, :duration)
-              |> Timex.Format.Duration.Formatters.Humanized.format() %>
+              {Timex.diff(segment.end_time, segment.start_time, :duration)
+              |> Timex.Format.Duration.Formatters.Humanized.format()}
             </span>
             <%= if segment.is_canceled do %>
               <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-700/10">

@@ -7,10 +7,10 @@
           <img class="h-10 w-10" src={~p"/images/eurovision/#{row.country.code}"} />
         </div>
         <div class="min-w-0 flex-1">
-          <p class="text-xl font-bold text-gray-700"><%= row.country.name %></p>
+          <p class="text-xl font-bold text-gray-700">{row.country.name}</p>
         </div>
         <div class="min-w-0 flex-3">
-          <p class="text-3xl font-bold text-gray-700"><%= row.points %></p>
+          <p class="text-3xl font-bold text-gray-700">{row.points}</p>
         </div>
       </div>
     <% end %>

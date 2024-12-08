@@ -3,15 +3,15 @@
 
   <.table id="users" rows={@users}>
     <:col :let={user} label="Name">
-      <%= user.name %>
+      {user.name}
     </:col>
 
     <:col :let={user} label="Id">
-      <%= user.id %>
+      {user.id}
     </:col>
 
     <:col :let={user} label="Role">
-      <%= user.role %>
+      {user.role}
     </:col>
 
     <:action :let={user}>
@@ -63,10 +63,10 @@
         />
         <div>
           <dt class="text-base font-semibold leading-7 text-gray-900">
-            <%= String.capitalize(@current_user.provider) %> account
+            {String.capitalize(@current_user.provider)} account
           </dt>
           <dd class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-            <%= @user.id %>
+            {@user.id}
           </dd>
         </div>
       </div>
@@ -75,7 +75,7 @@
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Name</dt>
             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <%= @user.name %>
+              {@user.name}
             </dd>
           </div>
         </dl>
@@ -83,7 +83,7 @@
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Email</dt>
             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <%= @user.email %>
+              {@user.email}
             </dd>
           </div>
         </dl>
@@ -91,7 +91,7 @@
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Role</dt>
             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <%= String.capitalize(Atom.to_string(@user.role)) %>
+              {String.capitalize(Atom.to_string(@user.role))}
             </dd>
           </div>
         </dl>
@@ -99,7 +99,7 @@
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Twitch ID</dt>
             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <%= String.capitalize(@user.twitch_id) %>
+              {String.capitalize(@user.twitch_id)}
             </dd>
           </div>
         </dl>
@@ -107,7 +107,7 @@
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Created at</dt>
             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <%= @user.inserted_at %>
+              {@user.inserted_at}
             </dd>
           </div>
         </dl>

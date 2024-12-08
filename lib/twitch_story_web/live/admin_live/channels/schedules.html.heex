@@ -11,7 +11,7 @@
 
   <.stats rows={@schedules} />
 
-  <%= @page %>
+  {@page}
 
   <.table id="streams-schedules" rows={@streams.schedules}>
     <:col :let={{_, schedule}} label="Id">
@@ -19,15 +19,15 @@
         phx-click={show_modal("show-schedule-modal")}
         patch={~p"/admin/channels/schedules/#{schedule.id}"}
       >
-        <%= schedule.id %>
+        {schedule.id}
       </.link>
     </:col>
-    <:col :let={{_, schedule}} label="Entries"><%= length(schedule.entries) %></:col>
+    <:col :let={{_, schedule}} label="Entries">{length(schedule.entries)}</:col>
     <:col :let={{_, schedule}} label="Inserted at">
-      <%= Timex.format!(schedule.inserted_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+      {Timex.format!(schedule.inserted_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}")}
     </:col>
     <:col :let={{_, schedule}} label="Updated at">
-      <%= Timex.format!(schedule.updated_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+      {Timex.format!(schedule.updated_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}")}
     </:col>
     <:empty><.empty title="No schedules" description="" icon="hero-film" /></:empty>
   </.table>
@@ -43,16 +43,16 @@
     <.heading title={@schedule.channel.broadcaster_name}></.heading>
     <!-- Display entries -->
     <.table id="schedule-entries" rows={@schedule.entries}>
-      <:col :let={entry} label="Title"><%= entry.title %></:col>
-      <:col :let={entry} label="Category"><%= entry.category %></:col>
+      <:col :let={entry} label="Title">{entry.title}</:col>
+      <:col :let={entry} label="Category">{entry.category}</:col>
       <:col :let={entry} label="Start time">
-        <%= Timex.format!(entry.start_time, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+        {Timex.format!(entry.start_time, "{D}-{M}-{YYYY} {h24}:{m}:{s}")}
       </:col>
       <:col :let={entry} label="End time">
-        <%= Timex.format!(entry.end_time, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+        {Timex.format!(entry.end_time, "{D}-{M}-{YYYY} {h24}:{m}:{s}")}
       </:col>
-      <:col :let={entry} label="Is recurring"><%= entry.is_recurring %></:col>
-      <:col :let={entry} label="Is cancelled"><%= entry.is_canceled %></:col>
+      <:col :let={entry} label="Is recurring">{entry.is_recurring}</:col>
+      <:col :let={entry} label="Is cancelled">{entry.is_canceled}</:col>
     </.table>
   </.modal>
 </div>

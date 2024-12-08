@@ -22,19 +22,19 @@ defmodule TwitchStoryWeb.AdminLive.Components.Events do
 
       <.table id="events" rows={@filtered_events}>
         <:col :let={event} label="Name">
-          <%= TwitchStory.Event.humanize(event, :name) %>
+          {TwitchStory.Event.humanize(event, :name)}
         </:col>
 
         <:col :let={event} label="Id">
-          <%= event.id %>
+          {event.id}
         </:col>
 
         <:col :let={event} label="Metadata">
-          <%= inspect(event |> Map.from_struct() |> Map.drop([:id, :at])) %>
+          {inspect(event |> Map.from_struct() |> Map.drop([:id, :at]))}
         </:col>
 
         <:col :let={event} label="Date">
-          <%= TwitchStory.Event.humanize(event, :at) %> ago
+          {TwitchStory.Event.humanize(event, :at)} ago
         </:col>
       </.table>
     </div>

@@ -60,16 +60,16 @@
           <tbody class="divide-y divide-gray-800">
             <tr :for={message <- Explorer.DataFrame.to_rows(messages, atom_keys: true)}>
               <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-white sm:pl-0">
-                <%= message.body %>
+                {message.body}
               </td>
               <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
-                <%= message.channel %>
+                {message.channel}
               </td>
               <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
-                <%= message.time %>
+                {message.time}
               </td>
               <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
-                <%= message.is_reply %>
+                {message.is_reply}
               </td>
             </tr>
           </tbody>

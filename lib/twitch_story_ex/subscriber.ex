@@ -1,5 +1,11 @@
 defmodule TwitchStory.EventSubscriber do
-  @moduledoc false
+  @moduledoc """
+  Event Store subscriber
+
+  Using this behaviour, you can subscribe to all event registered in the EventStore. The subscription ID is automatically generated if none is provided. Two differents subcribeers should have different subscription IDs.
+
+  To define the behaviour of your subscriber, override the `handle/1` function. It takes an event as argument and should return `:ok` if the event is handled or `:error` if it cannot be handled.
+  """
 
   defmacro __using__(opts) do
     subcription = Keyword.get(opts, :subcription, UUID.uuid4())

@@ -52,7 +52,7 @@ defmodule TwitchStoryWeb do
     quote do
       use Phoenix.LiveView, layout: {TwitchStoryWeb.Layouts, :app}
 
-      on_mount Sentry.LiveViewHook
+      # on_mount Sentry.LiveViewHook
 
       unquote(html_helpers())
     end

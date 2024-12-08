@@ -1,5 +1,9 @@
 defmodule TwitchStory.PubSub do
-  @moduledoc false
+  @moduledoc """
+  PubSub functions
+
+  This module provides functions to broadcast and subscribe to Phoenix PubSub events.
+  """
 
   @pubsub TwitchStory.PubSub
 

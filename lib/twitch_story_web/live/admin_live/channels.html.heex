@@ -19,22 +19,22 @@
   <.stats rows={@channels} />
 
   <.table id="channels" rows={@streams.channels}>
-    <:col :let={{_, channel}} label="Name"><%= channel.broadcaster_name %></:col>
-    <:col :let={{_, channel}} label="ID"><%= channel.broadcaster_id %></:col>
-    <:col :let={{_, channel}} label="Description"><%= channel.description %></:col>
+    <:col :let={{_, channel}} label="Name">{channel.broadcaster_name}</:col>
+    <:col :let={{_, channel}} label="ID">{channel.broadcaster_id}</:col>
+    <:col :let={{_, channel}} label="Description">{channel.description}</:col>
     <:col :let={{_, channel}} label="Tags">
       <%= for tag <- channel.tags || [] do %>
         <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
-          <%= tag %>
+          {tag}
         </span>
       <% end %>
     </:col>
-    <:col :let={{_, channel}} label="Language"><%= channel.broadcaster_language %></:col>
+    <:col :let={{_, channel}} label="Language">{channel.broadcaster_language}</:col>
     <:col :let={{_, channel}} label="Inserted at">
-      <%= Timex.format!(channel.inserted_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+      {Timex.format!(channel.inserted_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}")}
     </:col>
     <:col :let={{_, channel}} label="Updated at">
-      <%= Timex.format!(channel.updated_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}") %>
+      {Timex.format!(channel.updated_at, "{D}-{M}-{YYYY} {h24}:{m}:{s}")}
     </:col>
     <:empty><.empty title="No channels" description="" icon="hero-film" /></:empty>
   </.table>

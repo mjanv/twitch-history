@@ -10,13 +10,13 @@
 
   <.table id="feature-flags" rows={@feature_flags}>
     <:col :let={feature} label="Name">
-      <%= feature.name %>
+      {feature.name}
     </:col>
     <:col :let={feature} label="Enabled">
-      <%= feature.enabled? %>
+      {feature.enabled?}
     </:col>
     <:col :let={feature} label="Users">
-      <%= length(feature.users) %>
+      {length(feature.users)}
     </:col>
     <:action :let={feature}>
       <.link patch={~p"/admin/flags/#{feature.name}/users"}>
@@ -42,12 +42,12 @@
   on_cancel={JS.patch(~p"/admin/flags")}
 >
   <h2 class="text-xl font-bold leading-7 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight">
-    Flag <%= @feature_flag.name %> (<%= @feature_flag.enabled? %>)
+    Flag {@feature_flag.name} ({@feature_flag.enabled?})
   </h2>
 
   <.table id="users" rows={@feature_flag.users}>
-    <:col :let={user} label="Id"><%= user.id %></:col>
-    <:col :let={user} label="Enabled"><%= user.enabled? %></:col>
+    <:col :let={user} label="Id">{user.id}</:col>
+    <:col :let={user} label="Enabled">{user.enabled?}</:col>
     <:action :let={user}>
       <.link
         phx-click="enable_user"

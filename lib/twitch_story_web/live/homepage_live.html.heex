@@ -14,7 +14,7 @@
       <div class="hidden lg:flex lg:gap-x-12">
         <%= if @current_user do %>
           <a href="#" class="text-sm font-semibold leading-6 text-white">
-            <%= @current_user.email %>
+            {@current_user.email}
           </a>
         <% end %>
       </div>
@@ -26,7 +26,7 @@
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-3xl text-center">
           <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-            <%= gettext("Twitch Story") %>
+            {gettext("Twitch Story")}
           </h1>
           <p class="mt-6 text-lg leading-8 text-gray-300">
             Want to know what did on Twitch since the beginning? Connect with you Twitch account and we will create the most appropriate retrospective for you.

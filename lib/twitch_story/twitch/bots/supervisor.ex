@@ -1,4 +1,4 @@
-defmodule TwitchStory.Twitch.Supervisor do
+defmodule TwitchStory.Twitch.Bots.Supervisor do
   @moduledoc false
 
   use Supervisor
@@ -9,8 +9,7 @@ defmodule TwitchStory.Twitch.Supervisor do
 
   def init(_args) do
     children = [
-      TwitchStory.Twitch.Bots.Supervisor,
-      TwitchStory.Twitch.Subscribers.Supervisor
+      # {TwitchStory.Twitch.Bots.Websocket, []}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

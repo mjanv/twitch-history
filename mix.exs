@@ -3,11 +3,13 @@ defmodule TwitchStory.MixProject do
 
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :twitch_story,
-      version: "0.1.0",
-      elixir: "~> 1.16",
+      version: @version,
+      elixir: "~> 1.17",
       consolidate_protocols: Mix.env() != :test,
       elixirc_options: [warnings_as_errors: true],
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -53,13 +55,12 @@ defmodule TwitchStory.MixProject do
     [
       # Web
       {:phoenix, "~> 1.7.10"},
-      {:phoenix_ecto, "~> 4.4"},
-      {:scrivener_ecto, "~> 3.0"},
       {:phoenix_html, "~> 4.1"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.20.5"},
-      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_live_view, "~> 1.0"},
       {:phoenix_live_dashboard, "~> 0.8.2"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:phoenix_ecto, "~> 4.4"},
+      {:floki, "~> 0.36", only: :test},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       {:gettext, "~> 0.20"},
@@ -71,10 +72,14 @@ defmodule TwitchStory.MixProject do
       {:set_locale, "~> 0.2.1"},
       {:fun_with_flags_ui, "~> 1.0"},
       # Mobile
-      {:live_view_native, "~> 0.3.1"},
-      {:live_view_native_stylesheet, "~> 0.3.1"},
-      {:live_view_native_swiftui, "~> 0.3.1"},
-      {:live_view_native_live_form, "~> 0.3.1"},
+      {:live_view_native,
+       git: "https://github.com/liveview-native/live_view_native", branch: "main", override: true},
+      {:live_view_native_stylesheet,
+       git: "https://github.com/liveview-native/live_view_native_stylesheet", branch: "main"},
+      {:live_view_native_swiftui,
+       git: "https://github.com/liveview-native/liveview-client-swiftui", branch: "main"},
+      {:live_view_native_live_form,
+       git: "https://github.com/liveview-native/liveview-native-live-form", branch: "main"},
       # Backend
       {:uniq, "~> 0.1"},
       {:uuid, "~> 1.1"},
@@ -83,13 +88,15 @@ defmodule TwitchStory.MixProject do
       {:jason, "~> 1.2"},
       {:poison, "~> 6.0"},
       {:sweet_xml, "~> 0.7"},
+      {:websockex, "~> 0.4"},
       {:oban, "~> 2.18"},
       {:explorer, "~> 0.9"},
       {:vega_lite, "~> 0.1"},
       {:swoosh, "~> 1.17"},
       {:postgrex, "~> 0.19"},
       {:ecto_sql, "~> 3.10"},
-      {:ecto_sqlite3, ">= 0.0.0"},
+      {:ecto_sqlite3, "~> 0.17"},
+      {:scrivener_ecto, "~> 3.0"},
       {:eventstore, "~> 1.4"},
       {:hackney, "~> 1.19"},
       {:ex_aws, "~> 2.5"},
@@ -108,7 +115,7 @@ defmodule TwitchStory.MixProject do
       {:opentelemetry_sentry, "~> 0.1.0"},
       {:sentry, "~> 10.0"},
       # Development tools
-      {:credo, "~> 1.7"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.18", only: :test},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
@@ -132,7 +139,7 @@ defmodule TwitchStory.MixProject do
         "gettext.merge priv/gettext --locale en",
         "gettext.merge priv/gettext --locale fr"
       ],
-      # Local development
+      # Development
       quality: ["format", "credo --strict", "sobelow --config", "dialyzer"],
       test: ["ecto.setup", "test"],
       "test.unit": [cmd("docker compose up -d"), "ecto.setup", "coveralls.html"],
@@ -144,5 +151,6 @@ defmodule TwitchStory.MixProject do
     ]
   end
 
+  # Run a shell command
   defp cmd(command), do: fn _ -> Mix.shell().cmd(command) end
 end

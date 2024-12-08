@@ -12,8 +12,8 @@ defmodule TwitchStory.Supervisor do
 
     children = [
       TwitchStory.Repos.Supervisor,
-      TwitchStory.Twitch.Supervisor,
-      {Oban, Application.fetch_env!(:twitch_story, Oban)}
+      TwitchStory.Twitch.Supervisor
+      # {Oban, Application.fetch_env!(:twitch_story, Oban)}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

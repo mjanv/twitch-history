@@ -21,10 +21,10 @@ defmodule TwitchStoryWeb.GamesLive.Eurovision.Components.Vote do
                 <TwitchStoryWeb.Components.Badges.flag height={16} text={false} code={country.code} />
               </button>
               <div class="flex-auto text-2xl font-bold leading-6 text-gray-900">
-                <%= country.name %>
+                {country.name}
               </div>
               <div class="flex-auto text-2xl font-bold leading-6 text-gray-900">
-                <%= Enum.at(Eurovision.points(:desc), i, 0) %>
+                {Enum.at(Eurovision.points(:desc), i, 0)}
               </div>
             </div>
           </div>

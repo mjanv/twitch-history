@@ -1,10 +1,23 @@
 defmodule TwitchStory.Twitch.Auth.Callback do
   @moduledoc false
 
-  def user_attrs(%Ueberauth.Auth{
+  alias Ueberauth.Auth
+
+  @type role() :: :admin | :streamer | :viewer
+
+  @doc "Returns the attributes of a user from Ueberauth callback data"
+  @spec user_attrs(Ueberauth.Auth.t()) :: %{
+          required(:name) => String.t(),
+          required(:email) => String.t(),
+          required(:provider) => String.t(),
+          required(:role) => role(),
+          optional(:twitch_id) => String.t(),
+          optional(:twitch_avatar) => String.t()
+        }
+  def user_attrs(%Auth{
         uid: uid,
         provider: :twitch,
-        info: %Ueberauth.Auth.Info{name: name, email: email, image: image}
+        info: %Auth.Info{name: name, email: email, image: image}
       }) do
     %{
       name: name,
@@ -16,13 +29,15 @@ defmodule TwitchStory.Twitch.Auth.Callback do
     }
   end
 
-  def role?("lanfeust313"), do: :admin
-  def role?(_), do: :viewer
+  @spec role?(String.t()) :: role()
+  defp role?("lanfeust313"), do: :admin
+  defp role?("flonflon"), do: :streamer
+  defp role?(_), do: :viewer
 
-  def oauth_token_attrs(%Ueberauth.Auth{
+  def oauth_token_attrs(%Auth{
         uid: uid,
         provider: :twitch,
-        credentials: %Ueberauth.Auth.Credentials{
+        credentials: %Auth.Credentials{
           token: token,
           refresh_token: refresh_token,
           scopes: scopes,

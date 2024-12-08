@@ -5,8 +5,8 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Overview do
 
   alias TwitchStory.Twitch.Histories.Commerce
   alias TwitchStory.Twitch.Histories.Community
-  alias TwitchStory.Twitch.Histories.SiteHistory
   alias TwitchStory.Twitch.Histories.History
+  alias TwitchStory.Twitch.Histories.SiteHistory
   alias TwitchStoryWeb.TwitchLive.Histories.Components
 
   @impl true
