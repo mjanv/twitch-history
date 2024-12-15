@@ -63,7 +63,7 @@ defmodule TwitchStory.Twitch.Histories.Commerce.Subs do
 
   def group_month_year(df) do
     df
-    |> SiteHistory.preprocess2()
+    |> SiteHistory.preprocess("access_start")
     |> SiteHistory.group(
       [:month, :year],
       &[

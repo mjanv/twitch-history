@@ -16,44 +16,40 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Overview do
 
   @impl true
   def handle_params(%{"id" => id}, _url, %{assigns: %{current_user: current_user}} = socket) do
-    file = TwitchStory.file_storage().bucket(Path.join(current_user.id, id <> ".zip"))
-
-    case History.get(history_id: id) do
-      {:ok, history} ->
+    with file <- TwitchStory.file_storage().bucket(Path.join(current_user.id, id <> ".zip")),
+         true <- File.exists?(file),
+         {:ok, history} <- History.get(history_id: id) do
+      socket
+      |> assign(:id, id)
+      |> assign(:file, file)
+      |> assign(:history, history)
+      |> assign_async([:hour_watched, :follows, :chat_messages, :subscriptions], fn ->
+        %{
+          hour_watched:
+            file
+            |> SiteHistory.MinuteWatched.read()
+            |> SiteHistory.MinuteWatched.group_month_year(),
+          follows:
+            file
+            |> Community.Follows.read()
+            |> Community.Follows.group_month_year(),
+          chat_messages:
+            file
+            |> SiteHistory.ChatMessages.read()
+            |> SiteHistory.ChatMessages.group_month_year(),
+          subscriptions:
+            file
+            |> Commerce.Subs.read()
+            |> Commerce.Subs.group_month_year()
+        }
+        |> Enum.map(fn {k, v} -> {k, SiteHistory.nominal_date_column(v)} end)
+        |> Enum.into(%{})
+        |> then(fn graphs -> {:ok, graphs} end)
+      end)
+    else
+      _ ->
         socket
-        |> assign(:id, id)
-        |> assign(:file, file)
-        |> assign(:history, history)
-        |> assign_async([:hour_watched, :follows, :chat_messages, :subscriptions], fn ->
-          graphs = %{
-            hour_watched:
-              file
-              |> SiteHistory.MinuteWatched.read()
-              |> SiteHistory.MinuteWatched.group_month_year()
-              |> SiteHistory.nominal_date_column(),
-            follows:
-              file
-              |> Community.Follows.read()
-              |> Community.Follows.group_month_year()
-              |> SiteHistory.nominal_date_column(),
-            chat_messages:
-              file
-              |> SiteHistory.ChatMessages.read()
-              |> SiteHistory.ChatMessages.group_month_year()
-              |> SiteHistory.nominal_date_column(),
-            subscriptions:
-              file
-              |> Commerce.Subs.read()
-              |> Commerce.Subs.group_month_year()
-              |> SiteHistory.nominal_date_column()
-          }
-
-          {:ok, graphs}
-        end)
-
-      {:error, _} ->
-        socket
-        |> put_flash(:error, "Cannot find history")
+        |> put_flash(:error, "- Cannot find history")
         |> redirect(to: ~p"/history")
     end
     |> then(fn socket -> {:noreply, socket} end)

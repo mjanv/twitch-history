@@ -3,7 +3,7 @@ defmodule TwitchStory.Twitch.Histories.Community.UnfollowsTest do
 
   use ExUnit.Case
 
-  @moduletag :data
+  @moduletag :zip
 
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.Community.Unfollows

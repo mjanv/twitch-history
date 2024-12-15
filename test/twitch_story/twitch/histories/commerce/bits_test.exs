@@ -3,7 +3,7 @@ defmodule TwitchStory.Twitch.Histories.Commerce.BitsTest do
 
   use ExUnit.Case
 
-  @moduletag :data
+  @moduletag :zip
 
   alias TwitchStory.Twitch.Histories.Commerce.Bits
 

@@ -3,13 +3,13 @@ defmodule TwitchStory.ZipfileTest do
 
   use ExUnit.Case
 
-  @moduletag :data
+  @moduletag :zip
 
   alias TwitchStory.Zipfile
 
   @path "priv/static/request-1.zip"
 
-  test "list/1" do
+  test "list/1 returns the list of files present in a zip file" do
     files = Zipfile.list(@path)
 
     assert files == [
@@ -45,7 +45,7 @@ defmodule TwitchStory.ZipfileTest do
            ]
   end
 
-  test "json/2" do
+  test "json/2 returns the content of a JSON file in a zip file" do
     file = "request/users/channel/441903922.json"
 
     json = Zipfile.json(@path, file)
@@ -66,7 +66,7 @@ defmodule TwitchStory.ZipfileTest do
            }
   end
 
-  test "csv/2" do
+  test "csv/2 returns the content of a CSV file as a DataFrame in a zip file" do
     file = "request/community/follows/follow.csv"
 
     csv = Zipfile.csv(@path, file)

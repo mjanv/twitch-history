@@ -5,6 +5,7 @@ defmodule TwitchStory.Twitch.Histories.Summary do
 
   import Ecto.Changeset
 
+  alias TwitchStory.Dataflow.Statistics
   alias TwitchStory.Twitch.Histories.{Commerce, Community, SiteHistory}
 
   @type t() :: %__MODULE__{
@@ -32,10 +33,10 @@ defmodule TwitchStory.Twitch.Histories.Summary do
   @spec new(String.t()) :: t()
   def new(file) do
     %__MODULE__{
-      follows: file |> Community.Follows.read() |> SiteHistory.n_rows(),
-      chat_messages: file |> SiteHistory.ChatMessages.read() |> SiteHistory.n_rows(),
-      hours_watched: file |> SiteHistory.MinuteWatched.read() |> SiteHistory.n_rows(60),
-      subscriptions: file |> Commerce.Subs.read() |> SiteHistory.n_rows()
+      follows: file |> Community.Follows.read() |> Statistics.n_rows(),
+      chat_messages: file |> SiteHistory.ChatMessages.read() |> Statistics.n_rows(),
+      hours_watched: file |> SiteHistory.MinuteWatched.read() |> Statistics.n_rows(60),
+      subscriptions: file |> Commerce.Subs.read() |> Statistics.n_rows()
     }
   end
 end

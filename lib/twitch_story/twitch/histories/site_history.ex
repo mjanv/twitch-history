@@ -5,8 +5,6 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory do
 
   alias Explorer.Series
 
-  def as_string(s), do: s |> Series.cast(:string) |> Series.to_list()
-
   def nominal_date_column(df) do
     {df["year"], df["month"]}
     |> then(fn {y, m} -> Enum.zip(as_string(y), as_string(m)) end)
@@ -15,41 +13,28 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory do
     |> then(fn s -> DF.put(df, "date", s) end)
   end
 
-  def preprocess(df) do
-    df
-    |> DF.mutate(
-      year: year(time),
-      month: month(time),
-      day: day_of_year(time),
-      weekday: day_of_week(time),
-      hour: hour(time)
-    )
-  end
+  defp as_string(s), do: s |> Series.cast(:string) |> Series.to_list()
 
-  def preprocess2(df) do
+  def preprocess(df, column \\ "time") do
     df
-    |> DF.mutate(
-      year: year(access_start),
-      month: month(access_start),
-      day: day_of_year(access_start),
-      weekday: day_of_week(access_start),
-      hour: hour(access_start)
+    |> DF.mutate_with(
+      &[
+        year: Series.year(&1[column]),
+        month: Series.month(&1[column]),
+        day: Series.day_of_year(&1[column]),
+        weekday: Series.day_of_week(&1[column]),
+        hour: Series.hour(&1[column])
+      ]
     )
-  end
-
-  # Statistics
-  def n_rows(df, divider \\ 1) do
-    df
-    |> DF.n_rows()
-    |> Kernel./(divider)
-    |> Kernel.round()
   end
 
   # Filters
-  def channel(df, channel), do: DF.filter(df, channel == ^channel)
-  def years(df, start, stop), do: DF.filter(df, ^start <= year and year <= ^stop)
+  def filter(df, column, value), do: DF.filter(df, col(^column) == ^value)
 
-  def equals(df, [{n, q} | t]), do: df |> DF.filter(col(^n) == ^q) |> equals(t)
+  def window(df, start, stop, column),
+    do: DF.filter(df, ^start <= col(^column) and col(^column) <= ^stop)
+
+  def equals(df, [{n, q} | t]), do: df |> filter(n, q) |> equals(t)
   def equals(df, []), do: df
 
   def contains(df, [{n, q} | t]),

@@ -3,7 +3,7 @@ defmodule TwitchStory.Twitch.Histories.Commerce.SubsTest do
 
   use ExUnit.Case
 
-  @moduletag :data
+  @moduletag :zip
 
   alias Support.ExplorerCase
   alias TwitchStory.Twitch.Histories.Commerce.Subs

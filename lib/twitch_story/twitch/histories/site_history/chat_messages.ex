@@ -1,12 +1,15 @@
 defmodule TwitchStory.Twitch.Histories.SiteHistory.ChatMessages do
   @moduledoc false
 
+  @behaviour TwitchStory.Dataflow.Sink
+
   alias Explorer.Series
   alias TwitchStory.Twitch.Histories.SiteHistory
   alias TwitchStory.Zipfile
 
   @dialyzer {:nowarn_function, group_channel: 1, group_month_year: 1}
 
+  @impl true
   def read(file) do
     file
     |> Zipfile.csv(

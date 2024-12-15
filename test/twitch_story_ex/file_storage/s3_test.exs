@@ -4,7 +4,6 @@ defmodule TwitchStory.FileStorage.TigrisTest do
   alias TwitchStory.FileStorage.Tigris
 
   @moduletag :s3
-  @moduletag :wip
 
   test "buckets/0" do
     {:ok, buckets} = Tigris.buckets()
