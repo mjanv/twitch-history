@@ -3,6 +3,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Overview do
 
   use TwitchStoryWeb, :live_view
 
+  alias TwitchStory.Dataflow.Sink
   alias TwitchStory.Twitch.Histories.Commerce
   alias TwitchStory.Twitch.Histories.Community
   alias TwitchStory.Twitch.Histories.History
@@ -42,7 +43,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Overview do
             |> Commerce.Subs.read()
             |> Commerce.Subs.group_month_year()
         }
-        |> Enum.map(fn {k, v} -> {k, SiteHistory.nominal_date_column(v)} end)
+        |> Enum.map(fn {k, v} -> {k, Sink.nominal_date_column(v)} end)
         |> Enum.into(%{})
         |> then(fn graphs -> {:ok, graphs} end)
       end)

@@ -1,17 +1,14 @@
 defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched do
   @moduledoc false
 
-  alias Explorer.Series
-  alias TwitchStory.Twitch.Histories.SiteHistory
-  alias TwitchStory.Zipfile
-
   require Explorer.DataFrame, as: DataFrame
 
-  @dialyzer {:nowarn_function,
-             group_channel: 1,
-             group_month_year: 1,
-             remove_unwatched_channels: 1,
-             remove_unwatched_channels: 2}
+  alias Explorer.Series
+  alias TwitchStory.Dataflow.Filters
+  alias TwitchStory.Dataflow.Sink
+  alias TwitchStory.Zipfile
+
+  @dialyzer {:nowarn_function, remove_unwatched_channels: 2}
 
   def read(file) do
     file
@@ -20,9 +17,10 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched do
       columns: ["time", "channel", "minutes_logged", "game"],
       dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
+    |> Sink.preprocess()
   end
 
-  def remove_unwatched_channels(df, threshold \\ 60) do
+  def remove_unwatched_channels(df, threshold) do
     df
     |> DataFrame.group_by([:channel])
     |> DataFrame.filter(count(minutes_logged) > ^threshold)
@@ -31,8 +29,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched do
 
   def group_channel(df) do
     df
-    |> SiteHistory.preprocess()
-    |> SiteHistory.group(
+    |> Filters.group(
       [:channel],
       &[
         hours: Series.count(&1["minutes_logged"]) |> Series.divide(60) |> Series.cast(:integer)
@@ -43,8 +40,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.MinuteWatched do
 
   def group_month_year(df) do
     df
-    |> SiteHistory.preprocess()
-    |> SiteHistory.group(
+    |> Filters.group(
       [:channel, :month, :year],
       &[
         hours: Series.count(&1["minutes_logged"]) |> Series.divide(60) |> Series.cast(:integer),

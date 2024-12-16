@@ -2,7 +2,9 @@ defmodule TwitchStory.Twitch.Histories.Commerce.Subs do
   @moduledoc false
 
   alias Explorer.{DataFrame, Series}
-  alias TwitchStory.Twitch.Histories.SiteHistory
+  alias TwitchStory.Dataflow.Filters
+  alias TwitchStory.Dataflow.Sink
+  alias TwitchStory.Dataflow.Statistics
   alias TwitchStory.Zipfile
 
   def read(file) do
@@ -53,18 +55,18 @@ defmodule TwitchStory.Twitch.Histories.Commerce.Subs do
         is_tier_upgrade: Series.equal(&1["is_tier_upgrade"], "t")
       ]
     )
+    |> Sink.preprocess("access_start")
   end
 
   def n(file) do
     file
     |> read()
-    |> DataFrame.n_rows()
+    |> Statistics.n_rows()
   end
 
   def group_month_year(df) do
     df
-    |> SiteHistory.preprocess("access_start")
-    |> SiteHistory.group(
+    |> Filters.group(
       [:month, :year],
       &[
         subs: Series.n_distinct(&1["is_paid"])

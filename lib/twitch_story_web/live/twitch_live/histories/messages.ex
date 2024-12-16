@@ -5,6 +5,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Messages do
 
   alias Phoenix.LiveView.AsyncResult
 
+  alias TwitchStory.Dataflow.Filters
   alias TwitchStory.Twitch.Histories.SiteHistory
   alias TwitchStoryWeb.TwitchLive.Histories.Components
 
@@ -62,7 +63,7 @@ defmodule TwitchStoryWeb.TwitchLive.Histories.Messages do
       |> assign(:query, query)
       |> start_async(:messages, fn ->
         raw.result
-        |> SiteHistory.contains(body: query)
+        |> Filters.contains(body: query)
         |> Explorer.DataFrame.head(25)
       end)
 

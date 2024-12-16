@@ -3,18 +3,21 @@ defmodule Support.ExplorerCase do
 
   alias Explorer.{DataFrame, Series}
 
-  def equal_master?(df, name, mode \\ :test)
+  def equal_master?(df, name) do
+    case System.get_env("GOLDEN_MASTER", "false") do
+      "false" ->
+        dataframes_equal?(df, read_dataframe(name))
+        df
 
-  def equal_master?(df, name, :store) do
-    df
-    |> store_dataframe(name)
-    |> case do
-      :ok -> true
-      {:error, _} -> false
+      _ ->
+        df
+        |> store_dataframe(name)
+        |> case do
+          :ok -> true
+          {:error, _} -> false
+        end
     end
   end
-
-  def equal_master?(df, name, :test), do: dataframes_equal?(df, read_dataframe(name))
 
   defp store_dataframe(df, name), do: DataFrame.to_parquet(df, path(name))
   defp read_dataframe(name), do: DataFrame.from_parquet!(path(name))

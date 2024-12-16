@@ -4,10 +4,9 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.ChatMessages do
   @behaviour TwitchStory.Dataflow.Sink
 
   alias Explorer.Series
-  alias TwitchStory.Twitch.Histories.SiteHistory
+  alias TwitchStory.Dataflow.Filters
+  alias TwitchStory.Dataflow.Sink
   alias TwitchStory.Zipfile
-
-  @dialyzer {:nowarn_function, group_channel: 1, group_month_year: 1}
 
   @impl true
   def read(file) do
@@ -25,12 +24,12 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.ChatMessages do
       ],
       dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
+    |> Sink.preprocess()
   end
 
   def group_channel(df) do
     df
-    |> SiteHistory.preprocess()
-    |> SiteHistory.group(
+    |> Filters.group(
       [:channel],
       &[messages: Series.count(&1["body"]) |> Series.cast(:integer)],
       &[desc: &1["messages"]]
@@ -39,8 +38,7 @@ defmodule TwitchStory.Twitch.Histories.SiteHistory.ChatMessages do
 
   def group_month_year(df) do
     df
-    |> SiteHistory.preprocess()
-    |> SiteHistory.group(
+    |> Filters.group(
       [:channel, :month, :year],
       &[messages: Series.count(&1["body"]) |> Series.cast(:integer)],
       &[desc: &1["messages"]]

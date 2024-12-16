@@ -5,21 +5,24 @@ defmodule TwitchStory.Twitch.Histories.Community.Follows do
 
   alias Explorer.Series
 
-  alias TwitchStory.Twitch.Histories.SiteHistory
+  alias TwitchStory.Dataflow.Filters
+  alias TwitchStory.Dataflow.Sink
+  alias TwitchStory.Dataflow.Statistics
   alias TwitchStory.Zipfile
 
   def read(file) do
-    Zipfile.csv(
-      file,
+    file
+    |> Zipfile.csv(
       "request/community/follows/follow.csv",
       columns: ["time", "channel"],
       dtypes: [{"time", {:naive_datetime, :microsecond}}]
     )
+    |> Sink.preprocess()
+    |> DataFrame.filter(not is_nil(channel))
   end
 
   def all(df) do
     df
-    |> DataFrame.filter(not is_nil(channel))
     |> DataFrame.sort_by(asc: time)
     |> DataFrame.group_by([:channel])
     |> DataFrame.summarise_with(&[follow: Explorer.Series.first(&1["time"])])
@@ -28,14 +31,12 @@ defmodule TwitchStory.Twitch.Histories.Community.Follows do
   def n(file) do
     file
     |> read()
-    |> DataFrame.filter(not is_nil(channel))
-    |> DataFrame.n_rows()
+    |> Statistics.n_rows()
   end
 
   def group_month_year(df) do
     df
-    |> SiteHistory.preprocess()
-    |> SiteHistory.group(
+    |> Filters.group(
       [:month, :year],
       &[
         follows: Series.n_distinct(&1["channel"])
